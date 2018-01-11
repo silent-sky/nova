@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>nova</artifactId>
+    <groupId>com.nova.parent</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>paas</artifactId>
+  <modules>
+    <module>auth-api</module>
+    <module>auth-provider</module>
+    <module>common</module>
+    <module>workflow-api</module>
+    <module>workflow-provider</module>
+    <module>metadata-api</module>
+    <module>metadata-provider</module>
+    <module>license-api</module>
+    <module>license-provider</module>
+    <module>org-provider</module>
+    <module>org-api</module>
+  </modules>
+  <packaging>pom</packaging>
+
+
+</project>
