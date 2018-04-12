@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nova.paas.auth.service.mapper.ViewAccessMapper">
+    <resultMap id="viewAccess" type="com.nova.paas.auth.service.entity.ViewAccess">
+        <id property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="appId" column="app_id"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="recordTypeId" column="record_type_id"/>
+        <result property="viewId" column="view_id"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="modifier" column="modifier"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+
+    <update id="batchDel">
+        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        del_flag=0
+        <if test="roleCode != null and roleCode!='' ">
+            AND role_code=#{roleCode}
+        </if>
+        <if test="entityId != null and entityId!='' ">
+            AND entity_id=#{entityId}
+        </if>
+    </update>
+
+    <select id="queryViewAccessProvider" resultMap="viewAccess">
+        select * from auth_view_access WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="roleCodes != null and roleCodes.size()>0">
+            AND role_code IN
+            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
+                #{roles}
+            </foreach>
+        </if>
+        <if test="entityId != null and entityId!=''">
+            AND entity_id=#{entityId}
+        </if>
+        <if test="recordTypeId != null and recordTypeId!=''">
+            AND record_type_id=#{recordTypeId}
+        </if>
+        <if test="viewId != null and viewId!=''">
+            AND view_id=#{viewId}
+        </if>
+        and del_flag=0
+    </select>
+
+
+    <update id="delRoleViewAccess">
+        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        del_flag=0
+        <if test="roleViewPojos != null and roleViewPojos.size()>0">
+            and (
+            <foreach item="pojos" collection="roleViewPojos" open="(" separator=") or (" close=")">
+                role_code=#{pojos.roleCode} and entity_id=#{pojos.entityId} and record_type_id=#{pojos.recordTypeId}
+            </foreach>
+            )
+        </if>
+    </update>
+
+    <update id="deleteViewAccess">
+        update auth_view_access set del_Flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        del_flag=0
+        <if test="entityId != null and entityId!='' ">
+            AND entity_id=#{entityId}
+        </if>
+        <if test="roleCode != null and roleCode!='' ">
+            AND role_code=#{roleCode}
+        </if>
+        <if test="recordTypeId != null and recordTypeId!='' ">
+            AND record_type_id=#{recordTypeId}
+        </if>
+        <if test="viewId != null and viewId!='' ">
+            AND view_id=#{viewId}
+        </if>
+    </update>
+
+    <select id="queryViewAccessByEntitys" resultMap="viewAccess">
+        select * from auth_view_access WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="entitys != null">
+            <choose>
+                <when test="entitys.size()==0">
+                    AND entity_id in ('')
+                </when>
+                <otherwise>
+                    AND entity_id IN
+                    <foreach item="entityIds" collection="entitys" open="(" separator="," close=")">
+                        #{entity_ids}
+                    </foreach>
+                </otherwise>
+            </choose>
+        </if>
+        and del_flag=0
+    </select>
+
+    <select id="queryViewAccessByEntityIdBatch" resultMap="viewAccess">
+        select * from auth_view_access WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="entityIds != null and entityIds.size()>0">
+            AND entity_id IN
+            <foreach item="entitys" collection="entityIds" open="(" separator="," close=")">
+                #{entitys}
+            </foreach>
+        </if>
+        <if test="roleCodes != null and roleCodes.size()>0">
+            AND role_code IN
+            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
+                #{roles}
+            </foreach>
+        </if>
+        <if test="recordTypeId != null and recordTypeId!=''">
+            AND record_type_id=#{recordTypeId}
+        </if>
+        and del_flag=0
+    </select>
+
+</mapper>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nova.paas.auth.service.mapper.UserRoleMapper">
+    <resultMap id="userRole" type="com.nova.paas.auth.service.entity.UserRole">
+        <id property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="appId" column="app_id"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="orgId" column="org_id"/>
+        <result property="orgType" column="org_type"/>
+        <result property="defaultRole" column="default_role"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="modifier" column="modifier"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <resultMap id="int" type="java.lang.Integer"/>
+
+    <update id="batchDel">
+        update auth_user_role set del_flag=1,modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        del_flag=0
+        <if test="roleCode != null and roleCode!='' ">
+            AND role_code=#{roleCode}
+        </if>
+        <if test="orgIdList != null and orgIdList.size()>0">
+            AND org_id IN
+            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
+                #{orgIds}
+            </foreach>
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+    </update>
+
+
+    <select id="queryUserRoleProvider" resultMap="userRole">
+        select * from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
+        <if test="orgIdList != null and orgIdList.size()>0">
+            AND org_id IN
+            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
+                #{orgIds}
+            </foreach>
+        </if>
+        <if test="roles != null and roles.size()>0">
+            AND role_code IN
+            <foreach item="roleCodes" collection="roles" open="(" separator="," close=")">
+                #{roleCodes}
+            </foreach>
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+    </select>
+
+    <select id="queryOrgIdsOrRoles" resultType="String">
+        select distinct(${result}) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
+        <if test="orgIdList != null and orgIdList.size()>0">
+            AND org_id IN
+            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
+                #{orgIds}
+            </foreach>
+        </if>
+        <if test="roleCode != null and roleCode!=''">
+            AND role_code=#{roleCode}
+        </if>
+        <choose>
+            <when test="excludeRoles!=null and excludeRoles.size()>0 and result=='orgId'">
+                and org_id not in (SELECT org_id from auth_user_role where tenant_id=#{tenantId} and app_id=#{appId} and role_code IN
+                <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
+                    #{excludeRoleCodes}
+                </foreach>
+                <if test="orgType != null ">
+                    AND org_type=#{orgType}
+                </if>
+                and del_flag=0 )
+            </when>
+            <otherwise>
+                <if test="excludeRoles!=null and excludeRoles.size()>0 and result=='roleCode'">
+                    and role_code not in
+                    <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
+                        #{excludeRoleCodes}
+                    </foreach>
+                </if>
+            </otherwise>
+        </choose>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+        <if test="page!=null and page.pageSize!=null and start!=null">
+            limit #{start},#{page.pageSize}
+        </if>
+    </select>
+
+
+    <select id="queryOrgIdsOrRolesCount" resultType="int">
+        select count(distinct(${result})) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
+        <if test="orgIdList != null and orgIdList.size()>0">
+            AND org_id IN
+            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
+                #{orgIds}
+            </foreach>
+        </if>
+        <if test="roleCode != null and roleCode!=''">
+            AND role_code=#{roleCode}
+        </if>
+        <choose>
+            <when test="excludeRoles!=null and excludeRoles.size()>0 and result=='orgId'">
+                and org_id not in (SELECT org_id from auth_user_role where tenant_id=#{tenantId} and app_id=#{appId} and role_code IN
+                <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
+                    #{excludeRoleCodes}
+                </foreach>
+                <if test="orgType != null ">
+                    AND org_type=#{orgType}
+                </if>
+                and del_flag=0 )
+            </when>
+            <otherwise>
+                <if test="excludeRoles!=null and excludeRoles.size()>0 and result=='roleCode'">
+                    and role_code not in
+                    <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
+                        #{excludeRoleCodes}
+                    </foreach>
+                </if>
+            </otherwise>
+        </choose>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+    </select>
+
+
+    <update id="setDefaultRoleFlag">
+        update auth_user_role set default_role=#{flag},modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        and del_flag=0
+        <if test="idList != null and idList.size()>0">
+            AND id IN
+            <foreach item="ids" collection="idList" open="(" separator="," close=")">
+                #{ids}
+            </foreach>
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+    </update>
+
+
+    <update id="updateUserRoleDeptId">
+        update auth_user_role set dept_id=#{dept},modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        del_flag=0
+        <if test="roleCode != null and roleCode!='' ">
+            AND role_code=#{roleCode}
+        </if>
+        <if test="orgId != null and orgId!='' ">
+            AND org_id=#{orgId}
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+    </update>
+
+
+    <select id="queryEntityByUserRole" resultMap="userRole">
+        select role_code,org_id,dept_id from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="roleCodes != null and roleCodes.size()>0">
+            AND role_code IN
+            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
+                #{roles}
+            </foreach>
+        </if>
+        <if test="orgId != null and orgId!='' ">
+            AND org_id=#{orgId}
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+        and del_flag=0
+        <if test="start!=null and pageSize!=null">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+
+    <select id="queryEntityByUserRoleCount" resultMap="int">
+        select count(id) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="roleCodes != null and roleCodes.size()>0">
+            AND role_code IN
+            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
+                #{roles}
+            </foreach>
+        </if>
+        <if test="orgId != null and orgId!='' ">
+            AND org_id=#{orgId}
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+        and del_flag=0
+    </select>
+
+
+    <select id="queryUsersByRoleDept" resultType="String">
+        select org_id from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        <if test="roleCodes != null and roleCodes.size()>0">
+            AND role_code IN
+            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
+                #{roles}
+            </foreach>
+        </if>
+        <if test="deptId != null and deptId!='' ">
+            AND dept_id like CONCAT('%',#{deptId},'%')
+        </if>
+        <if test="orgType != null ">
+            AND org_type=#{orgType}
+        </if>
+        and del_flag=0
+    </select>
+
+</mapper>
