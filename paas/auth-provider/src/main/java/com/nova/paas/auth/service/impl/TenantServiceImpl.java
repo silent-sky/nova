@@ -23,7 +23,7 @@ import com.nova.paas.auth.service.mapper.RecordTypeAccessMapper;
 import com.nova.paas.auth.service.mapper.RoleMapper;
 import com.nova.paas.auth.service.mapper.UserRoleMapper;
 import com.nova.paas.auth.service.mapper.ViewAccessMapper;
-import com.nova.paas.auth.service.support.TenantServiceUtilService;
+import com.nova.paas.auth.service.support.TenantServiceUtil;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.support.CacheManager;
@@ -71,7 +71,7 @@ public class TenantServiceImpl implements TenantService {
     @Autowired
     FuncService funcService;
     @Autowired
-    TenantServiceUtilService tenantServiceUtilService;
+    TenantServiceUtil tenantServiceUtil;
 
     @Transactional
     public void clear(CommonContext context) {
@@ -450,7 +450,7 @@ public class TenantServiceImpl implements TenantService {
         } catch (Exception e) {
             log.error("enterpriseCopy ", e);
         }
-        tenantServiceUtilService.enterpriseCopyBatchInsert(toEnterpriseAccount,
+        tenantServiceUtil.enterpriseCopyBatchInsert(toEnterpriseAccount,
                 functionList,
                 roleList,
                 userRoleList,

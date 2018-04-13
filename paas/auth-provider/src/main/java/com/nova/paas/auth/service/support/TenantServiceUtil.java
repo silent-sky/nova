@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Service("tenantServiceUtilService")
 @Slf4j
-public class TenantServiceUtilService {
+public class TenantServiceUtil {
 
     @Autowired
     FunctionMapper funcMapper;
