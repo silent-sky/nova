@@ -21,7 +21,6 @@
     <!--添加MVC注解驱动-->
     <mvc:annotation-driven/>
 
-    <!--restApplication-->
     <bean id="applicationContextAccessor" class="com.nova.paas.common.support.ApplicationContextAccessor"/>
 
     <bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -33,7 +32,7 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="mysqlDataSource"/>
-        <property name="mapperLocations" value="classpath:/mybatis/mapper/*.xml"/>
+        <property name="mapperLocations" value="classpath*:/mybatis/mapper/**/*.xml"></property>
         <property name="transactionFactory">
             <bean class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory"/>
         </property>
