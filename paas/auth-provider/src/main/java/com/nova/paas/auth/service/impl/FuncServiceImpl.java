@@ -1,15 +1,15 @@
 package com.nova.paas.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.nova.paas.auth.FuncAccessService;
+import com.nova.paas.auth.FuncService;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.exception.AuthServiceException;
+import com.nova.paas.auth.mapper.FuncAccessMapper;
+import com.nova.paas.auth.mapper.FunctionMapper;
 import com.nova.paas.auth.pojo.FunctionPojo;
-import com.nova.paas.auth.service.FuncAccessService;
-import com.nova.paas.auth.service.FuncService;
-import com.nova.paas.auth.service.entity.Function;
-import com.nova.paas.auth.service.mapper.FuncAccessMapper;
-import com.nova.paas.auth.service.mapper.FunctionMapper;
+import com.nova.paas.auth.entity.Function;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.support.CacheManager;
