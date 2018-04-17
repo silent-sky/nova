@@ -1,0 +1,13 @@
+com.effektif.workflow.impl.activity.types.ParallelGatewayImpl
+com.effektif.workflow.impl.activity.types.ExclusiveGatewayImpl
+com.effektif.workflow.impl.activity.types.StartEventImpl
+com.effektif.workflow.impl.activity.types.EndEventImpl
+com.effektif.workflow.impl.activity.types.SubProcessImpl
+com.effektif.workflow.impl.activity.types.EmbeddedSubprocessImpl
+com.effektif.workflow.impl.activity.types.JavaServiceTaskImpl
+com.effektif.workflow.impl.activity.types.HttpServiceTaskImpl
+com.effektif.workflow.impl.activity.types.NoneTaskImpl
+com.effektif.workflow.impl.activity.types.ReceiveTaskImpl
+#zhenghaibo 2018.4.8
+com.effektif.workflow.impl.activity.types.UserTaskImpl
+com.effektif.workflow.impl.activity.types.ExecutionTaskImpl
