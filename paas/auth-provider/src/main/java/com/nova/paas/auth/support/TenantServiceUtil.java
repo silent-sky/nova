@@ -1,9 +1,6 @@
 package com.nova.paas.auth.support;
 
 import com.nova.paas.auth.entity.FieldAccess;
-import com.nova.paas.auth.mapper.FuncAccessMapper;
-import com.nova.paas.auth.mapper.FunctionMapper;
-import com.nova.paas.auth.mapper.UserRoleMapper;
 import com.nova.paas.auth.entity.FuncAccess;
 import com.nova.paas.auth.entity.Function;
 import com.nova.paas.auth.entity.RecordTypeAccess;
@@ -11,11 +8,14 @@ import com.nova.paas.auth.entity.Role;
 import com.nova.paas.auth.entity.UserRole;
 import com.nova.paas.auth.entity.ViewAccess;
 import com.nova.paas.auth.mapper.FieldAccessMapper;
+import com.nova.paas.auth.mapper.FunctionAccessMapper;
+import com.nova.paas.auth.mapper.FunctionMapper;
 import com.nova.paas.auth.mapper.RecordTypeAccessMapper;
 import com.nova.paas.auth.mapper.RoleMapper;
+import com.nova.paas.auth.mapper.UserRoleMapper;
 import com.nova.paas.auth.mapper.ViewAccessMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class TenantServiceUtil {
     @Autowired
     FunctionMapper funcMapper;
     @Autowired
-    FuncAccessMapper funcAccessMapper;
+    FunctionAccessMapper functionAccessMapper;
     @Autowired
     FieldAccessMapper fieldAccessMapper;
     @Autowired

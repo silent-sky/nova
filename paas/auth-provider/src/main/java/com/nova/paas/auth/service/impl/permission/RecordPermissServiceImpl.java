@@ -1,11 +1,12 @@
 package com.nova.paas.auth.service.impl.permission;
 
+import com.nova.paas.auth.entity.permission.RecordPermiss;
+import com.nova.paas.auth.entity.permission.Team;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.mapper.permission.RecordPermissMapper;
-import com.nova.paas.auth.permission.RecordPermissService;
-import com.nova.paas.auth.permission.TeamService;
+import com.nova.paas.auth.mapper.permission.TeamMapper;
 import com.nova.paas.auth.pojo.permission.EntityObjects;
 import com.nova.paas.auth.pojo.permission.QueryRecordPermissObjectFilter;
 import com.nova.paas.auth.pojo.permission.RecordPermissObjectPojo;
@@ -13,9 +14,8 @@ import com.nova.paas.auth.pojo.permission.RecordPermissPojo;
 import com.nova.paas.auth.pojo.permission.RecordPermissTeamPojo;
 import com.nova.paas.auth.pojo.permission.TeamMembersPojo;
 import com.nova.paas.auth.pojo.permission.TeamPojo;
-import com.nova.paas.auth.entity.permission.RecordPermiss;
-import com.nova.paas.auth.entity.permission.Team;
-import com.nova.paas.auth.mapper.permission.TeamMapper;
+import com.nova.paas.auth.service.permission.RecordPermissService;
+import com.nova.paas.auth.service.permission.TeamService;
 import com.nova.paas.auth.support.CommonParamsCheckUtil;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.pojo.PageInfo;
@@ -23,7 +23,7 @@ import com.nova.paas.common.util.IdUtil;
 import com.nova.paas.common.util.SetUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Service("recordPermissService")
+@Service
 @Slf4j
 public class RecordPermissServiceImpl implements RecordPermissService {
 

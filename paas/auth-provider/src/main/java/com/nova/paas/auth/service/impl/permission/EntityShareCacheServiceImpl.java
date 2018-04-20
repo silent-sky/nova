@@ -1,18 +1,18 @@
 package com.nova.paas.auth.service.impl.permission;
 
 import com.google.common.collect.Lists;
+import com.nova.paas.auth.entity.permission.EntityShare;
 import com.nova.paas.auth.entity.permission.EntityShareCache;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthServiceException;
-import com.nova.paas.auth.pojo.permission.EntityShareCachePojo;
-import com.nova.paas.auth.pojo.permission.EntitySharePojo;
-import com.nova.paas.auth.UserRoleService;
-import com.nova.paas.auth.entity.permission.EntityShare;
 import com.nova.paas.auth.mapper.permission.EntityShareCacheMapper;
 import com.nova.paas.auth.mapper.permission.EntityShareMapper;
-import com.nova.paas.auth.permission.DataRightsService;
-import com.nova.paas.auth.permission.EntityShareCacheService;
-import com.nova.paas.auth.permission.EntityShareService;
+import com.nova.paas.auth.pojo.permission.EntityShareCachePojo;
+import com.nova.paas.auth.pojo.permission.EntitySharePojo;
+import com.nova.paas.auth.service.UserRoleService;
+import com.nova.paas.auth.service.permission.DataRightsService;
+import com.nova.paas.auth.service.permission.EntityShareCacheService;
+import com.nova.paas.auth.service.permission.EntityShareService;
 import com.nova.paas.common.constant.PermissionConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.pojo.PageInfo;
@@ -23,8 +23,8 @@ import com.nova.paas.org.service.DeptService;
 import com.nova.paas.org.service.DeptUserService;
 import com.nova.paas.org.service.GroupMemService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Service("entityShareCacheService")
+@Service
 @Slf4j
 public class EntityShareCacheServiceImpl implements EntityShareCacheService {
 

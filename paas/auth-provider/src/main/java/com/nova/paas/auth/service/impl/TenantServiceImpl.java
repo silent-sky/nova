@@ -1,15 +1,6 @@
 package com.nova.paas.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.nova.paas.auth.exception.AuthErrorMsg;
-import com.nova.paas.auth.exception.AuthException;
-import com.nova.paas.auth.mapper.FuncAccessMapper;
-import com.nova.paas.auth.pojo.FuncAccessPojo;
-import com.nova.paas.auth.pojo.FunctionPojo;
-import com.nova.paas.auth.pojo.RolePojo;
-import com.nova.paas.auth.pojo.UserRolePojo;
-import com.nova.paas.auth.FuncService;
-import com.nova.paas.auth.TenantService;
 import com.nova.paas.auth.entity.FieldAccess;
 import com.nova.paas.auth.entity.FuncAccess;
 import com.nova.paas.auth.entity.Function;
@@ -17,12 +8,21 @@ import com.nova.paas.auth.entity.RecordTypeAccess;
 import com.nova.paas.auth.entity.Role;
 import com.nova.paas.auth.entity.UserRole;
 import com.nova.paas.auth.entity.ViewAccess;
+import com.nova.paas.auth.exception.AuthErrorMsg;
+import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.mapper.FieldAccessMapper;
+import com.nova.paas.auth.mapper.FunctionAccessMapper;
 import com.nova.paas.auth.mapper.FunctionMapper;
 import com.nova.paas.auth.mapper.RecordTypeAccessMapper;
 import com.nova.paas.auth.mapper.RoleMapper;
 import com.nova.paas.auth.mapper.UserRoleMapper;
 import com.nova.paas.auth.mapper.ViewAccessMapper;
+import com.nova.paas.auth.pojo.FunctionAccessPojo;
+import com.nova.paas.auth.pojo.FunctionPojo;
+import com.nova.paas.auth.pojo.RolePojo;
+import com.nova.paas.auth.pojo.UserRolePojo;
+import com.nova.paas.auth.service.FunctionService;
+import com.nova.paas.auth.service.TenantService;
 import com.nova.paas.auth.support.TenantServiceUtil;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
@@ -30,7 +30,7 @@ import com.nova.paas.common.support.CacheManager;
 import com.nova.paas.common.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,14 +48,14 @@ import java.util.Set;
  * zhenghaibo
  * 18/4/11 15:23
  */
-@Service("tenantService")
+@Service
 @Slf4j
 public class TenantServiceImpl implements TenantService {
 
     @Autowired
     FunctionMapper funcMapper;
     @Autowired
-    FuncAccessMapper funcAccessMapper;
+    FunctionAccessMapper functionAccessMapper;
     @Autowired
     FieldAccessMapper fieldAccessMapper;
     @Autowired
@@ -69,7 +69,7 @@ public class TenantServiceImpl implements TenantService {
     @Autowired
     CacheManager cacheManager;
     @Autowired
-    FuncService funcService;
+    FunctionService functionService;
     @Autowired
     TenantServiceUtil tenantServiceUtil;
 
@@ -220,20 +220,20 @@ public class TenantServiceImpl implements TenantService {
      * 批量添加角色功能权限(无校验)
      */
     @Transactional
-    public void batchAddFuncAccessInit(CommonContext context, List<FuncAccessPojo> funcAccessPojos) {
+    public void batchAddFuncAccessInit(CommonContext context, List<FunctionAccessPojo> functionAccessPojos) {
         log.info("[Request], method:{},context:{}", "batchAddFuncAccessInit", JSON.toJSONString(context));
-        if (CollectionUtils.isEmpty(funcAccessPojos)) {
+        if (CollectionUtils.isEmpty(functionAccessPojos)) {
             throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
         try {
             List<FuncAccess> funcAccesses = new LinkedList<>();
-            funcAccessPojos.forEach(funcAccessPojo -> {
+            functionAccessPojos.forEach(functionAccessPojo -> {
                 FuncAccess funcAccess = new FuncAccess();
                 funcAccess.setId(IdUtil.generateId());
                 funcAccess.setTenantId(context.getTenantId());
                 funcAccess.setAppId(context.getAppId());
-                funcAccess.setRoleCode(funcAccessPojo.getRoleCode());
-                funcAccess.setFuncCode(funcAccessPojo.getFuncCode());
+                funcAccess.setRoleCode(functionAccessPojo.getRoleCode());
+                funcAccess.setFuncCode(functionAccessPojo.getFuncCode());
                 funcAccess.setDelFlag(Boolean.FALSE);
 
                 funcAccesses.add(funcAccess);
@@ -306,7 +306,7 @@ public class TenantServiceImpl implements TenantService {
         functions = funcMapper.queryFunctionByTenant(fromEnterpriseAccount, context.getAppId());
         List<Role> roles = roleMapper.queryRole(fromEnterpriseAccount, context.getAppId(), null, null, null, Boolean.FALSE);
         List<UserRole> userRoles = userRoleMapper.queryUserRoleProvider(fromEnterpriseAccount, context.getAppId(), null, null, null, Boolean.FALSE);
-        List<FuncAccess> funcAccesses = funcAccessMapper.queryFuncAccessEntitys(fromEnterpriseAccount, context.getAppId(), null, null, Boolean.FALSE);
+        List<FuncAccess> funcAccesses = functionAccessMapper.queryFuncAccessEntitys(fromEnterpriseAccount, context.getAppId(), null, null, Boolean.FALSE);
 
         //字段权限
         Set<String> defultEntitys = null;
@@ -467,7 +467,7 @@ public class TenantServiceImpl implements TenantService {
             userRoleMapper.batchDel(context.getTenantId(), context.getAppId(), null, null, null, context.getUserId(), System.currentTimeMillis());
             funcMapper.batchDel(context.getTenantId(), context.getAppId(), context.getUserId(), null, System.currentTimeMillis());
             roleMapper.batchDel(context.getTenantId(), context.getAppId(), null, null, null, context.getUserId(), System.currentTimeMillis());
-            funcAccessMapper.batchDel(context.getTenantId(), context.getAppId(), null, context.getUserId(), null, System.currentTimeMillis());
+            functionAccessMapper.batchDel(context.getTenantId(), context.getAppId(), null, context.getUserId(), null, System.currentTimeMillis());
             fieldAccessMapper.batchDel(context.getTenantId(), context.getAppId(), null, null, null, context.getUserId(), System.currentTimeMillis());
             viewAccessMapper.batchDel(context.getTenantId(), context.getAppId(), null, null, context.getUserId(), System.currentTimeMillis());
             recordTypeAccessMapper.deleteRoleRecordType(context.getTenantId(),
@@ -541,7 +541,7 @@ public class TenantServiceImpl implements TenantService {
 
             //功能权限
             List<FuncAccess> funcAccesseList =
-                    funcAccessMapper.queryFuncAccessProvider(context.getTenantId(), context.getAppId(), null, null, Boolean.FALSE);
+                    functionAccessMapper.queryFuncAccessProvider(context.getTenantId(), context.getAppId(), null, null, Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(funcAccesseList)) {
                 Map<String, Set<String>> funcAccessMap = new HashMap<>();
                 funcAccesseList.forEach(funcAccess -> {

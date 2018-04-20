@@ -1,21 +1,21 @@
 package com.nova.paas.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.nova.paas.auth.RoleService;
-import com.nova.paas.auth.ViewAccessService;
+import com.nova.paas.auth.entity.ViewAccess;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.mapper.ViewAccessMapper;
 import com.nova.paas.auth.pojo.RoleViewPojo;
-import com.nova.paas.auth.entity.ViewAccess;
+import com.nova.paas.auth.service.RoleService;
+import com.nova.paas.auth.service.ViewAccessService;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.support.CacheManager;
 import com.nova.paas.common.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ import java.util.Set;
  * zhenghaibo
  * 18/4/11 15:23
  */
-@Service("viewAccessService")
+@Service
 @Slf4j
 public class ViewAccessServiceImpl implements ViewAccessService {
 

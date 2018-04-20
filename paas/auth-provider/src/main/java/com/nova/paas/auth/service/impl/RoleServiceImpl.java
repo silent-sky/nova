@@ -1,27 +1,27 @@
 package com.nova.paas.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.nova.paas.auth.FieldAccessService;
-import com.nova.paas.auth.FuncAccessService;
-import com.nova.paas.auth.FuncService;
-import com.nova.paas.auth.RoleService;
 import com.nova.paas.auth.entity.FieldAccess;
-import com.nova.paas.auth.exception.AuthErrorMsg;
-import com.nova.paas.auth.exception.AuthException;
-import com.nova.paas.auth.exception.AuthServiceException;
-import com.nova.paas.auth.mapper.FieldAccessMapper;
-import com.nova.paas.auth.mapper.FuncAccessMapper;
-import com.nova.paas.auth.mapper.UserRoleMapper;
-import com.nova.paas.auth.mapper.ViewAccessMapper;
-import com.nova.paas.auth.pojo.RolePojo;
-import com.nova.paas.auth.UserRoleService;
-import com.nova.paas.auth.ViewAccessService;
 import com.nova.paas.auth.entity.FuncAccess;
 import com.nova.paas.auth.entity.RecordTypeAccess;
 import com.nova.paas.auth.entity.Role;
 import com.nova.paas.auth.entity.ViewAccess;
+import com.nova.paas.auth.exception.AuthErrorMsg;
+import com.nova.paas.auth.exception.AuthException;
+import com.nova.paas.auth.exception.AuthServiceException;
+import com.nova.paas.auth.mapper.FieldAccessMapper;
+import com.nova.paas.auth.mapper.FunctionAccessMapper;
 import com.nova.paas.auth.mapper.RecordTypeAccessMapper;
 import com.nova.paas.auth.mapper.RoleMapper;
+import com.nova.paas.auth.mapper.UserRoleMapper;
+import com.nova.paas.auth.mapper.ViewAccessMapper;
+import com.nova.paas.auth.pojo.RolePojo;
+import com.nova.paas.auth.service.FieldAccessService;
+import com.nova.paas.auth.service.FunctionAccessService;
+import com.nova.paas.auth.service.FunctionService;
+import com.nova.paas.auth.service.RoleService;
+import com.nova.paas.auth.service.UserRoleService;
+import com.nova.paas.auth.service.ViewAccessService;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.pojo.PageInfo;
@@ -29,7 +29,7 @@ import com.nova.paas.common.support.CacheManager;
 import com.nova.paas.common.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ import java.util.Set;
  * zhenghaibo
  * 18/4/11 15:23
  */
-@Service("roleService")
+@Service
 @Slf4j
 public class RoleServiceImpl implements RoleService {
 
@@ -57,13 +57,13 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     UserRoleService userRoleService;
     @Autowired
-    FuncService funcService;
+    FunctionService functionService;
     @Autowired
     FieldAccessService fieldAccessService;
     @Autowired
     ViewAccessService viewAccessService;
     @Autowired
-    FuncAccessService funcAccessService;
+    FunctionAccessService functionAccessService;
     @Autowired
     UserRoleMapper userRoleMapper;
     @Autowired
@@ -71,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     ViewAccessMapper viewAccessMapper;
     @Autowired
-    FuncAccessMapper funcAccessMapper;
+    FunctionAccessMapper functionAccessMapper;
     @Autowired
     RecordTypeAccessMapper recordTypeAccessMapper;
     @Autowired
@@ -315,7 +315,7 @@ public class RoleServiceImpl implements RoleService {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
 
-        List<FuncAccess> funcAccessList = funcAccessMapper.queryFuncAccessProvider(context.getTenantId(),
+        List<FuncAccess> funcAccessList = functionAccessMapper.queryFuncAccessProvider(context.getTenantId(),
                 context.getAppId(),
                 Collections.singletonList(destRoleCode),
                 null,
@@ -353,7 +353,7 @@ public class RoleServiceImpl implements RoleService {
 
         try {
             //1.功能权限 2.字段权限  3.视图权限  (直接查/加数据库,不需要更新缓存)
-            funcAccessList = funcAccessMapper.queryFuncAccessProvider(context.getTenantId(),
+            funcAccessList = functionAccessMapper.queryFuncAccessProvider(context.getTenantId(),
                     context.getAppId(),
                     Collections.singletonList(sourceRoleCode),
                     null,
@@ -547,7 +547,7 @@ public class RoleServiceImpl implements RoleService {
             //删除视图权限
             viewAccessService.delRoleViewAccess(context, roleCode);
             //删除功能权限
-            funcAccessService.delRoleFuncPermiss(context, roleCode);
+            functionAccessService.delRoleFuncPermiss(context, roleCode);
             //删除用户角色
             userRoleMapper.batchDel(context.getTenantId(), context.getAppId(), roleCode, null, null, context.getUserId(), System.currentTimeMillis());
 

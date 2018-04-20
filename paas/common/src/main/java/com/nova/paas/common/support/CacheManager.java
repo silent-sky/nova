@@ -1,12 +1,13 @@
 package com.nova.paas.common.support;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationUtils;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import java.util.Map;
  * zhenghaibo
  * 18/4/11 15:23
  */
+@Component
 public class CacheManager {
     @Inject
     private RedisTemplate<String, Map> mapRedisTemplate;

@@ -2,15 +2,16 @@ package com.nova.paas.auth.service.impl.permission;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.nova.paas.auth.exception.AuthServiceException;
-import com.nova.paas.auth.permission.EntityFieldShareCacheService;
-import com.nova.paas.auth.permission.EntityFieldShareCacheVersionService;
 import com.nova.paas.auth.entity.permission.EntityFieldShareCache;
+import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.mapper.permission.EntityFieldShareCacheMapper;
+import com.nova.paas.auth.service.permission.EntityFieldShareCacheService;
+import com.nova.paas.auth.service.permission.EntityFieldShareCacheVersionService;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.util.IdUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class EntityFieldShareCacheServiceImpl implements EntityFieldShareCacheService {
 
     @Autowired

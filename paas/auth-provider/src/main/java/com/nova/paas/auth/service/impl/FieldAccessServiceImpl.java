@@ -4,22 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.nova.paas.auth.FuncAccessService;
+import com.nova.paas.auth.entity.FieldAccess;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.exception.AuthServiceException;
-import com.nova.paas.auth.FieldAccessService;
-import com.nova.paas.auth.RoleService;
-import com.nova.paas.auth.UserRoleService;
-import com.nova.paas.auth.entity.FieldAccess;
 import com.nova.paas.auth.mapper.FieldAccessMapper;
+import com.nova.paas.auth.service.FieldAccessService;
+import com.nova.paas.auth.service.FunctionAccessService;
+import com.nova.paas.auth.service.RoleService;
+import com.nova.paas.auth.service.UserRoleService;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.support.CacheManager;
 import com.nova.paas.common.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +40,7 @@ import java.util.Set;
  * zhenghaibo
  * 18/4/11 15:23
  */
-@Service("fieldAccessService")
+@Service
 @Slf4j
 public class FieldAccessServiceImpl implements FieldAccessService {
 
@@ -53,7 +53,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private FuncAccessService funcAccessService;
+    private FunctionAccessService functionAccessService;
 
     @Value("${FIELD_PERMISS_EXPIRE_SECOND}")
     private int FIELD_PERMISS_EXPIRE_SECOND;
@@ -716,7 +716,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
             entityFuncCode.put(entity, entity);
         });
         Map<String, List<String>> entityRoles = new HashMap<>();
-        Map<String, Set<String>> rolesFuncCodes = funcAccessService.queryFuncAccessByRoles(context, new HashSet<>(userRoles));//role  funcCodeSet
+        Map<String, Set<String>> rolesFuncCodes = functionAccessService.queryFuncAccessByRoles(context, new HashSet<>(userRoles));//role  funcCodeSet
         entityFuncCode.forEach((entity, funcCode) -> userRoles.forEach(role -> {
             if (rolesFuncCodes.get(role) != null && (rolesFuncCodes.get(role).contains(funcCode) || ("5".equals(entity) && rolesFuncCodes.get(role)
                     .contains("PaymentObj")))) {
