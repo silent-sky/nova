@@ -1,63 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-<configuration scan="false" scanPeriod="60 seconds" debug="false">
-  <contextName>saas-hr</contextName>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-  <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!-- 每天产生一个日志文件，最多 30 个，自动回滚 -->
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${catalina.home}/logs/saas-hr-%d{yyyyMMdd}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
-    </rollingPolicy>
-    <encoder>
-      <!-- 异常栈中去掉包含如下字符的行避免打印很多无用的信息-->
-      <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{12} %msg%rEx{full,
-        java.lang.Thread,
-        javassist,
-        sun.reflect,
-        org.springframework,
-        org.apache,
-        org.eclipse.jetty,
-        $Proxy,
-        java.net,
-        java.io,
-        javax.servlet,
-        org.junit,
-        com.mysql,
-        com.sun,
-        org.mybatis.spring,
-        cglib,
-        CGLIB,
-        java.util.concurrent,
-        okhttp,
-        org.jboss,
-        }%n
-      </pattern>
-    </encoder>
-  </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/hr.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/hr_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
 
-  <!-- 异步输出 -->
-  <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
-    <queueSize>2048</queueSize>
-    <appender-ref ref="RollingFile"/>
-  </appender>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
 
-  <!--新加-->
-  <logger name="druid.sql" level="INFO"/>
-  <logger name="org.hibernate" level="WARN"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
 
-  <logger name="org.springframework" level="WARN"/>
-  <logger name="org.apache" level="WARN"/>
-  <logger name="com.alibaba.dubbo" level="WARN"/>
+    <appender name="ERR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_PATH}/error_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>365</MaxHistory>
+        </rollingPolicy>
 
-  <logger name="com.nova.paas" level="INFO">
-    <appender-ref ref="ASYNC"/>
-  </logger>
-  <logger name="com.nova.saas" level="INFO">
-    <appender-ref ref="ASYNC"/>
-  </logger>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
 
-  <root level="WARN">
-    <appender-ref ref="ASYNC"/>
-  </root>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <springProfile name="default">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERR_FILE"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="!default">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERR_FILE"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
 </configuration>
