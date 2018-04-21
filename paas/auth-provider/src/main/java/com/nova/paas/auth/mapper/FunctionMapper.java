@@ -4,6 +4,7 @@ import com.nova.paas.auth.entity.Function;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Set;
  * 18/4/10 16:00
  */
 @Mapper
+@Component
 public interface FunctionMapper {
 
     @Select("select * from auth_function where tenant_id = #{tenantId} and app_id = #{appId} and del_flag = false")

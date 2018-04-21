@@ -19,13 +19,13 @@ public class Function implements Serializable {
     private String tenantId;
     private String funcName;
     private String funcCode;
-    private String funcOrder;
+    private Integer funcOrder;
     private Integer funcType;
-    private String levelCode;
-    private String parentCode;
-    private String creator;
-    private Long createTime;
-    private String modifier;
-    private Long modifyTime;
+    private String parentId;
+    private String createdBy;
+    private Long createdAt;
+    private String modifiedBy;
+    private Long modifiedAt;
+    private Boolean isEnabled;
     private Boolean delFlag;
 }

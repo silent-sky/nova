@@ -135,7 +135,7 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
 
             if (CollectionUtils.isNotEmpty(funcAccessList)) {
                 funcAccessList.forEach(funcAccess -> {
-                    funcCodeRoles.get(funcAccess.getFuncCode()).add(funcAccess.getRoleCode());
+                    funcCodeRoles.get(funcAccess.getFuncId()).add(funcAccess.getRoleId());
                 });
             }
         } catch (Exception e) {
@@ -517,7 +517,7 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
             });
             if (CollectionUtils.isNotEmpty(funcAccessList)) {
                 funcAccessList.forEach(funcAccess -> {
-                    funcAccessMap.get(funcAccess.getRoleCode()).add(funcAccess.getFuncCode());
+                    funcAccessMap.get(funcAccess.getRoleId()).add(funcAccess.getFuncId());
                 });
             }
         } catch (Exception e) {
@@ -611,7 +611,7 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
 
             if (CollectionUtils.isNotEmpty(funcAccessList)) {
                 funcAccessList.forEach(funcAccess -> {
-                    funcAccessSet.add(funcAccess.getFuncCode());
+                    funcAccessSet.add(funcAccess.getFuncId());
                 });
             }
         } catch (Exception e) {
@@ -640,21 +640,21 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
         }
     }
 
-    private void partUpdateAccess(CommonContext context, Set<String> needAdd, Set<String> needDel, String roleCode, Set<String> funcCodeSet)
+    private void partUpdateAccess(CommonContext context, Set<String> needAdd, Set<String> needDel, String roleId, Set<String> funcCodeSet)
             throws AuthServiceException {
 
         List<FuncAccess> accessList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(needAdd)) {
-            for (String funcCode : needAdd) {
+            for (String funcId : needAdd) {
                 FuncAccess funcAccess = new FuncAccess();
                 funcAccess.setId(IdUtil.generateId());
                 funcAccess.setTenantId(context.getTenantId());
                 funcAccess.setAppId(context.getAppId());
-                funcAccess.setRoleCode(roleCode);
+                funcAccess.setRoleId(roleId);
                 funcAccess.setDelFlag(Boolean.FALSE);
-                funcAccess.setFuncCode(funcCode);
-                funcAccess.setModifier(context.getUserId());
-                funcAccess.setModifyTime(System.currentTimeMillis());
+                funcAccess.setFuncId(funcId);
+                funcAccess.setModifiedBy(context.getUserId());
+                funcAccess.setModifiedAt(System.currentTimeMillis());
                 accessList.add(funcAccess);
             }
         }
@@ -663,7 +663,7 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
             if (CollectionUtils.isNotEmpty(needDel)) {
                 functionAccessMapper.batchDel(context.getTenantId(),
                         context.getAppId(),
-                        roleCode,
+                        roleId,
                         context.getUserId(),
                         needDel,
                         System.currentTimeMillis());
@@ -672,7 +672,7 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
                 //                funcAccessMapper.batchInsert(accessList);
             }
             cacheManager.putHashObject(context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_FUNCTION_PERMISSION,
-                    roleCode,
+                    roleId,
                     funcCodeSet);
             //            cacheManager.expire(
             //                    context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_FUNCTION_PERMISSION,

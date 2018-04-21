@@ -81,15 +81,15 @@ public class ViewAccessServiceImpl implements ViewAccessService {
             roleView.setAppId(context.getAppId());
             roleView.setEntityId(pojo.getEntityId());
             roleView.setRecordTypeId(pojo.getRecordTypeId());
-            roleView.setRoleCode(pojo.getRoleCode());
+            roleView.setRoleId(pojo.getRoleId());
             roleView.setViewId(pojo.getViewId());
 
-            roleView.setModifier(context.getUserId());
-            roleView.setModifyTime(System.currentTimeMillis());
+            roleView.setModifiedBy(context.getUserId());
+            roleView.setModifiedAt(System.currentTimeMillis());
             roleView.setDelFlag(Boolean.FALSE);
             list.add(roleView);
 
-            cacheUpdate.put(pojo.getRoleCode() + pojo.getRecordTypeId(), pojo.getViewId());
+            cacheUpdate.put(pojo.getRoleId() + pojo.getRecordTypeId(), pojo.getViewId());
         });
 
         try {
@@ -106,27 +106,27 @@ public class ViewAccessServiceImpl implements ViewAccessService {
     }
 
     @Override
-    public List<RoleViewPojo> queryRoleViewAccess(CommonContext context, String entityId, String recordTypeId, String roleCode)
+    public List<RoleViewPojo> queryRoleViewAccess(CommonContext context, String entityId, String recordTypeId, String roleId)
             throws AuthServiceException {
 
         this.entityVerify(entityId);
 
         List<ViewAccess> entityList;
 
-        if (StringUtils.isNotBlank(roleCode) && StringUtils.isNotBlank(recordTypeId)) {//查询一条记录
-            String key = roleCode + recordTypeId;
+        if (StringUtils.isNotBlank(roleId) && StringUtils.isNotBlank(recordTypeId)) {//查询一条记录
+            String key = roleId + recordTypeId;
             String viewId;
             try {
                 viewId = (String) cacheManager.getHashObject(
                         context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_VIEW + ":" + entityId,
                         key);
             } catch (Exception e) {
-                entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleCode), entityId, recordTypeId);
+                entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleId), entityId, recordTypeId);
                 return this.convertToPojo(entityList);
             }
 
             if (viewId == null) {//未命中缓存
-                entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleCode), entityId, recordTypeId);
+                entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleId), entityId, recordTypeId);
                 if (CollectionUtils.isEmpty(entityList)) {
                     viewId = "";
                 } else {
@@ -150,7 +150,7 @@ public class ViewAccessServiceImpl implements ViewAccessService {
             RoleViewPojo pojo = new RoleViewPojo();
             pojo.setEntityId(entityId);
             pojo.setRecordTypeId(recordTypeId);
-            pojo.setRoleCode(roleCode);
+            pojo.setRoleId(roleId);
             pojo.setViewId(viewId);
             pojo.setTenantId(context.getTenantId());
             pojo.setAppId(context.getAppId());
@@ -158,10 +158,10 @@ public class ViewAccessServiceImpl implements ViewAccessService {
             return Collections.singletonList(pojo);
         }
 
-        if (StringUtils.isBlank(roleCode)) {//查询多条记录--用于管理界面
+        if (StringUtils.isBlank(roleId)) {//查询多条记录--用于管理界面
             entityList = this.queryRoleViewPermissFromDB(context, null, entityId, recordTypeId);
         } else {
-            entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleCode), entityId, recordTypeId);
+            entityList = this.queryRoleViewPermissFromDB(context, Collections.singletonList(roleId), entityId, recordTypeId);
         }
         return this.convertToPojo(entityList);
     }
@@ -248,12 +248,12 @@ public class ViewAccessServiceImpl implements ViewAccessService {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
 
-            this.roleCodeVerify(pojo.getRoleCode());
-            roleCodes.add(pojo.getRoleCode());
+            this.roleCodeVerify(pojo.getRoleId());
+            roleCodes.add(pojo.getRoleId());
             this.recordTypeIdVerify(pojo.getRecordTypeId());
             this.viewIdVerify(pojo.getViewId());
 
-            String union = pojo.getRoleCode() + pojo.getEntityId() + pojo.getRecordTypeId();
+            String union = pojo.getRoleId() + pojo.getEntityId() + pojo.getRecordTypeId();
             if (unionSet.contains(union)) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }

@@ -64,13 +64,13 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
 
-            if (StringUtils.isBlank(pojo.getRoleCode())) {
+            if (StringUtils.isBlank(pojo.getRoleId())) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
-            if (roleList.contains(pojo.getRoleCode())) {
+            if (roleList.contains(pojo.getRoleId())) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
-            roleList.add(pojo.getRoleCode());
+            roleList.add(pojo.getRoleId());
         });
         this.rolesIsExist(context, roleList);
 
@@ -79,23 +79,23 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
         Set<String> dbRoles = new HashSet<>();
         if (CollectionUtils.isNotEmpty(dbData)) {
             dbData.forEach(entity -> {
-                dbRoles.add(entity.getRoleCode());
+                dbRoles.add(entity.getRoleId());
             });
         }
 
         List<RecordTypeAccess> list = new ArrayList<>();
         recordTypePojos.forEach(pojo -> {
-            if (!dbRoles.contains(pojo.getRoleCode())) {
+            if (!dbRoles.contains(pojo.getRoleId())) {
                 RecordTypeAccess recordTypeAccess = new RecordTypeAccess();
                 recordTypeAccess.setId(IdUtil.generateId());
                 recordTypeAccess.setTenantId(context.getTenantId());
                 recordTypeAccess.setAppId(context.getAppId());
                 recordTypeAccess.setEntityId(entityId);
                 recordTypeAccess.setRecordTypeId(recordTypeId);
-                recordTypeAccess.setRoleCode(pojo.getRoleCode());
+                recordTypeAccess.setRoleId(pojo.getRoleId());
 
-                recordTypeAccess.setModifier(context.getUserId());
-                recordTypeAccess.setModifyTime(System.currentTimeMillis());
+                recordTypeAccess.setModifiedBy(context.getUserId());
+                recordTypeAccess.setModifiedAt(System.currentTimeMillis());
                 recordTypeAccess.setDelFlag(Boolean.FALSE);
                 list.add(recordTypeAccess);
             }
@@ -133,16 +133,16 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
             if (pojo == null) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
-            if (StringUtils.isAnyBlank(pojo.getRoleCode(), pojo.getRecordTypeId())) {
+            if (StringUtils.isAnyBlank(pojo.getRoleId(), pojo.getRecordTypeId())) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
-            String check = pojo.getRoleCode() + pojo.getRecordTypeId();
+            String check = pojo.getRoleId() + pojo.getRecordTypeId();
             if (only.contains(check)) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
             only.add(check);
 
-            roleList.add(pojo.getRoleCode());
+            roleList.add(pojo.getRoleId());
 
         });
         this.rolesIsExist(context, roleList);
@@ -192,19 +192,19 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
         return this.convertToPojo(accessList);
     }
 
-    public void batchAddRoleRecordType(CommonContext context, Set<String> entityIds, String recordTypeId, String roleCode)
+    public void batchAddRoleRecordType(CommonContext context, Set<String> entityIds, String recordTypeId, String roleId)
             throws AuthServiceException {
         log.info("[Request], method:{},context:{},recordTypeId:{},roleCode:{},entityId:{}",
                 "batchAddRoleRecordType",
                 JSON.toJSONString(context),
                 recordTypeId,
-                roleCode,
+                roleId,
                 JSON.toJSONString(entityIds));
 
-        if (CollectionUtils.isEmpty(entityIds) || StringUtils.isAnyBlank(recordTypeId, roleCode)) {
+        if (CollectionUtils.isEmpty(entityIds) || StringUtils.isAnyBlank(recordTypeId, roleId)) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
-        this.rolesIsExist(context, Collections.singleton(roleCode));
+        this.rolesIsExist(context, Collections.singleton(roleId));
 
         List<RecordTypeAccess> accessList = new ArrayList<>();
         entityIds.forEach(entity -> {
@@ -215,16 +215,16 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 access.setAppId(context.getAppId());
                 access.setEntityId(entity);
                 access.setRecordTypeId(recordTypeId);
-                access.setRoleCode(roleCode);
-                access.setModifier(context.getUserId());
-                access.setModifyTime(System.currentTimeMillis());
+                access.setRoleId(roleId);
+                access.setModifiedBy(context.getUserId());
+                access.setModifiedAt(System.currentTimeMillis());
                 access.setDelFlag(Boolean.FALSE);
 
                 accessList.add(access);
             }
         });
 
-        List<RecordTypeAccess> dbData = this.queryRecordTypeAccessFromDB(context, Collections.singleton(roleCode), entityIds, recordTypeId);
+        List<RecordTypeAccess> dbData = this.queryRecordTypeAccessFromDB(context, Collections.singleton(roleId), entityIds, recordTypeId);
         if (CollectionUtils.isNotEmpty(dbData)) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
@@ -264,7 +264,7 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
         Set<String> roleCodes = new HashSet<>();
         pojos.forEach(pojo -> {
             if (pojo != null) {
-                roleCodes.add(pojo.getRoleCode());
+                roleCodes.add(pojo.getRoleId());
             }
         });
 
@@ -340,10 +340,10 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 roleView.setAppId(context.getAppId());
                 roleView.setEntityId(entityId);
                 roleView.setRecordTypeId(pojo.getRecordTypeId());
-                roleView.setRoleCode(pojo.getRoleCode());
+                roleView.setRoleId(pojo.getRoleId());
 
-                roleView.setModifier(context.getUserId());
-                roleView.setModifyTime(System.currentTimeMillis());
+                roleView.setModifiedBy(context.getUserId());
+                roleView.setModifiedAt(System.currentTimeMillis());
                 roleView.setDelFlag(Boolean.FALSE);
                 res.add(roleView);
             }

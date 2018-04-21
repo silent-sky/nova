@@ -155,10 +155,9 @@ public class TenantServiceImpl implements TenantService {
                 function.setFuncCode(functionPojo.getFuncCode());
                 function.setFuncType(functionPojo.getFuncType());
                 function.setFuncOrder(functionPojo.getFuncOrder());
-                function.setLevelCode(functionPojo.getLevelCode());
-                function.setParentCode(functionPojo.getParentCode());
-                function.setCreator(context.getUserId());
-                function.setCreateTime(System.currentTimeMillis());
+                function.setParentId(functionPojo.getParentId());
+                function.setCreatedBy(context.getUserId());
+                function.setCreatedAt(System.currentTimeMillis());
                 function.setDelFlag(Boolean.FALSE);
 
                 functions.add(function);
@@ -203,8 +202,8 @@ public class TenantServiceImpl implements TenantService {
                 role.setRoleCode(rolePojo.getRoleCode());
                 role.setRoleType(rolePojo.getRoleType());
                 role.setDescription(rolePojo.getDescription());
-                role.setCreator(context.getUserId());
-                role.setCreateTime(System.currentTimeMillis());
+                role.setCreatedBy(context.getUserId());
+                role.setCreatedAt(System.currentTimeMillis());
                 role.setDelFlag(Boolean.FALSE);
 
                 roles.add(role);
@@ -232,8 +231,8 @@ public class TenantServiceImpl implements TenantService {
                 funcAccess.setId(IdUtil.generateId());
                 funcAccess.setTenantId(context.getTenantId());
                 funcAccess.setAppId(context.getAppId());
-                funcAccess.setRoleCode(functionAccessPojo.getRoleCode());
-                funcAccess.setFuncCode(functionAccessPojo.getFuncCode());
+                funcAccess.setRoleId(functionAccessPojo.getRoleId());
+                funcAccess.setFuncId(functionAccessPojo.getFuncId());
                 funcAccess.setDelFlag(Boolean.FALSE);
 
                 funcAccesses.add(funcAccess);
@@ -263,12 +262,12 @@ public class TenantServiceImpl implements TenantService {
                                 .id(IdUtil.generateId())
                                 .tenantId(context.getTenantId())
                                 .appId(context.getAppId())
-                                .roleCode(role)
-                                .orgId(user)
-                                .orgType(AuthConstant.orgType.USER)
+                                .roleId(role)
+                                .targetId(user)
+                                .targetType(AuthConstant.TargetType.USER)
                                 .delFlag(Boolean.FALSE)
-                                .modifier(context.getUserId())
-                                .modifyTime(System.currentTimeMillis())
+                                .modifiedBy(context.getUserId())
+                                .modifiedAt(System.currentTimeMillis())
                                 .build();
                         userRoleList.add(userRole);
                     });
@@ -306,7 +305,8 @@ public class TenantServiceImpl implements TenantService {
         functions = funcMapper.queryFunctionByTenant(fromEnterpriseAccount, context.getAppId());
         List<Role> roles = roleMapper.queryRole(fromEnterpriseAccount, context.getAppId(), null, null, null, Boolean.FALSE);
         List<UserRole> userRoles = userRoleMapper.queryUserRoleProvider(fromEnterpriseAccount, context.getAppId(), null, null, null, Boolean.FALSE);
-        List<FuncAccess> funcAccesses = functionAccessMapper.queryFuncAccessEntitys(fromEnterpriseAccount, context.getAppId(), null, null, Boolean.FALSE);
+        List<FuncAccess> funcAccesses =
+                functionAccessMapper.queryFuncAccessEntitys(fromEnterpriseAccount, context.getAppId(), null, null, Boolean.FALSE);
 
         //字段权限
         Set<String> defultEntitys = null;
@@ -371,9 +371,9 @@ public class TenantServiceImpl implements TenantService {
                 for (UserRole userRole : userRoles) {
                     UserRole userRoleTemp = new UserRole();
                     PropertyUtils.copyProperties(userRoleTemp, userRole);
-                    String roleCode = roleMap.get(userRole.getRoleCode());
+                    String roleCode = roleMap.get(userRole.getRoleId());
                     if (roleCode != null) {
-                        userRoleTemp.setRoleCode(roleCode);
+                        userRoleTemp.setRoleId(roleCode);
                     }
                     userRoleTemp.setId(IdUtil.generateId());
                     userRoleTemp.setTenantId(toEnterpriseAccount);
@@ -385,14 +385,14 @@ public class TenantServiceImpl implements TenantService {
             if (CollectionUtils.isNotEmpty(funcAccesses)) {
                 funcAccessList = new ArrayList<>(funcAccesses.size());
                 for (FuncAccess funcAccess : funcAccesses) {
-                    if (filterMetaData && !funcCodes.contains(funcAccess.getFuncCode())) {
+                    if (filterMetaData && !funcCodes.contains(funcAccess.getFuncId())) {
                         continue;
                     }
                     FuncAccess funcAccessTemp = new FuncAccess();
                     PropertyUtils.copyProperties(funcAccessTemp, funcAccess);
-                    String roleCode = roleMap.get(funcAccess.getRoleCode());
+                    String roleCode = roleMap.get(funcAccess.getRoleId());
                     if (roleCode != null) {
-                        funcAccessTemp.setRoleCode(roleCode);
+                        funcAccessTemp.setRoleId(roleCode);
                     }
                     funcAccessTemp.setId(IdUtil.generateId());
                     funcAccessTemp.setTenantId(toEnterpriseAccount);
@@ -406,9 +406,9 @@ public class TenantServiceImpl implements TenantService {
                 for (FieldAccess fieldAccess : fieldAccesses) {
                     FieldAccess fieldAccessTemp = new FieldAccess();
                     PropertyUtils.copyProperties(fieldAccessTemp, fieldAccess);
-                    String roleCode = roleMap.get(fieldAccess.getRoleCode());
+                    String roleCode = roleMap.get(fieldAccess.getRoleId());
                     if (roleCode != null) {
-                        fieldAccessTemp.setRoleCode(roleCode);
+                        fieldAccessTemp.setRoleId(roleCode);
                     }
                     fieldAccessTemp.setId(IdUtil.generateId());
                     fieldAccessTemp.setTenantId(toEnterpriseAccount);
@@ -422,9 +422,9 @@ public class TenantServiceImpl implements TenantService {
                 for (ViewAccess viewAccess : viewAccesses) {
                     ViewAccess viewAccessTemp = new ViewAccess();
                     PropertyUtils.copyProperties(viewAccessTemp, viewAccess);
-                    String roleCode = roleMap.get(viewAccess.getRoleCode());
+                    String roleCode = roleMap.get(viewAccess.getRoleId());
                     if (roleCode != null) {
-                        viewAccessTemp.setRoleCode(roleCode);
+                        viewAccessTemp.setRoleId(roleCode);
                     }
                     viewAccessTemp.setId(IdUtil.generateId());
                     viewAccessTemp.setTenantId(toEnterpriseAccount);
@@ -438,9 +438,9 @@ public class TenantServiceImpl implements TenantService {
                 for (RecordTypeAccess recordTypeAccess : recordTypeAccesses) {
                     RecordTypeAccess recordTypeAccessTemp = new RecordTypeAccess();
                     PropertyUtils.copyProperties(recordTypeAccessTemp, recordTypeAccess);
-                    String roleCode = roleMap.get(recordTypeAccess.getRoleCode());
+                    String roleCode = roleMap.get(recordTypeAccess.getRoleId());
                     if (roleCode != null) {
-                        recordTypeAccessTemp.setRoleCode(roleCode);
+                        recordTypeAccessTemp.setRoleId(roleCode);
                     }
                     recordTypeAccessTemp.setId(IdUtil.generateId());
                     recordTypeAccessTemp.setTenantId(toEnterpriseAccount);
@@ -501,13 +501,12 @@ public class TenantServiceImpl implements TenantService {
                 userRole.setId(IdUtil.generateId());
                 userRole.setTenantId(context.getTenantId());
                 userRole.setAppId(context.getAppId());
-                userRole.setRoleCode(pojo.getRoleCode());
-                userRole.setOrgId(pojo.getOrgId());
-                userRole.setOrgType(AuthConstant.orgType.USER);
-                userRole.setDeptId(pojo.getDeptId());
+                userRole.setRoleId(pojo.getRoleId());
+                userRole.setTargetId(pojo.getTargetId());
+                userRole.setTargetType(AuthConstant.TargetType.USER);
                 userRole.setDelFlag(Boolean.FALSE);
-                userRole.setModifier(context.getUserId());
-                userRole.setModifyTime(System.currentTimeMillis());
+                userRole.setModifiedBy(context.getUserId());
+                userRole.setModifiedAt(System.currentTimeMillis());
                 userRoleList.add(userRole);
             });
             if (CollectionUtils.isNotEmpty(userRoleList)) {
@@ -545,10 +544,10 @@ public class TenantServiceImpl implements TenantService {
             if (CollectionUtils.isNotEmpty(funcAccesseList)) {
                 Map<String, Set<String>> funcAccessMap = new HashMap<>();
                 funcAccesseList.forEach(funcAccess -> {
-                    if (funcAccessMap.get(funcAccess.getRoleCode()) == null) {
-                        funcAccessMap.put(funcAccess.getRoleCode(), new HashSet<>());
+                    if (funcAccessMap.get(funcAccess.getRoleId()) == null) {
+                        funcAccessMap.put(funcAccess.getRoleId(), new HashSet<>());
                     }
-                    funcAccessMap.get(funcAccess.getRoleCode()).add(funcAccess.getFuncCode());
+                    funcAccessMap.get(funcAccess.getRoleId()).add(funcAccess.getFuncId());
                 });
 
                 cacheManager.putAll(context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_FUNCTION_PERMISSION,
@@ -565,11 +564,11 @@ public class TenantServiceImpl implements TenantService {
                     if (fieldAccessMap.get(fieldAccess.getEntityId()) == null) {
                         fieldAccessMap.put(fieldAccess.getEntityId(), new HashMap<>());
                     }
-                    if (fieldAccessMap.get(fieldAccess.getEntityId()).get(fieldAccess.getRoleCode()) == null) {
-                        fieldAccessMap.get(fieldAccess.getEntityId()).put(fieldAccess.getRoleCode(), new HashMap<>());
+                    if (fieldAccessMap.get(fieldAccess.getEntityId()).get(fieldAccess.getRoleId()) == null) {
+                        fieldAccessMap.get(fieldAccess.getEntityId()).put(fieldAccess.getRoleId(), new HashMap<>());
                     }
                     fieldAccessMap.get(fieldAccess.getEntityId())
-                            .get(fieldAccess.getRoleCode())
+                            .get(fieldAccess.getRoleId())
                             .put(fieldAccess.getFieldId(), fieldAccess.getPermission());
                 });
 
@@ -590,10 +589,10 @@ public class TenantServiceImpl implements TenantService {
                     if (viewAccessMap.get(viewAccess.getEntityId()) == null) {
                         viewAccessMap.put(viewAccess.getEntityId(), new HashMap<>());
                     }
-                    if (viewAccessMap.get(viewAccess.getEntityId()).get(viewAccess.getRoleCode()) == null) {
-                        viewAccessMap.get(viewAccess.getEntityId()).put(viewAccess.getRoleCode(), new HashSet<>());
+                    if (viewAccessMap.get(viewAccess.getEntityId()).get(viewAccess.getRoleId()) == null) {
+                        viewAccessMap.get(viewAccess.getEntityId()).put(viewAccess.getRoleId(), new HashSet<>());
                     }
-                    viewAccessMap.get(viewAccess.getEntityId()).get(viewAccess.getRoleCode()).add(viewAccess.getViewId());
+                    viewAccessMap.get(viewAccess.getEntityId()).get(viewAccess.getRoleId()).add(viewAccess.getViewId());
                 });
 
                 if (CollectionUtils.isNotEmpty(viewAccessMap.keySet())) {

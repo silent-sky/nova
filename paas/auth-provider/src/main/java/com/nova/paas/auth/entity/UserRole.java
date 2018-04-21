@@ -20,15 +20,15 @@ public class UserRole {
     private String id;
     private String tenantId;
     private String appId;
-    private String orgId;
-    private String roleCode;
+    private String targetId;
+    private String roleId;
     /**
-     * @see com.nova.paas.common.constant.AuthConstant.RoleType
+     * @see com.nova.paas.common.constant.AuthConstant.TargetType
      */
-    private Integer orgType;
-    private String modifier;
-    private long modifyTime;
-    private Boolean defaultRole;
+    private Integer targetType;
+    private String modifiedBy;
+    private Long modifiedAt;
+    //    private Boolean defaultRole;
     private String deptId;
     private Boolean delFlag;
 
@@ -36,20 +36,20 @@ public class UserRole {
             String id,
             String tenantId,
             String appId,
-            String orgId,
-            String roleCode,
-            Integer orgType,
-            String modifier,
-            long modifyTime,
+            String targetId,
+            String roleId,
+            Integer targetType,
+            String modifiedBy,
+            Long modifiedAt,
             Boolean delFlag) {
         this.id = id;
         this.tenantId = tenantId;
         this.appId = appId;
-        this.orgId = orgId;
-        this.roleCode = roleCode;
-        this.orgType = orgType;
-        this.modifier = modifier;
-        this.modifyTime = modifyTime;
+        this.targetId = targetId;
+        this.roleId = roleId;
+        this.targetType = targetType;
+        this.modifiedBy = modifiedBy;
+        this.modifiedAt = modifiedAt;
         this.delFlag = delFlag;
     }
 }

@@ -17,11 +17,11 @@ public class RecordTypeAccess implements Serializable {
     private String id;
     private String tenantId;
     private String appId;
-    private String roleCode;
+    private String roleId;
     private String entityId;
     private String recordTypeId;
     private Boolean defaultType;
+    private String modifiedBy;
+    private Long modifiedAt;
     private Boolean delFlag;
-    private String modifier;
-    private Long modifyTime;
 }

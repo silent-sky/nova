@@ -16,8 +16,7 @@ public class CommonContext implements Serializable {
     private String tenantId;
     private String appId;
     private String userId;
-    private Map<String, String> properties;
-    private Map<String, Object> objectProperties;
+    private Map<String, Object> properties;
 
     public CommonContext tenantId(String tenantId) {
         this.tenantId = tenantId;
@@ -34,19 +33,11 @@ public class CommonContext implements Serializable {
         return this;
     }
 
-    public CommonContext property(String key, String value) {
+    public CommonContext property(String key, Object value) {
         if (properties == null) {
             this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
-        return this;
-    }
-
-    public CommonContext objectProperty(String key, Object value) {
-        if (objectProperties == null) {
-            objectProperties = new HashMap<>();
-        }
-        this.objectProperties.put(key, value);
         return this;
     }
 }

@@ -5,9 +5,9 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/hr.log</file>
+        <file>${catalina.home}/logs/hr.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOG_PATH}/hr_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${catalina.home}/logs/hr_%d{yyyy-MM-dd}.log</FileNamePattern>
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
 
@@ -24,10 +24,10 @@
     </appender>
 
     <appender name="ERR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/error.log</file>
+        <file>${catalina.home}/logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOG_PATH}/error_%d{yyyy-MM-dd}.log</FileNamePattern>
-            <MaxHistory>365</MaxHistory>
+            <FileNamePattern>${catalina.home}/logs/error_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
         </rollingPolicy>
 
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

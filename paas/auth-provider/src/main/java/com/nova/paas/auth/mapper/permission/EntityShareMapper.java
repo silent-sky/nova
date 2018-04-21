@@ -84,7 +84,7 @@ public interface EntityShareMapper {
     List<EntityShare> queryRuleIdsByOrg(
             @Param("tenantId") String tenantId,
             @Param("orgIds") Set<String> orgIds,
-            @Param("orgType") Integer orgType,
+            @Param("targetType") Integer orgType,
             @Param("status") Integer status,
             @Param("asShare") Boolean asShare);
 

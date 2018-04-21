@@ -15,7 +15,7 @@ public class RoleViewPojo implements Serializable {
     private String id;
     private String tenantId;
     private String appId;
-    private String roleCode;
+    private String roleId;
     private String entityId;
     private String viewId;
     private String recordTypeId;

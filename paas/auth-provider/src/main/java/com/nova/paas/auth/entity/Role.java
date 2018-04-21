@@ -22,9 +22,9 @@ public class Role implements Serializable {
     private String description;
     private String appId;
     private String tenantId;
+    private String createdBy;
+    private Long createdAt;
+    private String modifiedBy;
+    private Long modifiedAt;
     private Boolean delFlag;
-    private String creator;
-    private Long createTime;
-    private String modifier;
-    private Long modifyTime;
 }

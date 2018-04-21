@@ -108,7 +108,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
         try {
             List<Role> roleList =
-                    userRoleMapper.queryRoleByUser(authContext.getTenantId(), authContext.getAppId(), userId, AuthConstant.orgType.USER);
+                    userRoleMapper.queryRoleByUser(authContext.getTenantId(), authContext.getAppId(), userId, AuthConstant.TargetType.USER);
             return this.roleConvertToRolePojo(roleList);
         } catch (Exception e) {
             log.error("===auth.queryRoleListByUserId() error===", e);
@@ -177,7 +177,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                         context.getAppId(),
                         userId,
                         roleCode,
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         context.getUserId(),
                         System.currentTimeMillis(),
                         Boolean.FALSE);
@@ -216,7 +216,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     context.getAppId(),
                     null,
                     Collections.singletonList(userId),
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     context.getUserId(),
                     System.currentTimeMillis());
             List<UserRole> userRoleList = new LinkedList<>();
@@ -226,7 +226,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                         context.getAppId(),
                         userId,
                         role,
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         context.getUserId(),
                         System.currentTimeMillis(),
                         Boolean.FALSE);
@@ -277,7 +277,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         try {
             //返回角色的用户
             userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), roles, null, AuthConstant.orgType.USER, false);
+                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), roles, null, AuthConstant.TargetType.USER, false);
         } catch (Exception e) {
             log.error("===auth.batchAddUserToRole() error===", e);
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -285,10 +285,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         Map<String, Set<String>> roleUserMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(userRoleList)) {
             userRoleList.forEach(userRole -> {
-                if (roleUserMap.get(userRole.getRoleCode()) == null) {
-                    roleUserMap.put(userRole.getRoleCode(), new HashSet<>());
+                if (roleUserMap.get(userRole.getRoleId()) == null) {
+                    roleUserMap.put(userRole.getRoleId(), new HashSet<>());
                 }
-                roleUserMap.get(userRole.getRoleCode()).add(userRole.getOrgId());
+                roleUserMap.get(userRole.getRoleId()).add(userRole.getTargetId());
             });
         }
 
@@ -302,7 +302,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                             context.getAppId(),
                             user,
                             role,
-                            AuthConstant.orgType.USER,
+                            AuthConstant.TargetType.USER,
                             context.getUserId(),
                             System.currentTimeMillis(),
                             Boolean.FALSE);
@@ -369,7 +369,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
         try {
             List<UserRole> userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.orgType.USER, false);
+                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.TargetType.USER, false);
             return this.UserRole2UserRolePojo(userRoleList);
         } catch (Exception e) {
             log.error("===auth.getUserRoleRelationEntitiesByUsers() error===", e);
@@ -410,16 +410,20 @@ public class UserRoleServiceImpl implements UserRoleService {
             userRolePojoMap.put(userId, new ArrayList<>());
         });
         try {
-            List<UserRole> userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, dbUsers, AuthConstant.orgType.USER, false);
+            List<UserRole> userRoleList = userRoleMapper.queryUserRoleProvider(context.getTenantId(),
+                    context.getAppId(),
+                    null,
+                    dbUsers,
+                    AuthConstant.TargetType.USER,
+                    false);
 
             //查询用户角色
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 userRoleList.forEach(userRole -> {
-                    if (null == userRoleMap.get(userRole.getOrgId())) {
-                        userRoleMap.put(userRole.getOrgId(), new HashSet<>());
+                    if (null == userRoleMap.get(userRole.getTargetId())) {
+                        userRoleMap.put(userRole.getTargetId(), new HashSet<>());
                     }
-                    userRoleMap.get(userRole.getOrgId()).add(userRole.getRoleCode());
+                    userRoleMap.get(userRole.getTargetId()).add(userRole.getRoleId());
                 });
             }
 
@@ -463,8 +467,8 @@ public class UserRoleServiceImpl implements UserRoleService {
                     userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), roles, null, null, Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 userRoleList.forEach(userRole -> {
-                    if (roleUsersMap.get(userRole.getRoleCode()) != null) {
-                        roleUsersMap.get(userRole.getRoleCode()).add(userRole.getOrgId());
+                    if (roleUsersMap.get(userRole.getRoleId()) != null) {
+                        roleUsersMap.get(userRole.getRoleId()).add(userRole.getTargetId());
                     }
                 });
             }
@@ -546,7 +550,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     context.getAppId(),
                     null,
                     users,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     context.getUserId(),
                     System.currentTimeMillis());
             Map<String, Set<String>> cacheUpdate = new HashMap<>();
@@ -562,7 +566,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                                 context.getAppId(),
                                 userId,
                                 roleCode,
-                                AuthConstant.orgType.USER,
+                                AuthConstant.TargetType.USER,
                                 context.getUserId(),
                                 System.currentTimeMillis(),
                                 Boolean.FALSE);
@@ -635,7 +639,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     context.getAppId(),
                     null,
                     users,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     context.getUserId(),
                     System.currentTimeMillis());
             Map<String, Set<String>> cacheUpdate = new HashMap<>();
@@ -651,15 +655,11 @@ public class UserRoleServiceImpl implements UserRoleService {
                                 context.getAppId(),
                                 userId,
                                 roleCode,
-                                AuthConstant.orgType.USER,
+                                AuthConstant.TargetType.USER,
                                 context.getUserId(),
                                 System.currentTimeMillis(),
                                 Boolean.FALSE);
-                        if (roleCode.equals(defaultRole)) {
-                            userRole.setDefaultRole(Boolean.TRUE);
-                        } else {
-                            userRole.setDefaultRole(Boolean.FALSE);
-                        }
+
                         userRoleList.add(userRole);
                     });
                 }
@@ -737,7 +737,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         try {
             //返回角色的用户
             userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.orgType.USER, false);
+                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.TargetType.USER, false);
         } catch (Exception e) {
             log.error("===auth.addRoleToUser() error===", e);
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -748,19 +748,10 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         if (CollectionUtils.isNotEmpty(userRoleList)) {
             userRoleList.forEach(userRole -> {
-                if (roleUserMap.get(userRole.getOrgId()) == null) {
-                    roleUserMap.put(userRole.getOrgId(), new HashSet<>());
+                if (roleUserMap.get(userRole.getTargetId()) == null) {
+                    roleUserMap.put(userRole.getTargetId(), new HashSet<>());
                 }
-                roleUserMap.get(userRole.getOrgId()).add(userRole.getRoleCode());
-
-                if (updateDefaultRole && userRole.getDefaultRole() != null && userRole.getDefaultRole()
-                        && (!defaultRole.equals(userRole.getRoleCode()))) {
-                    updateNoDefaultRoleId.add(userRole.getId());
-                }
-                if (updateDefaultRole && (userRole.getDefaultRole() == null || (!userRole.getDefaultRole()))
-                        && defaultRole.equals(userRole.getRoleCode())) {
-                    updateDefaultRoleId.add(userRole.getId());
-                }
+                roleUserMap.get(userRole.getTargetId()).add(userRole.getRoleId());
             });
         }
 
@@ -773,16 +764,11 @@ public class UserRoleServiceImpl implements UserRoleService {
                             context.getAppId(),
                             user,
                             role,
-                            AuthConstant.orgType.USER,
+                            AuthConstant.TargetType.USER,
                             context.getUserId(),
                             System.currentTimeMillis(),
                             Boolean.FALSE);
 
-                    if ((roleUserMap.get(user) == null || updateDefaultRole) && defaultRole.equals(role)) {//user之前没有任何角色
-                        userRole.setDefaultRole(Boolean.TRUE);
-                    } else {
-                        userRole.setDefaultRole(Boolean.FALSE);
-                    }
                     userRoles.add(userRole);
                 }
             });
@@ -858,7 +844,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         List<UserRole> userRoleList;
         try {
             userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.orgType.USER, false);
+                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.TargetType.USER, false);
         } catch (Exception e) {
             log.error("===auth.checkRoleUser() error===", e);
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -871,14 +857,11 @@ public class UserRoleServiceImpl implements UserRoleService {
         Set<String> userInDefaultRole = new HashSet<>();//把校验的角色设为主角色的用户
 
         userRoleList.forEach(userRole -> {
-            if (userRoleMap.get(userRole.getOrgId()) == null) {
-                userRoleMap.put(userRole.getOrgId(), new HashSet<>());
+            if (userRoleMap.get(userRole.getTargetId()) == null) {
+                userRoleMap.put(userRole.getTargetId(), new HashSet<>());
             }
-            userRoleMap.get(userRole.getOrgId()).add(userRole.getRoleCode());
+            userRoleMap.get(userRole.getTargetId()).add(userRole.getRoleId());
 
-            if (userRole.getDefaultRole() != null && userRole.getDefaultRole() && roleCode.equals(userRole.getRoleCode())) {
-                userInDefaultRole.add(userRole.getOrgId());
-            }
         });
 
         Set<String> res = new HashSet<>();
@@ -921,7 +904,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         try {
             //返回角色的用户
             userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.orgType.USER, false);
+                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, AuthConstant.TargetType.USER, false);
         } catch (Exception e) {
             log.error("===auth.updateUserDefaultRole() error===", e);
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -932,17 +915,11 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         if (CollectionUtils.isNotEmpty(userRoleList)) {
             userRoleList.forEach(userRole -> {
-                if (roleUserMap.get(userRole.getOrgId()) == null) {
-                    roleUserMap.put(userRole.getOrgId(), new HashSet<>());
+                if (roleUserMap.get(userRole.getTargetId()) == null) {
+                    roleUserMap.put(userRole.getTargetId(), new HashSet<>());
                 }
-                roleUserMap.get(userRole.getOrgId()).add(userRole.getRoleCode());
+                roleUserMap.get(userRole.getTargetId()).add(userRole.getRoleId());
 
-                if (userRole.getDefaultRole() != null && userRole.getDefaultRole() && (!roleCode.equals(userRole.getRoleCode()))) {
-                    updateNoDefaultRoleId.add(userRole.getId());
-                }
-                if ((userRole.getDefaultRole() == null || (!userRole.getDefaultRole())) && roleCode.equals(userRole.getRoleCode())) {
-                    updateDefaultRoleId.add(userRole.getId());
-                }
             });
         }
 
@@ -955,12 +932,11 @@ public class UserRoleServiceImpl implements UserRoleService {
                         context.getAppId(),
                         user,
                         roleCode,
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         context.getUserId(),
                         System.currentTimeMillis(),
                         Boolean.FALSE);
 
-                userRole.setDefaultRole(Boolean.TRUE);
                 userRoles.add(userRole);
                 needAddUsers.add(user);
             }
@@ -1003,40 +979,32 @@ public class UserRoleServiceImpl implements UserRoleService {
         Set<String> roleList = new HashSet<>();
 
         pojoList.forEach(pojo -> {
-            if (StringUtils.isAnyBlank(pojo.getRoleCode(), pojo.getOrgId())) {
+            if (StringUtils.isAnyBlank(pojo.getRoleId(), pojo.getTargetId())) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
-            if (roleUserMap.get(pojo.getOrgId()) != null && roleUserMap.get(pojo.getOrgId()).contains(pojo.getRoleCode())) {//一个user下的role不能重复
-                throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-            }
-            if (pojo.getDefaultRole() != null && pojo.getDefaultRole() && defaultRoleMap.get(pojo.getOrgId()) != null) {//一个user只能有一个主角色
+            if (roleUserMap.get(pojo.getTargetId()) != null && roleUserMap.get(pojo.getTargetId()).contains(pojo.getRoleId())) {//一个user下的role不能重复
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
 
-            this.checkUserId(pojo.getOrgId());
-            if (roleUserMap.get(pojo.getOrgId()) == null) {
-                roleUserMap.put(pojo.getOrgId(), new HashSet<>());
+            this.checkUserId(pojo.getTargetId());
+            if (roleUserMap.get(pojo.getTargetId()) == null) {
+                roleUserMap.put(pojo.getTargetId(), new HashSet<>());
             }
-            roleUserMap.get(pojo.getOrgId()).add(pojo.getRoleCode());
+            roleUserMap.get(pojo.getTargetId()).add(pojo.getRoleId());
 
             UserRole userRole = new UserRole(IdUtil.generateId(),
                     authContext.getTenantId(),
                     authContext.getAppId(),
-                    pojo.getOrgId(),
-                    pojo.getRoleCode(),
-                    AuthConstant.orgType.USER,
+                    pojo.getTargetId(),
+                    pojo.getRoleId(),
+                    AuthConstant.TargetType.USER,
                     authContext.getUserId(),
                     System.currentTimeMillis(),
                     Boolean.FALSE);
-            if (pojo.getDefaultRole() != null && pojo.getDefaultRole()) {
-                userRole.setDefaultRole(Boolean.TRUE);
-                defaultRoleMap.put(pojo.getOrgId(), pojo.getRoleCode());
-            } else {
-                userRole.setDefaultRole(Boolean.FALSE);
-            }
+
             entityList.add(userRole);
 
-            roleList.add(pojo.getRoleCode());
+            roleList.add(pojo.getRoleId());
         });
 
         this.rolesIsExist(authContext, roleList);
@@ -1053,7 +1021,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     authContext.getAppId(),
                     null,
                     userSet,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     authContext.getUserId(),
                     System.currentTimeMillis());
             //            userRoleMapper.batchInsert(entityList);
@@ -1106,8 +1074,12 @@ public class UserRoleServiceImpl implements UserRoleService {
             userRolePojoMap.put(userId, new ArrayList<>());
         });
         try {
-            List<UserRole> userRoleList =
-                    userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, dbUsers, AuthConstant.orgType.USER, false);
+            List<UserRole> userRoleList = userRoleMapper.queryUserRoleProvider(context.getTenantId(),
+                    context.getAppId(),
+                    null,
+                    dbUsers,
+                    AuthConstant.TargetType.USER,
+                    false);
 
             //查询企业所有角色
             List<RolePojo> rolePojoList = roleService.queryRole(context, null, null, null, null);
@@ -1121,15 +1093,14 @@ public class UserRoleServiceImpl implements UserRoleService {
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 userRoleList.forEach(userRole -> {
                     UserRolePojo pojo = new UserRolePojo();
-                    pojo.setOrgId(userRole.getOrgId());
-                    pojo.setOrgType(userRole.getOrgType());
-                    pojo.setRoleCode(userRole.getRoleCode());
+                    pojo.setTargetId(userRole.getTargetId());
+                    pojo.setTargetType(userRole.getTargetType());
+                    pojo.setRoleId(userRole.getRoleId());
                     //                    pojo.setRoleName(rolePojoMap.get(userRole.getRoleCode()));
-                    pojo.setDefaultRole(userRole.getDefaultRole());
                     pojo.setTenantId(context.getTenantId());
                     pojo.setAppId(context.getAppId());
 
-                    userRolePojoMap.get(userRole.getOrgId()).add(pojo);
+                    userRolePojoMap.get(userRole.getTargetId()).add(pojo);
                 });
             }
         } catch (Exception e) {
@@ -1180,7 +1151,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         try {
             line = userRoleMapper.updateUserRoleDeptId(context.getTenantId(),
                     context.getAppId(),
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     roleCode,
                     userId,
                     dept,
@@ -1223,12 +1194,12 @@ public class UserRoleServiceImpl implements UserRoleService {
                             userId + ":" + roleCode);
 
         } catch (Exception e) {
-            return this.queryDeptIdByUserRole(context, roleCode, AuthConstant.orgType.USER, userId);
+            return this.queryDeptIdByUserRole(context, roleCode, AuthConstant.TargetType.USER, userId);
         }
 
         //缓存未命中,重构
         if (deptIds == null) {
-            deptIds = this.queryDeptIdByUserRole(context, roleCode, AuthConstant.orgType.USER, userId);
+            deptIds = this.queryDeptIdByUserRole(context, roleCode, AuthConstant.TargetType.USER, userId);
             try {
                 cacheManager.putHashObject(context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_DEPT,
                         userId + ":" + roleCode,
@@ -1263,7 +1234,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 int total = userRoleMapper.queryEntityByUserRoleCount(context.getTenantId(),
                         context.getAppId(),
                         Collections.singleton(roleCode),
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         null);
                 pageInfo.setTotal(total);
                 int totalPage = total / pageInfo.getPageSize();
@@ -1281,7 +1252,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 entityList = userRoleMapper.queryEntityByUserRole(context.getTenantId(),
                         context.getAppId(),
                         Collections.singleton(roleCode),
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         null,
                         start,
                         pageInfo.getPageSize());
@@ -1297,11 +1268,11 @@ public class UserRoleServiceImpl implements UserRoleService {
                         roleCode);
             } catch (Exception e) {
                 log.error("redis error", e);
-                entityList = this.queryEntityByUserRole(context, Collections.singleton(roleCode), AuthConstant.orgType.USER, null);
+                entityList = this.queryEntityByUserRole(context, Collections.singleton(roleCode), AuthConstant.TargetType.USER, null);
             }
 
             if (entityList == null) {
-                entityList = this.queryEntityByUserRole(context, Collections.singleton(roleCode), AuthConstant.orgType.USER, null);
+                entityList = this.queryEntityByUserRole(context, Collections.singleton(roleCode), AuthConstant.TargetType.USER, null);
                 try {
                     cacheManager.putHashObject(context.getTenantId() + ":" + context.getAppId() + ":" + AuthConstant.AuthType.AUTH_ROLE_INFO,
                             roleCode,
@@ -1317,7 +1288,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             return res;
         }
         entityList.forEach(entity -> {
-            res.put(entity.getOrgId(), this.getDeptSetByString(entity.getDeptId()));
+            res.put(entity.getTargetId(), this.getDeptSetByString(entity.getDeptId()));
         });
 
         return res;
@@ -1405,7 +1376,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
         Set<String> users = new HashSet<>();
         try {
-            users = userRoleMapper.queryUsersByRoleDept(context.getTenantId(), context.getAppId(), roles, AuthConstant.orgType.USER, deptId);
+            users = userRoleMapper.queryUsersByRoleDept(context.getTenantId(), context.getAppId(), roles, AuthConstant.TargetType.USER, deptId);
         } catch (Exception e) {
             log.error("queryUsersByRoleDept error:", e);
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -1458,8 +1429,8 @@ public class UserRoleServiceImpl implements UserRoleService {
                     userRoleMapper.queryUserRoleProvider(context.getTenantId(), context.getAppId(), null, users, null, Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(userRoleList)) {
                 userRoleList.forEach(userRole -> {
-                    if (userRoleMap.get(userRole.getOrgId()) != null) {
-                        userRoleMap.get(userRole.getOrgId()).add(userRole.getRoleCode());
+                    if (userRoleMap.get(userRole.getTargetId()) != null) {
+                        userRoleMap.get(userRole.getTargetId()).add(userRole.getRoleId());
                     }
                 });
             }
@@ -1550,7 +1521,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                         context.getAppId(),
                         roleCode,
                         users,
-                        AuthConstant.orgType.USER,
+                        AuthConstant.TargetType.USER,
                         false,
                         "orgId",
                         excludeRoles);
@@ -1574,7 +1545,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     context.getAppId(),
                     roleCode,
                     users,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     false,
                     "orgId",
                     excludeRoles,
@@ -1612,7 +1583,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             return userRoleMapper.queryRoleCodeListByUserId(context.getTenantId(),
                     context.getAppId(),
                     context.getUserId(),
-                    AuthConstant.orgType.USER);
+                    AuthConstant.TargetType.USER);
         } catch (Exception e) {
             log.error("===auth.queryRoleCodeListByUserIdFromDB() error===", e);
             throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
@@ -1624,7 +1595,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             userRoleMapper.setDefaultRoleFlag(context.getTenantId(),
                     context.getAppId(),
                     idList,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     flag,
                     context.getUserId(),
                     System.currentTimeMillis());
@@ -1640,7 +1611,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     context.getAppId(),
                     roleCode,
                     users,
-                    AuthConstant.orgType.USER,
+                    AuthConstant.TargetType.USER,
                     context.getUserId(),
                     System.currentTimeMillis());
             //清理缓存

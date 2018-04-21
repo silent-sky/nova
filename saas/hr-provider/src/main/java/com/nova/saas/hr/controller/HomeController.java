@@ -4,10 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DemoController {
+public class HomeController {
 	@RequestMapping("/")
     String home() {
-        return "Hello Demo!";
+        return "Welcome to the PowerHr World!";
     }
 }
 

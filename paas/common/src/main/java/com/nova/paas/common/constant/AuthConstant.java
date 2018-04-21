@@ -49,7 +49,7 @@ public interface AuthConstant {
     }
 
 
-    interface orgType {
+    interface TargetType {
         //用户
         int USER = 0;
         //部门

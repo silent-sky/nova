@@ -301,7 +301,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
                     Collections.singletonList(fieldId),
                     Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(fieldAccessList)) {
-                fieldAccessList.forEach(fieldAccess -> rolePermiss.put(fieldAccess.getRoleCode(), fieldAccess.getPermission()));
+                fieldAccessList.forEach(fieldAccess -> rolePermiss.put(fieldAccess.getRoleId(), fieldAccess.getPermission()));
             }
             return rolePermiss;
         } catch (Exception e) {
@@ -498,7 +498,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
     }
 
     private List<FieldAccess> getFieldAccessEntity(
-            CommonContext context, String roleCode, String entityId, Map<String, Integer> fieldPermissionMap) throws AuthServiceException {
+            CommonContext context, String roleId, String entityId, Map<String, Integer> fieldPermissionMap) throws AuthServiceException {
         List<FieldAccess> needAdd = new ArrayList<>();
         if (!fieldPermissionMap.isEmpty()) {
             fieldPermissionMap.forEach((field, permiss) -> {
@@ -508,12 +508,12 @@ public class FieldAccessServiceImpl implements FieldAccessService {
                 fieldAccess.setId(IdUtil.generateId());
                 fieldAccess.setTenantId(context.getTenantId());
                 fieldAccess.setAppId(context.getAppId());
-                fieldAccess.setRoleCode(roleCode);
+                fieldAccess.setRoleId(roleId);
                 fieldAccess.setEntityId(entityId);
                 fieldAccess.setFieldId(field);
                 fieldAccess.setPermission(permiss);
-                fieldAccess.setModifier(context.getUserId());
-                fieldAccess.setModifyTime(System.currentTimeMillis());
+                fieldAccess.setModifiedBy(context.getUserId());
+                fieldAccess.setModifiedAt(System.currentTimeMillis());
                 fieldAccess.setDelFlag(Boolean.FALSE);
                 needAdd.add(fieldAccess);
             });
@@ -566,7 +566,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
                     null,
                     Boolean.FALSE);
             if (CollectionUtils.isNotEmpty(fieldAccessList)) {
-                fieldAccessList.forEach(fieldAccess -> rolesPermission.get(fieldAccess.getRoleCode())
+                fieldAccessList.forEach(fieldAccess -> rolesPermission.get(fieldAccess.getRoleId())
                         .put(fieldAccess.getFieldId(), fieldAccess.getPermission()));
             }
         } catch (Exception e) {
@@ -619,7 +619,7 @@ public class FieldAccessServiceImpl implements FieldAccessService {
             //解析数据
             if (CollectionUtils.isNotEmpty(fieldAccessList)) {
                 fieldAccessList.forEach(fieldAccess -> entityRolesFieldPermiss.get(fieldAccess.getEntityId())
-                        .get(fieldAccess.getRoleCode())
+                        .get(fieldAccess.getRoleId())
                         .put(fieldAccess.getFieldId(), fieldAccess.getPermission()));
             }
         } catch (Exception e) {

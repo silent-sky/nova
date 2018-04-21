@@ -15,6 +15,6 @@ public class FunctionAccessPojo implements Serializable {
     private String id;
     private String tenantId;
     private String appId;
-    private String roleCode;
-    private String funcCode;
+    private String roleId;
+    private String funcId;
 }

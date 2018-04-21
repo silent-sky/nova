@@ -168,30 +168,23 @@ public class RoleServiceImpl implements RoleService {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
 
-        //指定roleCode
-        String id = IdUtil.generateId();
-        if (StringUtils.isBlank(rolePojo.getRoleCode())) {
-            rolePojo.setRoleCode(id);
-        }
-
         //角色校验
-        if (this.roleCodeOrRoleNameExists(context, Collections.singleton(rolePojo.getRoleCode()), Collections.singleton(rolePojo.getRoleName()))
-                > 0) {
+        if (this.roleCodeOrRoleNameExists(context, Collections.singleton(rolePojo.getId()), Collections.singleton(rolePojo.getRoleName())) > 0) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
 
         Role role = new Role();
-        role.setId(id);
+        role.setId(IdUtil.generateId());
         role.setTenantId(context.getTenantId());
         role.setAppId(context.getAppId());
         role.setRoleCode(rolePojo.getRoleCode());
         role.setRoleName(rolePojo.getRoleName());
         role.setDescription(rolePojo.getDescription());
         role.setRoleType(rolePojo.getRoleType());
-        role.setCreator(context.getUserId());
-        role.setCreateTime(System.currentTimeMillis());
-        role.setModifier(context.getUserId());
-        role.setModifyTime(System.currentTimeMillis());
+        role.setCreatedBy(context.getUserId());
+        role.setCreatedAt(System.currentTimeMillis());
+        role.setModifiedBy(context.getUserId());
+        role.setModifiedAt(System.currentTimeMillis());
         role.setDelFlag(Boolean.FALSE);
         try {
             //            roleMapper.insert(role);
@@ -281,22 +274,22 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public void rolePermissCopy(CommonContext context, String sourceRoleCode, String destRoleCode) throws AuthServiceException {
+    public void rolePermissCopy(CommonContext context, String sourceRoleCode, String destRoleId) throws AuthServiceException {
         log.info("[Request], method:{},context:{},sourceRoleCode:{},destRoleCode:{}",
                 "rolePermissCopy",
                 JSON.toJSONString(context),
                 JSON.toJSONString(sourceRoleCode),
-                JSON.toJSONString(destRoleCode));
-        if (StringUtils.isAnyBlank(sourceRoleCode, destRoleCode)) {
+                JSON.toJSONString(destRoleId));
+        if (StringUtils.isAnyBlank(sourceRoleCode, destRoleId)) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
-        if (sourceRoleCode.equals(destRoleCode)) {
+        if (sourceRoleCode.equals(destRoleId)) {
             return;
         }
         List<Role> roleList;
         Set<String> roleCodeList = new HashSet<>();
         roleCodeList.add(sourceRoleCode);
-        roleCodeList.add(destRoleCode);
+        roleCodeList.add(destRoleId);
         try {
             //校验角色是否存在
             roleList = roleMapper.queryRoleByPage(context.getTenantId(), context.getAppId(), roleCodeList, null, null, null, null);
@@ -317,7 +310,7 @@ public class RoleServiceImpl implements RoleService {
 
         List<FuncAccess> funcAccessList = functionAccessMapper.queryFuncAccessProvider(context.getTenantId(),
                 context.getAppId(),
-                Collections.singletonList(destRoleCode),
+                Collections.singletonList(destRoleId),
                 null,
                 Boolean.FALSE);
         if (CollectionUtils.isNotEmpty(funcAccessList)) {
@@ -325,7 +318,7 @@ public class RoleServiceImpl implements RoleService {
         }
         List<FieldAccess> fieldAccessList = fieldAccessMapper.queryFieldAccess(context.getTenantId(),
                 context.getAppId(),
-                Collections.singletonList(destRoleCode),
+                Collections.singletonList(destRoleId),
                 null,
                 null,
                 Boolean.FALSE);
@@ -334,7 +327,7 @@ public class RoleServiceImpl implements RoleService {
         }
         List<ViewAccess> viewAccessList = viewAccessMapper.queryViewAccessProvider(context.getTenantId(),
                 context.getAppId(),
-                Collections.singletonList(destRoleCode),
+                Collections.singletonList(destRoleId),
                 null,
                 null,
                 null,
@@ -344,7 +337,7 @@ public class RoleServiceImpl implements RoleService {
         }
         List<RecordTypeAccess> recordTypeAccessList = recordTypeAccessMapper.queryRecordTypeAccessProvider(context.getTenantId(),
                 context.getAppId(),
-                Collections.singleton(destRoleCode),
+                Collections.singleton(destRoleId),
                 null,
                 null);
         if (CollectionUtils.isNotEmpty(recordTypeAccessList)) {
@@ -363,9 +356,9 @@ public class RoleServiceImpl implements RoleService {
                     funcAccess.setId(IdUtil.generateId());
                     funcAccess.setTenantId(context.getTenantId());
                     funcAccess.setAppId(context.getAppId());
-                    funcAccess.setRoleCode(destRoleCode);
-                    funcAccess.setModifier(context.getUserId());
-                    funcAccess.setModifyTime(System.currentTimeMillis());
+                    funcAccess.setRoleId(destRoleId);
+                    funcAccess.setModifiedBy(context.getUserId());
+                    funcAccess.setModifiedAt(System.currentTimeMillis());
                     funcAccess.setDelFlag(Boolean.FALSE);
                 });
                 //                funcAccessMapper.batchInsert(funcAccessList);
@@ -380,9 +373,9 @@ public class RoleServiceImpl implements RoleService {
             if (CollectionUtils.isNotEmpty(fieldAccessList)) {
                 fieldAccessList.forEach(fieldAccess -> {
                     fieldAccess.setId(IdUtil.generateId());
-                    fieldAccess.setRoleCode(destRoleCode);
-                    fieldAccess.setModifier(context.getUserId());
-                    fieldAccess.setModifyTime(System.currentTimeMillis());
+                    fieldAccess.setRoleId(destRoleId);
+                    fieldAccess.setModifiedBy(context.getUserId());
+                    fieldAccess.setModifiedAt(System.currentTimeMillis());
                 });
                 //                fieldAccessMapper.batchInsert(fieldAccessList);
             }
@@ -397,9 +390,9 @@ public class RoleServiceImpl implements RoleService {
             if (CollectionUtils.isNotEmpty(viewAccessList)) {
                 viewAccessList.forEach(viewAccess -> {
                     viewAccess.setId(IdUtil.generateId());
-                    viewAccess.setRoleCode(destRoleCode);
-                    viewAccess.setModifier(context.getUserId());
-                    viewAccess.setModifyTime(System.currentTimeMillis());
+                    viewAccess.setRoleId(destRoleId);
+                    viewAccess.setModifiedBy(context.getUserId());
+                    viewAccess.setModifiedAt(System.currentTimeMillis());
                 });
                 //                viewAccessMapper.batchInsert(viewAccessList);
             }
@@ -412,9 +405,9 @@ public class RoleServiceImpl implements RoleService {
             if (CollectionUtils.isNotEmpty(recordTypeAccessList)) {
                 recordTypeAccessList.forEach(recordTypeAccess -> {
                     recordTypeAccess.setId(IdUtil.generateId());
-                    recordTypeAccess.setRoleCode(destRoleCode);
-                    recordTypeAccess.setModifier(context.getUserId());
-                    recordTypeAccess.setModifyTime(System.currentTimeMillis());
+                    recordTypeAccess.setRoleId(destRoleId);
+                    recordTypeAccess.setModifiedBy(context.getUserId());
+                    recordTypeAccess.setModifiedAt(System.currentTimeMillis());
                 });
                 //                recordTypeAccessMapper.batchInsert(recordTypeAccessList);
             }

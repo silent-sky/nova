@@ -16,11 +16,11 @@ public class ViewAccess implements Serializable {
     private String id;
     private String tenantId;
     private String appId;
-    private String roleCode;
+    private String roleId;
     private String entityId;
     private String recordTypeId;
     private String viewId;
-    private String modifier;
-    private long modifyTime;
+    private String modifiedBy;
+    private Long modifiedAt;
     private Boolean delFlag;
 }

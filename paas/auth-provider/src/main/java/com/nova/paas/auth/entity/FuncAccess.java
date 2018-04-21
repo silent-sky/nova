@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 18/4/9 18:00
  * 角色功能权限实体
  */
-@Table(name = "auth_func_access")
+@Table(name = "au_func_access")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,9 +23,9 @@ public class FuncAccess implements Serializable {
     private String id;
     private String tenantId;
     private String appId;
-    private String roleCode;
-    private String funcCode;
-    private String modifier;
-    private Long modifyTime;
+    private String roleId;
+    private String funcId;
+    private String modifiedBy;
+    private Long modifiedAt;
     private Boolean delFlag;
 }

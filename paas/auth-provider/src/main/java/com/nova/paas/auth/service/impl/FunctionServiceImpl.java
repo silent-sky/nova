@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ import java.util.Set;
 @Slf4j
 public class FunctionServiceImpl implements FunctionService {
 
-    @Autowired
+    @Inject
     FunctionMapper functionMapper;
     @Autowired
     FunctionAccessMapper functionAccessMapper;
@@ -114,14 +115,13 @@ public class FunctionServiceImpl implements FunctionService {
                 function.setTenantId(context.getTenantId());
 
                 function.setFuncCode(functionPojo.getFuncCode());
-                function.setLevelCode(functionPojo.getLevelCode());
-                function.setParentCode(functionPojo.getParentCode());
+                function.setParentId(functionPojo.getParentId());
                 function.setFuncOrder(functionPojo.getFuncOrder());
                 function.setFuncName(functionPojo.getFuncName());
                 function.setFuncType(functionPojo.getFuncType());
 
-                function.setCreator(context.getUserId());
-                function.setCreateTime(System.currentTimeMillis());
+                function.setCreatedBy(context.getUserId());
+                function.setCreatedAt(System.currentTimeMillis());
                 function.setDelFlag(Boolean.FALSE);
 
                 //functionPojo缺少id等属性值
@@ -182,16 +182,15 @@ public class FunctionServiceImpl implements FunctionService {
         if (function.getFuncType() != null && AuthConstant.FuncType.DEFAULT == function.getFuncType()) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
-        String oldParentCode = function.getParentCode(); //记录父亲节点
+        String oldParentId = function.getParentId(); //记录父亲节点
         function.setFuncName(functionPojo.getFuncName());
         function.setFuncOrder(functionPojo.getFuncOrder());
-        function.setLevelCode(functionPojo.getLevelCode());
-        function.setParentCode(functionPojo.getParentCode());
-        function.setModifier(context.getUserId());
-        function.setModifyTime(System.currentTimeMillis());
+        function.setParentId(functionPojo.getParentId());
+        function.setModifiedBy(context.getUserId());
+        function.setModifiedAt(System.currentTimeMillis());
 
         //parentCode出现变更,检测回路
-        if (!function.getParentCode().equals(oldParentCode)) {
+        if (!function.getParentId().equals(oldParentId)) {
             Set<String> tempSet = new HashSet<>();
             try {
                 tempSet = functionMapper.queryFunctionCode(context.getTenantId(),
@@ -212,7 +211,7 @@ public class FunctionServiceImpl implements FunctionService {
                 throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
             //parentCode是否存在
-            if (!tempSet.contains(function.getParentCode())) {
+            if (!tempSet.contains(function.getParentId())) {
                 throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
 
@@ -221,7 +220,7 @@ public class FunctionServiceImpl implements FunctionService {
             //funcPojoList 更新父节点
             for (FunctionPojo funcPojo : functionPojoList) {
                 if (funcPojo.getFuncCode().equals(functionPojo.getFuncCode())) {
-                    funcPojo.setParentCode(function.getParentCode());
+                    funcPojo.setParentId(function.getParentId());
                     break;
                 }
             }
@@ -519,7 +518,7 @@ public class FunctionServiceImpl implements FunctionService {
         List<String> node = new LinkedList<>();
         Map<String, List<String>> funcTree = new HashMap<>(); //存储树形结构
         for (FunctionPojo functionPojo : functionPojoList) {
-            if (functionPojo.getParentCode().equals(AuthConstant.TreeRoot.ROOT)) {
+            if (functionPojo.getParentId().equals(AuthConstant.TreeRoot.ROOT)) {
                 continue;
             }
             addFuncPojoToFuncTree(funcTree, functionPojo);
@@ -548,12 +547,12 @@ public class FunctionServiceImpl implements FunctionService {
         }
 
         //功能父节点
-        if (StringUtils.isBlank(functionPojo.getParentCode())) {
+        if (StringUtils.isBlank(functionPojo.getParentId())) {
             throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
 
         //节点不能自己指向自己(回路)
-        if (functionPojo.getFuncCode() != null && functionPojo.getFuncCode().equals(functionPojo.getParentCode())) {
+        if (functionPojo.getId() != null && functionPojo.getId().equals(functionPojo.getParentId())) {
             throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
     }
@@ -561,9 +560,9 @@ public class FunctionServiceImpl implements FunctionService {
     /**
      * 功能唯一标识校验
      */
-    private void funcCodeVerify(String funcCode) {
+    private void funcCodeVerify(String id) {
         //功能唯一标识
-        if (StringUtils.isBlank(funcCode)) {
+        if (StringUtils.isBlank(id)) {
             throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
     }
@@ -580,7 +579,6 @@ public class FunctionServiceImpl implements FunctionService {
         //function字段检测,唯一标识重复检测
         funcPojoList.forEach(functionPojo -> {
             this.functionPojoVerify(functionPojo);  //字段检测
-            this.funcCodeVerify(functionPojo.getFuncCode());
             if (functionPojo.getFuncType() == null || !legalFuncCodeSet.contains(functionPojo.getFuncType())) {
                 throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
             }
@@ -590,10 +588,10 @@ public class FunctionServiceImpl implements FunctionService {
             tempSet.add(functionPojo.getFuncCode());
         });
 
-        //parentCode检测
+        //parentId检测
         funcPojoList.forEach(functionPojo -> {
-            if (!tempSet.contains(functionPojo.getParentCode())) {
-                if (!AuthConstant.TreeRoot.ROOT.equals(functionPojo.getParentCode())) {
+            if (!tempSet.contains(functionPojo.getParentId())) {
+                if (!AuthConstant.TreeRoot.ROOT.equals(functionPojo.getParentId())) {
                     throw new AuthException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
                 }
             }
@@ -650,11 +648,10 @@ public class FunctionServiceImpl implements FunctionService {
                 functionPojo.setTenantId(function.getTenantId());
                 functionPojo.setAppId(function.getAppId());
                 functionPojo.setFuncCode(function.getFuncCode());
-                functionPojo.setParentCode(function.getParentCode());
+                functionPojo.setParentId(function.getParentId());
                 functionPojo.setFuncName(function.getFuncName());
                 functionPojo.setFuncType(function.getFuncType());
                 functionPojo.setFuncOrder(function.getFuncOrder());
-                functionPojo.setLevelCode(function.getLevelCode());
 
                 functionPojoList.add(functionPojo);
             }
@@ -679,13 +676,13 @@ public class FunctionServiceImpl implements FunctionService {
      * 将每个功能节点添加到功能树结构中
      */
     private void addFuncPojoToFuncTree(Map<String, List<String>> funcTree, FunctionPojo funcPojo) {
-        if (funcTree.containsKey(funcPojo.getParentCode())) {
+        if (funcTree.containsKey(funcPojo.getParentId())) {
             //添加子节点
-            funcTree.get(funcPojo.getParentCode()).add(funcPojo.getFuncCode());
+            funcTree.get(funcPojo.getParentId()).add(funcPojo.getId());
         } else {
             List<String> tempList = new LinkedList<>();
             tempList.add(funcPojo.getFuncCode());
-            funcTree.put(funcPojo.getParentCode(), tempList);
+            funcTree.put(funcPojo.getParentId(), tempList);
         }
     }
 
@@ -698,8 +695,8 @@ public class FunctionServiceImpl implements FunctionService {
             }
             for (Function function : functionList) {
                 FunctionPojo functionPojo = new FunctionPojo();
-                functionPojo.setParentCode(function.getParentCode());
-                functionPojo.setFuncCode(function.getFuncCode());
+                functionPojo.setId(function.getId());
+                functionPojo.setParentId(function.getParentId());
                 functionPojoList.add(functionPojo);
             }
         } catch (Exception e) {

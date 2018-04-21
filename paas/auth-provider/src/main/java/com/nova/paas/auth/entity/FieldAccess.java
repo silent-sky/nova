@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 18/4/9 18:00
  * 字段权限实体
  */
-@Table(name = "auth_field_access")
+@Table(name = "au_field_access")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,11 +22,11 @@ public class FieldAccess implements Serializable {
     private String id;
     private String appId;
     private String tenantId;
-    private String roleCode;
+    private String roleId;
     private String entityId;
     private String fieldId;
     private Integer permission;
-    private String modifier;
-    private Long modifyTime;
+    private String modifiedBy;
+    private Long modifiedAt;
     private Boolean delFlag;
 }

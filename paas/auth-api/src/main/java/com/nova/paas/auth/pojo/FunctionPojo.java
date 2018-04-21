@@ -17,9 +17,8 @@ public class FunctionPojo implements Serializable {
   private String appId;
   private String funcCode;
   private String funcName;
-  private String funcOrder;
-  private String parentCode;
-  private String levelCode;
+  private Integer funcOrder;
+  private String parentId;
   private Integer funcType;
   private Boolean isEnabled;
 

@@ -14,9 +14,7 @@ public class UserRolePojo implements Serializable {
 
     private String tenantId;
     private String appId;
-    private String roleCode;
-    private Integer orgType;
-    private String orgId;
-    private Boolean defaultRole;
-    private String deptId;
+    private String roleId;
+    private Integer targetType;
+    private String targetId;
 }
