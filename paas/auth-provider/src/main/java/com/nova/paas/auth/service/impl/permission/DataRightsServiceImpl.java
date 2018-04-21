@@ -22,7 +22,6 @@ import com.nova.paas.auth.service.permission.TeamService;
 import com.nova.paas.common.constant.PermissionConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.util.SetUtil;
-import com.nova.paas.org.service.GroupMemService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -47,8 +46,8 @@ import java.util.Set;
 @Service
 public class DataRightsServiceImpl implements DataRightsService {
 
-    @Inject
-    private GroupMemService groupMemService;
+    //    @Inject
+    //    private GroupMemService groupMemService;
     //    @Inject
     //    private OrganizationService organizationService;
     @Inject

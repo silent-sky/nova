@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +39,8 @@ public class EntityOpennessServiceImpl implements EntityOpennessService {
     @Inject
     private CacheManager cacheManager;
 
-    @Value("${ENTITY_EXPIRE_SECOND}")
-    private int ENTITY_EXPIRE_SECOND;
+    //    @Value("${ENTITY_EXPIRE_SECOND}")
+    //    private int ENTITY_EXPIRE_SECOND;
 
     private static final Set<Integer> entityOpennessPermissType;
 

@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +52,8 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
     UserRoleService userRoleService;
     @Autowired
     RoleService roleService;
-    @Value("${FUNC_PERMISS_EXPIRE_SECOND}")
-    private int FUNC_PERMISS_EXPIRE_SECOND;
+//    @Value("${FUNC_PERMISS_EXPIRE_SECOND}")
+    //    private int FUNC_PERMISS_EXPIRE_SECOND;
 
     /**
      * 查询角色的功能权限
@@ -72,8 +71,9 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
         if (CollectionUtils.isEmpty(functionPermission)) {
             this.rolesIsExist(context, Collections.singleton(roleCode));
         }
-        List<FunctionPojo> functionPojoList = functionService.queryFunctionByTenant(context);//设置缓存失效时间
-        return this.structureFuncPermission(functionPermission, functionPojoList);
+//        List<FunctionPojo> functionPojoList = functionService.queryFunctionByTenant(context);//设置缓存失效时间
+//        return this.structureFuncPermission(functionPermission, functionPojoList);
+        return null;
     }
 
     /**
@@ -156,8 +156,9 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
     public List<FunctionPojo> queryFuncAccessByUser(CommonContext context) throws AuthServiceException {
         List<String> roleList = userRoleService.queryRoleCodeListByUserId(context);
         Set<String> functionPermission = this.queryFuncSetByRoles(context, roleList);
-        List<FunctionPojo> functionPojoList = functionService.queryFunctionByTenant(context);
-        return this.structureFuncPermission(functionPermission, functionPojoList);
+//        List<FunctionPojo> functionPojoList = functionService.queryFunctionByTenant(context);
+//        return this.structureFuncPermission(functionPermission, functionPojoList);
+        return null;
     }
 
     /**
@@ -623,21 +624,20 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
 
     private void checkFuncCodeExit(CommonContext context, Set<String> funcCodeSet) throws AuthServiceException {
         Set<String> tempSet;
-        try {
-            tempSet =
-                    funcMapper.queryFunctionCode(context.getTenantId(), context.getAppId(), null, null, null, null, null, null, null, Boolean.FALSE);
-        } catch (Exception e) {
-            log.error("===auth.checkFuncCodeExit() error===", e);
-            throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
-        }
-        if (CollectionUtils.isEmpty(tempSet)) {
-            throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-        }
-        for (String funcCode : funcCodeSet) {
-            if (!tempSet.contains(funcCode)) {
-                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-            }
-        }
+//        try {
+//            tempSet = funcMapper.queryFunctionCode(context.getTenantId(), context.getAppId(), null, null, null, null, null, null, null, Boolean.FALSE);
+//        } catch (Exception e) {
+//            log.error("===auth.checkFuncCodeExit() error===", e);
+//            throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
+//        }
+//        if (CollectionUtils.isEmpty(tempSet)) {
+//            throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
+//        }
+//        for (String funcCode : funcCodeSet) {
+//            if (!tempSet.contains(funcCode)) {
+//                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
+//            }
+//        }
     }
 
     private void partUpdateAccess(CommonContext context, Set<String> needAdd, Set<String> needDel, String roleId, Set<String> funcCodeSet)

@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +48,8 @@ public class RecordPermissServiceImpl implements RecordPermissService {
     private TeamMapper teamMapper;
     @Inject
     private TeamService teamService;
-    @Value("${COMPANY_ORG_ID}")
-    private String COMPANY_ORG_ID;
+    //    @Value("${COMPANY_ORG_ID}")
+    //    private String COMPANY_ORG_ID;
 
     /**
      * 添加记录权限
@@ -468,7 +467,7 @@ public class RecordPermissServiceImpl implements RecordPermissService {
      * 获取用户的主部门,如果不存在取默认值
      */
     private String getUserDeptId(CommonContext context) {
-        return COMPANY_ORG_ID;
+        return "";
     }
 
     private List<Team> queryRecordPermissTeamList(CommonContext context, String entityId, List<String> objects) {

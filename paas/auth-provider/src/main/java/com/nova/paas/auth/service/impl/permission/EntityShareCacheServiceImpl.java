@@ -27,7 +27,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,8 +62,8 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
     @Autowired
     private UserRoleService userRoleService;
 
-    @Autowired
-    TaskExecutor taskExecutor;
+//    @Autowired
+//    TaskExecutor taskExecutor;
 
     private static final Set<Integer> entitySharePermissType;
 
@@ -321,13 +320,13 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
                 context.setUserId(PermissionConstant.SystemValue.DEFAULT_USER);
                 context.setAppId(appId);
                 context.setTenantId(tenantId);
-                taskExecutor.execute(() -> {
-                    try {
-                        this.tenantEntityShareCacheReset(context);
-                    } catch (Exception e) {
-                        log.error("initAppEntityShareCache error tenantId:{}", context.getTenantId(), e);
-                    }
-                });
+//                taskExecutor.execute(() -> {
+//                    try {
+//                        this.tenantEntityShareCacheReset(context);
+//                    } catch (Exception e) {
+//                        log.error("initAppEntityShareCache error tenantId:{}", context.getTenantId(), e);
+//                    }
+//                });
             }
         }
     }

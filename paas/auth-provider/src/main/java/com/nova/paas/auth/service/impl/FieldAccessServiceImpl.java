@@ -22,7 +22,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,8 +54,8 @@ public class FieldAccessServiceImpl implements FieldAccessService {
     @Autowired
     private FunctionAccessService functionAccessService;
 
-    @Value("${FIELD_PERMISS_EXPIRE_SECOND}")
-    private int FIELD_PERMISS_EXPIRE_SECOND;
+    //    @Value("${FIELD_PERMISS_EXPIRE_SECOND}")
+    //    private int FIELD_PERMISS_EXPIRE_SECOND;
 
     private static final Set<Integer> legalFieldPermissionSet;
 

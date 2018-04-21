@@ -23,9 +23,7 @@ import java.util.Map;
 @Component
 public class CacheManager {
     @Inject
-    private RedisTemplate<String, Map> mapRedisTemplate;
-    @Inject
-    private RedisTemplate<String, Object> objectRedisTemplate;
+    private RedisTemplate redisTemplate;
     @Inject
     private StringRedisTemplate stringRedisTemplate;
 
@@ -37,7 +35,7 @@ public class CacheManager {
     }
 
     public void putMap(String key, Map<String, Object> map) {
-        mapRedisTemplate.boundHashOps(key).putAll(map);
+        redisTemplate.boundHashOps(key).putAll(map);
     }
 
     public String getString(String key) {
@@ -45,14 +43,14 @@ public class CacheManager {
     }
 
     public Map getMap(String key) {
-        return mapRedisTemplate.boundHashOps(key).entries();
+        return redisTemplate.boundHashOps(key).entries();
     }
 
     /**
      * 添加
      */
     public void putHashObject(String key, String hashKey, Object hashValue) {
-        mapRedisTemplate.opsForHash().put(key, hashKey, hashValue);
+        redisTemplate.opsForHash().put(key, hashKey, hashValue);
     }
 
     /**
@@ -62,7 +60,7 @@ public class CacheManager {
         if (StringUtils.isAnyBlank(key, hashKey)) {
             return null;
         }
-        return objectRedisTemplate.opsForHash().get(key, hashKey);
+        return redisTemplate.opsForHash().get(key, hashKey);
     }
 
     /**
@@ -74,7 +72,7 @@ public class CacheManager {
         if (StringUtils.isBlank(key)) {
             return null;
         }
-        return objectRedisTemplate.opsForHash().entries(key);
+        return redisTemplate.opsForHash().entries(key);
     }
 
     /**
@@ -84,7 +82,7 @@ public class CacheManager {
         if (StringUtils.isBlank(key) || CollectionUtils.isEmpty(mapKeys)) {
             return null;
         }
-        return objectRedisTemplate.opsForHash().multiGet(key, mapKeys);
+        return redisTemplate.opsForHash().multiGet(key, mapKeys);
     }
 
     /**
@@ -94,7 +92,7 @@ public class CacheManager {
         if (StringUtils.isBlank(key) || objectMap == null) {
             return;
         }
-        objectRedisTemplate.opsForHash().putAll(key, objectMap);
+        redisTemplate.opsForHash().putAll(key, objectMap);
     }
 
     byte[] rawKey(String key) {

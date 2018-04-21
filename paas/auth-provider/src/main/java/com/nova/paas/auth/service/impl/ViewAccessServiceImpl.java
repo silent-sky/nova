@@ -18,7 +18,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +43,8 @@ public class ViewAccessServiceImpl implements ViewAccessService {
     private ViewAccessMapper viewAccessMapper;
     @Autowired
     private RoleService roleService;
-    @Value("${VIEW_PERMISS_EXPIRE_SECOND}")
-    private int VIEW_PERMISS_EXPIRE_SECOND;
+    //    @Value("${VIEW_PERMISS_EXPIRE_SECOND}")
+    //    private int VIEW_PERMISS_EXPIRE_SECOND;
 
     @Override
     @Transactional
@@ -230,7 +229,7 @@ public class ViewAccessServiceImpl implements ViewAccessService {
         return this.convertToPojo(this.queryViewAccessByEntityIdBatch(context, entityIds, Collections.singleton(roleCode), recordTypeId));
     }
 
-    private void pojoVerify(CommonContext context, List<RoleViewPojo> pojos) throws AuthServiceException{
+    private void pojoVerify(CommonContext context, List<RoleViewPojo> pojos) throws AuthServiceException {
         if (CollectionUtils.isEmpty(pojos)) {
             return;
         }

@@ -21,7 +21,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +48,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     RoleService roleService;
     @Autowired
     private CacheManager cacheManager;
-    @Value("${USER_ROLE_EXPIRE_SECOND}")
-    private int USER_ROLE_EXPIRE_SECOND;
+//    @Value("${USER_ROLE_EXPIRE_SECOND}")
+    //    private int USER_ROLE_EXPIRE_SECOND;
 
     @Override
     public List<String> queryRoleCodeListByUserId(CommonContext context) throws AuthServiceException {
