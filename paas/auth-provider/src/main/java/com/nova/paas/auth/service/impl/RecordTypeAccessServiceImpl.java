@@ -89,7 +89,6 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 RecordTypeAccess recordTypeAccess = new RecordTypeAccess();
                 recordTypeAccess.setId(IdUtil.generateId());
                 recordTypeAccess.setTenantId(context.getTenantId());
-                recordTypeAccess.setAppId(context.getAppId());
                 recordTypeAccess.setEntityId(entityId);
                 recordTypeAccess.setRecordTypeId(recordTypeId);
                 recordTypeAccess.setRoleId(pojo.getRoleId());
@@ -212,7 +211,6 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 RecordTypeAccess access = new RecordTypeAccess();
                 access.setId(IdUtil.generateId());
                 access.setTenantId(context.getTenantId());
-                access.setAppId(context.getAppId());
                 access.setEntityId(entity);
                 access.setRecordTypeId(recordTypeId);
                 access.setRoleId(roleId);
@@ -337,7 +335,6 @@ public class RecordTypeAccessServiceImpl implements RecordTypeAccessService {
                 RecordTypeAccess roleView = new RecordTypeAccess();
                 roleView.setId(IdUtil.generateId());
                 roleView.setTenantId(context.getTenantId());
-                roleView.setAppId(context.getAppId());
                 roleView.setEntityId(entityId);
                 roleView.setRecordTypeId(pojo.getRecordTypeId());
                 roleView.setRoleId(pojo.getRoleId());

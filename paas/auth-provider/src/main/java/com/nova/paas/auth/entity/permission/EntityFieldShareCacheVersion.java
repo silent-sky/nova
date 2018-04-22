@@ -11,7 +11,6 @@ public class EntityFieldShareCacheVersion implements Serializable {
     private static final long serialVersionUID = 236939567559839311L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleCode;
     private String currentVersion;

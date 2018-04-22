@@ -10,7 +10,6 @@ public class SharePojo implements Serializable {
 
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private Integer shareType;
     private String shareId;

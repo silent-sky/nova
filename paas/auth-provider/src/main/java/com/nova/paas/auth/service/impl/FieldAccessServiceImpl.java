@@ -215,7 +215,6 @@ public class FieldAccessServiceImpl implements FieldAccessService {
             //校验字段权限在否合法
             this.fieldPermissVerify(permiss);
             FieldAccess fieldAccess = new FieldAccess(IdUtil.generateId(),
-                    context.getAppId(),
                     context.getTenantId(),
                     roleCode,
                     entityId,
@@ -506,7 +505,6 @@ public class FieldAccessServiceImpl implements FieldAccessService {
                 FieldAccess fieldAccess = new FieldAccess();
                 fieldAccess.setId(IdUtil.generateId());
                 fieldAccess.setTenantId(context.getTenantId());
-                fieldAccess.setAppId(context.getAppId());
                 fieldAccess.setRoleId(roleId);
                 fieldAccess.setEntityId(entityId);
                 fieldAccess.setFieldId(field);

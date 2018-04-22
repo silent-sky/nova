@@ -12,7 +12,6 @@ public class EntityOpennessPojo implements Serializable {
     private String id;
     private String tenantId;
     private String entityId;
-    private String appId;
     /**
      * @see com.nova.paas.common.constant.PermissionConstant.DataRightsSceneType
      */

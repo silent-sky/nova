@@ -13,7 +13,6 @@ public class EntityFieldShareReceive implements Serializable {
     private static final long serialVersionUID = 1258173777440955738L;
     private String getTenantId;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleCode;
     private Integer receiveType;

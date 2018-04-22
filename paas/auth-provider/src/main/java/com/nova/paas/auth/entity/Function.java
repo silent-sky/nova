@@ -15,7 +15,6 @@ public class Function implements Serializable {
     private static final long serialVersionUID = 5528890711926409746L;
 
     private String id;
-    private String appId;
     private String tenantId;
     private String funcName;
     private String funcCode;

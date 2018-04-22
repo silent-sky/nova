@@ -173,7 +173,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                 this.checkUserId(userId);
                 UserRole userRole = new UserRole(IdUtil.generateId(),
                         context.getTenantId(),
-                        context.getAppId(),
                         userId,
                         roleCode,
                         AuthConstant.TargetType.USER,
@@ -222,7 +221,6 @@ public class UserRoleServiceImpl implements UserRoleService {
             roles.forEach(role -> {
                 UserRole userRole = new UserRole(IdUtil.generateId(),
                         context.getTenantId(),
-                        context.getAppId(),
                         userId,
                         role,
                         AuthConstant.TargetType.USER,
@@ -298,7 +296,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                     this.checkUserId(user);
                     UserRole userRole = new UserRole(IdUtil.generateId(),
                             context.getTenantId(),
-                            context.getAppId(),
                             user,
                             role,
                             AuthConstant.TargetType.USER,
@@ -562,7 +559,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                     roles.forEach(roleCode -> {
                         UserRole userRole = new UserRole(IdUtil.generateId(),
                                 context.getTenantId(),
-                                context.getAppId(),
                                 userId,
                                 roleCode,
                                 AuthConstant.TargetType.USER,
@@ -651,7 +647,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                     roles.forEach(roleCode -> {
                         UserRole userRole = new UserRole(IdUtil.generateId(),
                                 context.getTenantId(),
-                                context.getAppId(),
                                 userId,
                                 roleCode,
                                 AuthConstant.TargetType.USER,
@@ -760,7 +755,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                 if (roleUserMap.get(user) == null || (!roleUserMap.get(user).contains(role))) {
                     UserRole userRole = new UserRole(IdUtil.generateId(),
                             context.getTenantId(),
-                            context.getAppId(),
                             user,
                             role,
                             AuthConstant.TargetType.USER,
@@ -928,7 +922,6 @@ public class UserRoleServiceImpl implements UserRoleService {
             if (roleUserMap.get(user) == null || (!roleUserMap.get(user).contains(roleCode))) {
                 UserRole userRole = new UserRole(IdUtil.generateId(),
                         context.getTenantId(),
-                        context.getAppId(),
                         user,
                         roleCode,
                         AuthConstant.TargetType.USER,
@@ -993,7 +986,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
             UserRole userRole = new UserRole(IdUtil.generateId(),
                     authContext.getTenantId(),
-                    authContext.getAppId(),
                     pojo.getTargetId(),
                     pojo.getRoleId(),
                     AuthConstant.TargetType.USER,
@@ -1097,7 +1089,6 @@ public class UserRoleServiceImpl implements UserRoleService {
                     pojo.setRoleId(userRole.getRoleId());
                     //                    pojo.setRoleName(rolePojoMap.get(userRole.getRoleCode()));
                     pojo.setTenantId(context.getTenantId());
-                    pojo.setAppId(context.getAppId());
 
                     userRolePojoMap.get(userRole.getTargetId()).add(pojo);
                 });

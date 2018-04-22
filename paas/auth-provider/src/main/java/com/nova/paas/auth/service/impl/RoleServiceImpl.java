@@ -176,7 +176,6 @@ public class RoleServiceImpl implements RoleService {
         Role role = new Role();
         role.setId(IdUtil.generateId());
         role.setTenantId(context.getTenantId());
-        role.setAppId(context.getAppId());
         role.setRoleCode(rolePojo.getRoleCode());
         role.setRoleName(rolePojo.getRoleName());
         role.setDescription(rolePojo.getDescription());
@@ -355,7 +354,6 @@ public class RoleServiceImpl implements RoleService {
                 funcAccessList.forEach(funcAccess -> {
                     funcAccess.setId(IdUtil.generateId());
                     funcAccess.setTenantId(context.getTenantId());
-                    funcAccess.setAppId(context.getAppId());
                     funcAccess.setRoleId(destRoleId);
                     funcAccess.setModifiedBy(context.getUserId());
                     funcAccess.setModifiedAt(System.currentTimeMillis());

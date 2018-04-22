@@ -10,7 +10,6 @@ public class EntityFieldSharePojo implements Serializable {
     private static final long serialVersionUID = 3125765669904090628L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleName;
     private String ruleCode;

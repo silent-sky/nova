@@ -11,7 +11,6 @@ public class EntityFieldShareReceiveCache implements Serializable {
     private static final long serialVersionUID = 6879825050295096177L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleCode;
     private String userId;

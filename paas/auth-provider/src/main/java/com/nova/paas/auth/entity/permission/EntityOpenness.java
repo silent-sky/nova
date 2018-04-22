@@ -12,7 +12,6 @@ import java.io.Serializable;
 public class EntityOpenness implements Serializable {
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     /**
      * @see com.nova.paas.common.constant.PermissionConstant

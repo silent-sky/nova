@@ -11,7 +11,6 @@ public class EntityShareCachePojo implements Serializable {
     private static final long serialVersionUID = 6191408585811403178L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String entityShareId;
     private String shareUser;

@@ -77,7 +77,6 @@ public class ViewAccessServiceImpl implements ViewAccessService {
             ViewAccess roleView = new ViewAccess();
             roleView.setId(IdUtil.generateId());
             roleView.setTenantId(context.getTenantId());
-            roleView.setAppId(context.getAppId());
             roleView.setEntityId(pojo.getEntityId());
             roleView.setRecordTypeId(pojo.getRecordTypeId());
             roleView.setRoleId(pojo.getRoleId());
@@ -152,7 +151,6 @@ public class ViewAccessServiceImpl implements ViewAccessService {
             pojo.setRoleId(roleId);
             pojo.setViewId(viewId);
             pojo.setTenantId(context.getTenantId());
-            pojo.setAppId(context.getAppId());
 
             return Collections.singletonList(pojo);
         }

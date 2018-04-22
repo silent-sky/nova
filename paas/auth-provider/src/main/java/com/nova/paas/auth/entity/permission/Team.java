@@ -14,7 +14,6 @@ public class Team implements Serializable {
     private static final long serialVersionUID = 7132283704869187571L;
     private String id;
     private String tenantId;
-    private String appId;
     //private String entityId;
     private String objectId;
 

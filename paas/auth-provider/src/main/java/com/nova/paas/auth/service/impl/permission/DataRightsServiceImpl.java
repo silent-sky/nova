@@ -18,7 +18,6 @@ import com.nova.paas.auth.service.permission.DataRightsService;
 import com.nova.paas.auth.service.permission.EntityFieldShareService;
 import com.nova.paas.auth.service.permission.EntityOpennessService;
 import com.nova.paas.auth.service.permission.EntityShareService;
-import com.nova.paas.auth.service.permission.TeamService;
 import com.nova.paas.common.constant.PermissionConstant;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.util.SetUtil;
@@ -56,8 +55,8 @@ public class DataRightsServiceImpl implements DataRightsService {
     private EntityFieldShareService entityFieldShareService;
     @Inject
     private EntityOpennessService entityOpennessService;
-    @Inject
-    private TeamService teamService;
+    //    @Inject
+    //    private TeamService teamService;
     @Inject
     private UserRoleService userRoleService;
     @Inject

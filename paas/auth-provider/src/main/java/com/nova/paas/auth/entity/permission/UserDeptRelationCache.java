@@ -12,7 +12,6 @@ public class UserDeptRelationCache implements Serializable {
     private static final long serialVersionUID = 7514172010580812555L;
     private String id;
     private String tenantId;
-    //private String appId;
     private String deptId;
     private String userId;
     private Integer relationType;

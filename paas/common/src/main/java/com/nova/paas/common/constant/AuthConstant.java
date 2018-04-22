@@ -26,8 +26,8 @@ public interface AuthConstant {
 
     interface TreeRoot {
 
-        //功能根节点funcCode
-        String ROOT = "00000000000000000000000000000000";
+        //功能根节点funcId
+        String ROOT = "0";
     }
 
 

@@ -5,7 +5,6 @@
     <resultMap id="function" type="com.nova.paas.auth.entity.Function">
         <id property="id" column="id"/>
         <result property="tenantId" column="tenant_id"/>
-        <result property="appId" column="app_id"/>
         <result property="funcName" column="func_name"/>
         <result property="funcCode" column="func_code"/>
         <result property="funcOrder" column="func_order"/>
@@ -18,12 +17,65 @@
         <result property="delFlag" column="del_flag"/>
     </resultMap>
 
+    <select id="queryFunction" resultMap="function">
+        select * from au_function where tenant_id=#{tenantId}
+        <if test="ids != null and ids.size()>0">
+            AND id IN
+            <foreach item="idSet" collection="ids" open="(" separator="," close=")">
+                #{idSet}
+            </foreach>
+        </if>
+        <if test="funcName != null and funcName!=''">
+            AND func_name=#{funcName}
+        </if>
+        <if test="parentId != null and parentId!=''">
+            AND parent_id=#{parentId}
+        </if>
+        <if test="funcType != null ">
+            AND func_type=#{funcType}
+        </if>
+        and del_flag=0
+    </select>
+
     <insert id="insert" parameterType="com.nova.paas.auth.entity.Function">
-        insert into au_function (id, tenant_id, app_id,func_code,func_name,func_order,func_type,
+        insert into au_function (id, tenant_id,func_code,func_name,func_order,func_type,
         parent_id,created_by,created_at)
-        values (#{id}, #{tenantId}, #{appId},#{funcCode},#{funcName},#{funcOrder},
-        #{funcType},#{parentId},#{createdBy},#{created_At})
+        values (#{id}, #{tenantId},#{funcCode},#{funcName},#{funcOrder},
+        #{funcType},#{parentId},#{createdBy},#{createdAt})
     </insert>
+
+    <update id="batchDelete">
+        update au_function set del_flag=1,modified_by=#{modifiedBy},modified_at=#{modifiedAt} WHERE tenant_id=#{tenantId}
+        <if test="funcIds != null and funcIds.size()>0">
+            AND id IN
+            <foreach item="item" collection="funcIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and del_flag=0
+    </update>
+
+    <update id="update" parameterType="com.nova.paas.auth.entity.Function">
+        update au_function
+        <set>
+            <if test="funcName != null">
+                func_name = #{funcName},
+            </if>
+            <if test="funcOrder != null">
+                func_order = #{funcOrder},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="modifiedBy != null">
+                modified_by = #{modifiedBy},
+            </if>
+            <if test="modifiedAt != null">
+                modified_at = #{modifiedAt},
+            </if>
+        </set>
+        where id = #{id} and tenant_id=#{tenantId}
+    </update>
 
 
 </mapper>

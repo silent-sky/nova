@@ -259,7 +259,6 @@ public class EntityOpennessServiceImpl implements EntityOpennessService {
             entityOpennessPojoList.forEach(entityOpennessPojo -> {
                 EntityOpenness entityOpenness = EntityOpenness.builder()
                         .tenantId(context.getTenantId())
-                        .appId(context.getAppId())
                         .entityId(entityOpennessPojo.getEntityId())
                         .permission(entityOpennessPojo.getPermission())
                         .scope(entityOpennessPojo.getScope())

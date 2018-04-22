@@ -99,7 +99,6 @@ public class EntityFieldShareCacheServiceImpl implements EntityFieldShareCacheSe
                 if (!existsDataIds.contains(dataId)) {
                     EntityFieldShareCache cache = EntityFieldShareCache.builder()
                             .tenantId(context.getTenantId())
-                            .appId(context.getAppId())
                             .entityId(entityId)
                             .dataId(dataId)
                             .rules(Lists.newArrayList(version))

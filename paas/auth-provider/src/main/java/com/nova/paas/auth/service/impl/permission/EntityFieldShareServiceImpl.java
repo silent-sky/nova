@@ -379,7 +379,6 @@ public class EntityFieldShareServiceImpl implements EntityFieldShareService {
                 this.entityFieldShareReceivePojoCheck(receivePojo);
                 EntityFieldShareReceive receive = EntityFieldShareReceive.builder()
                         .tenantId(context.getTenantId())
-                        .appId(context.getAppId())
                         .entityId(entityId)
                         .ruleCode(ruleCode)
                         .receiveType(receivePojo.getReceiveType())

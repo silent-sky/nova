@@ -10,7 +10,6 @@ public class OpennessPojo implements Serializable {
 
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private Integer scope;
     private Integer permission;

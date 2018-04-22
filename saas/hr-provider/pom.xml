@@ -60,6 +60,11 @@
             <artifactId>spring-jdbc</artifactId>
             <version>4.3.13.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.39</version>
+        </dependency>
 
         <!-- spring boot -->
         <dependency>
@@ -83,7 +88,7 @@
 
     <build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
-        <finalName>nova</finalName>
+        <finalName>power</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>

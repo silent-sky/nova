@@ -20,7 +20,6 @@ public class Role implements Serializable {
      */
     private Integer roleType;
     private String description;
-    private String appId;
     private String tenantId;
     private String createdBy;
     private Long createdAt;

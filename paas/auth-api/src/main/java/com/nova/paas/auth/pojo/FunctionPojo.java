@@ -10,16 +10,15 @@ import java.io.Serializable;
  */
 @Data
 public class FunctionPojo implements Serializable {
-  private static final long serialVersionUID = -5568682306872628657L;
+    private static final long serialVersionUID = -5568682306872628657L;
 
-  private String id;
-  private String tenantId;
-  private String appId;
-  private String funcCode;
-  private String funcName;
-  private Integer funcOrder;
-  private String parentId;
-  private Integer funcType;
-  private Boolean isEnabled;
+    private String id;
+    private String tenantId;
+    private String funcCode;
+    private String funcName;
+    private Integer funcOrder;
+    private String parentId;
+    private Integer funcType;
+    private Boolean isEnabled;
 
 }

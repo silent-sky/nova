@@ -18,7 +18,6 @@ public class RecordPermiss implements Serializable {
     private static final long serialVersionUID = -2210941707678234571L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String objectId;
     private String owner;

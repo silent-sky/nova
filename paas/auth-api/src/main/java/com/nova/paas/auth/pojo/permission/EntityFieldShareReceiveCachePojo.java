@@ -10,7 +10,6 @@ public class EntityFieldShareReceiveCachePojo implements Serializable {
 
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleCode;
     private String userId;

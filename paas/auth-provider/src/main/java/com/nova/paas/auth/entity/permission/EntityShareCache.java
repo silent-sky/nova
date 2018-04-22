@@ -18,7 +18,6 @@ public class EntityShareCache implements Serializable {
     private static final long serialVersionUID = 7616664573885935156L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String entityShareId;
     private String shareUser;

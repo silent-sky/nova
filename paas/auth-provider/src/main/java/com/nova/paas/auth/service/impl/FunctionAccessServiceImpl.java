@@ -375,7 +375,6 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
                 accessList.add(new FuncAccess(IdUtil.generateId(),
                         context.getTenantId(),
                         role,
-                        context.getAppId(),
                         context.getUserId(),
                         funcCode,
                         System.currentTimeMillis(),
@@ -649,7 +648,6 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
                 FuncAccess funcAccess = new FuncAccess();
                 funcAccess.setId(IdUtil.generateId());
                 funcAccess.setTenantId(context.getTenantId());
-                funcAccess.setAppId(context.getAppId());
                 funcAccess.setRoleId(roleId);
                 funcAccess.setDelFlag(Boolean.FALSE);
                 funcAccess.setFuncId(funcId);

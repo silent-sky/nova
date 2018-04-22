@@ -20,7 +20,6 @@ public class FieldAccess implements Serializable {
     private static final long serialVersionUID = -1179316286787259367L;
 
     private String id;
-    private String appId;
     private String tenantId;
     private String roleId;
     private String entityId;

@@ -10,7 +10,6 @@ public class FieldShareRulePojo implements Serializable {
     private static final long serialVersionUID = 3036944074368622334L;
     private String id;
     private String tenantId;
-    private String appId;
     private String entityId;
     private String ruleCode;
     private Integer ruleOrder;

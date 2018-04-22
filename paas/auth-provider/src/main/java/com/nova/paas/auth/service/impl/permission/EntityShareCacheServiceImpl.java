@@ -19,9 +19,6 @@ import com.nova.paas.common.pojo.PageInfo;
 import com.nova.paas.common.util.IdUtil;
 import com.nova.paas.common.util.SetUtil;
 import com.nova.paas.org.pojo.DeptPojo;
-import com.nova.paas.org.service.DeptService;
-import com.nova.paas.org.service.DeptUserService;
-import com.nova.paas.org.service.GroupMemService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -53,17 +50,17 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
 
     @Autowired
     private EntityShareService entityShareService;
-    @Autowired
-    private GroupMemService groupMemService;
-    @Autowired
-    private DeptService deptService;
-    @Autowired
-    private DeptUserService deptUserService;
+    //    @Autowired
+    //    private GroupMemService groupMemService;
+    //    @Autowired
+    //    private DeptService deptService;
+    //    @Autowired
+    //    private DeptUserService deptUserService;
     @Autowired
     private UserRoleService userRoleService;
 
-//    @Autowired
-//    TaskExecutor taskExecutor;
+    //    @Autowired
+    //    TaskExecutor taskExecutor;
 
     private static final Set<Integer> entitySharePermissType;
 
@@ -320,13 +317,13 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
                 context.setUserId(PermissionConstant.SystemValue.DEFAULT_USER);
                 context.setAppId(appId);
                 context.setTenantId(tenantId);
-//                taskExecutor.execute(() -> {
-//                    try {
-//                        this.tenantEntityShareCacheReset(context);
-//                    } catch (Exception e) {
-//                        log.error("initAppEntityShareCache error tenantId:{}", context.getTenantId(), e);
-//                    }
-//                });
+                //                taskExecutor.execute(() -> {
+                //                    try {
+                //                        this.tenantEntityShareCacheReset(context);
+                //                    } catch (Exception e) {
+                //                        log.error("initAppEntityShareCache error tenantId:{}", context.getTenantId(), e);
+                //                    }
+                //                });
             }
         }
     }
@@ -382,7 +379,6 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
                 EntityShareCachePojo pojo = EntityShareCachePojo.builder()
                         .id(entityShareCache.getId())
                         .tenantId(entityShareCache.getTenantId())
-                        .appId(entityShareCache.getAppId())
                         .entityId(entityShareCache.getEntityId())
                         .entityShareId(entityShareCache.getEntityShareId())
                         .receiveUser(entityShareCache.getReceiveUser())
@@ -508,81 +504,80 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
 
     private List<EntityShareCache> convertEntityShareRuleToCache(CommonContext context, List<EntityShare> entityShareList) {
         List<EntityShareCache> entityShareCacheList = new LinkedList<>();
-        Map<String, Map<String, Set<String>>> appGroupMembers = new HashMap<>();
-        Map<String, Map<String, Set<String>>> appRoleMembers = new HashMap<>();
-        Map<String, Set<String>> appGroups = new HashMap<>();
-        Map<String, Set<String>> appRoles = new HashMap<>();
-        Map<String, Set<String>> deptUsersShare;
-        Set<String> entityShareDept = new HashSet<>();
-        entityShareList.forEach(entityShare -> {
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.GROUP) {
-                appGroups.computeIfAbsent(entityShare.getAppId(), k -> new HashSet<>());
-                appGroups.get(entityShare.getAppId()).add(entityShare.getShareId());
-            }
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.DEPT) {
-                entityShareDept.add(entityShare.getShareId());
-            }
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.ROLE) {
-                appRoles.computeIfAbsent(entityShare.getAppId(), k -> new HashSet<>());
-                appRoles.get(entityShare.getAppId()).add(entityShare.getShareId());
-            }
-        });
-        String oldAppID = context.getAppId();
-        if (MapUtils.isNotEmpty(appGroups)) {
-            appGroups.forEach((appId, groups) -> {
-                context.setAppId(appId);
-                //                appGroupMembers.put(appId, groupMemService.queryGroupMembers(context, new ArrayList<>(groups), false, true, 0));
-            });
-        }
-
-        if (MapUtils.isNotEmpty(appRoles)) {
-            appRoles.forEach((appId, roles) -> {
-                context.setAppId(appId);
-                try {
-                    appRoleMembers.put(appId, userRoleService.queryRoleUsersByRoles(context, roles));
-                } catch (AuthServiceException e) {
-                    throw new RuntimeException(e.getErrorMsg().getMessage());
-                }
-            });
-        }
-        context.setAppId(oldAppID);
-
-        deptUsersShare = queryDeptUsers(context, entityShareDept, Boolean.TRUE);
-
-        Set<String> shareUsers = new HashSet<>();
-
-        for (EntityShare entityShare : entityShareList) {
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.GROUP && appGroupMembers.get(entityShare.getAppId()) != null
-                    && CollectionUtils.isNotEmpty(appGroupMembers.get(entityShare.getAppId()).get(entityShare.getShareId()))) {
-                shareUsers.addAll(appGroupMembers.get(entityShare.getAppId()).get(entityShare.getShareId()));
-            }
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.DEPT
-                    && CollectionUtils.isNotEmpty(deptUsersShare.get(entityShare.getShareId()))) {
-                shareUsers.addAll(deptUsersShare.get(entityShare.getShareId()));
-            }
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.USER) {
-                shareUsers.add(entityShare.getShareId());
-            }
-            if (entityShare.getShareType() == PermissionConstant.EntityShareType.ROLE && appRoleMembers.get(entityShare.getAppId()) != null
-                    && CollectionUtils.isNotEmpty(appRoleMembers.get(entityShare.getAppId()).get(entityShare.getShareId()))) {
-                shareUsers.addAll(appRoleMembers.get(entityShare.getAppId()).get(entityShare.getShareId()));
-            }
-            for (String shareUser : shareUsers) {
-                EntityShareCache entityShareCache = EntityShareCache.builder()
-                        .tenantId(entityShare.getTenantId())
-                        .appId(entityShare.getAppId())
-                        .entityId(entityShare.getEntityId())
-                        .entityShareId(entityShare.getId())
-                        .shareUser(shareUser)
-                        .receiveUser(entityShare.getReceiveId())
-                        .receiveType(entityShare.getReceiveType())
-                        .permission(entityShare.getPermission())
-                        .build();
-                entityShareCache.setId(IdUtil.generateId());
-                entityShareCacheList.add(entityShareCache);
-            }
-            shareUsers.clear(); //如果直接赋值为null,null.addAll()出现NullPointException
-        }
+        //        Map<String, Map<String, Set<String>>> appGroupMembers = new HashMap<>();
+        //        Map<String, Map<String, Set<String>>> appRoleMembers = new HashMap<>();
+        //        Map<String, Set<String>> appGroups = new HashMap<>();
+        //        Map<String, Set<String>> appRoles = new HashMap<>();
+        //        Map<String, Set<String>> deptUsersShare;
+        //        Set<String> entityShareDept = new HashSet<>();
+        //        entityShareList.forEach(entityShare -> {
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.GROUP) {
+        //                appGroups.computeIfAbsent(entityShare.getAppId(), k -> new HashSet<>());
+        //                appGroups.get(entityShare.getAppId()).add(entityShare.getShareId());
+        //            }
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.DEPT) {
+        //                entityShareDept.add(entityShare.getShareId());
+        //            }
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.ROLE) {
+        //                appRoles.computeIfAbsent(entityShare.getAppId(), k -> new HashSet<>());
+        //                appRoles.get(entityShare.getAppId()).add(entityShare.getShareId());
+        //            }
+        //        });
+        //        String oldAppID = context.getAppId();
+        //        if (MapUtils.isNotEmpty(appGroups)) {
+        //            appGroups.forEach((appId, groups) -> {
+        //                context.setAppId(appId);
+        //                //                appGroupMembers.put(appId, groupMemService.queryGroupMembers(context, new ArrayList<>(groups), false, true, 0));
+        //            });
+        //        }
+        //
+        //        if (MapUtils.isNotEmpty(appRoles)) {
+        //            appRoles.forEach((appId, roles) -> {
+        //                context.setAppId(appId);
+        //                try {
+        //                    appRoleMembers.put(appId, userRoleService.queryRoleUsersByRoles(context, roles));
+        //                } catch (AuthServiceException e) {
+        //                    throw new RuntimeException(e.getErrorMsg().getMessage());
+        //                }
+        //            });
+        //        }
+        //        context.setAppId(oldAppID);
+        //
+        //        deptUsersShare = queryDeptUsers(context, entityShareDept, Boolean.TRUE);
+        //
+        //        Set<String> shareUsers = new HashSet<>();
+        //
+        //        for (EntityShare entityShare : entityShareList) {
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.GROUP && appGroupMembers.get(entityShare.getAppId()) != null
+        //                    && CollectionUtils.isNotEmpty(appGroupMembers.get(entityShare.getAppId()).get(entityShare.getShareId()))) {
+        //                shareUsers.addAll(appGroupMembers.get(entityShare.getAppId()).get(entityShare.getShareId()));
+        //            }
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.DEPT
+        //                    && CollectionUtils.isNotEmpty(deptUsersShare.get(entityShare.getShareId()))) {
+        //                shareUsers.addAll(deptUsersShare.get(entityShare.getShareId()));
+        //            }
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.USER) {
+        //                shareUsers.add(entityShare.getShareId());
+        //            }
+        //            if (entityShare.getShareType() == PermissionConstant.EntityShareType.ROLE && appRoleMembers.get(entityShare.getAppId()) != null
+        //                    && CollectionUtils.isNotEmpty(appRoleMembers.get(entityShare.getAppId()).get(entityShare.getShareId()))) {
+        //                shareUsers.addAll(appRoleMembers.get(entityShare.getAppId()).get(entityShare.getShareId()));
+        //            }
+        //            for (String shareUser : shareUsers) {
+        //                EntityShareCache entityShareCache = EntityShareCache.builder()
+        //                        .tenantId(entityShare.getTenantId())
+        //                        .entityId(entityShare.getEntityId())
+        //                        .entityShareId(entityShare.getId())
+        //                        .shareUser(shareUser)
+        //                        .receiveUser(entityShare.getReceiveId())
+        //                        .receiveType(entityShare.getReceiveType())
+        //                        .permission(entityShare.getPermission())
+        //                        .build();
+        //                entityShareCache.setId(IdUtil.generateId());
+        //                entityShareCacheList.add(entityShareCache);
+        //            }
+        //            shareUsers.clear(); //如果直接赋值为null,null.addAll()出现NullPointException
+        //        }
         return entityShareCacheList;
     }
 
@@ -636,7 +631,8 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
 
     //包括root、包括自己
     private Set<String> getSuperDeptSet(CommonContext context, Set<String> deptIds) {
-        Map<String, List<DeptPojo>> orgData = deptService.batchQuerySuperDeptPathWithSelfByDeptId(context, deptIds);
+        //        Map<String, List<DeptPojo>> orgData = deptService.batchQuerySuperDeptPathWithSelfByDeptId(context, deptIds);
+        Map<String, List<DeptPojo>> orgData = null;
 
         Set<String> allSuperDept = new HashSet<>();
         if (MapUtils.isNotEmpty(orgData)) {
@@ -666,7 +662,6 @@ public class EntityShareCacheServiceImpl implements EntityShareCacheService {
                 EntityShareCache cache = new EntityShareCache();
                 cache.setId(IdUtil.generateId());
                 cache.setTenantId(rulePojo.getTenantId());
-                cache.setAppId(rulePojo.getAppId());//right
                 cache.setEntityId(rulePojo.getEntityId());
                 cache.setEntityShareId(rulePojo.getId());
                 cache.setShareUser(userId);

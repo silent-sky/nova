@@ -81,7 +81,6 @@ public class EntityShareServiceImpl implements EntityShareService {
             this.pojoCheck(pojo);
             EntityShare entityShare = EntityShare.builder()
                     .tenantId(context.getTenantId())
-                    .appId(context.getAppId())
                     .entityId(pojo.getEntityId())
                     .shareType(pojo.getShareType())
                     .shareId(pojo.getShareId())

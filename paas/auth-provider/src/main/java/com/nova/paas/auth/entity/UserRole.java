@@ -19,7 +19,6 @@ import javax.persistence.Table;
 public class UserRole {
     private String id;
     private String tenantId;
-    private String appId;
     private String targetId;
     private String roleId;
     /**
@@ -35,7 +34,6 @@ public class UserRole {
     public UserRole(
             String id,
             String tenantId,
-            String appId,
             String targetId,
             String roleId,
             Integer targetType,
@@ -44,7 +42,6 @@ public class UserRole {
             Boolean delFlag) {
         this.id = id;
         this.tenantId = tenantId;
-        this.appId = appId;
         this.targetId = targetId;
         this.roleId = roleId;
         this.targetType = targetType;

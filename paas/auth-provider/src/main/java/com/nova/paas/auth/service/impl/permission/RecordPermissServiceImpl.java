@@ -15,7 +15,6 @@ import com.nova.paas.auth.pojo.permission.RecordPermissTeamPojo;
 import com.nova.paas.auth.pojo.permission.TeamMembersPojo;
 import com.nova.paas.auth.pojo.permission.TeamPojo;
 import com.nova.paas.auth.service.permission.RecordPermissService;
-import com.nova.paas.auth.service.permission.TeamService;
 import com.nova.paas.auth.support.CommonParamsCheckUtil;
 import com.nova.paas.common.pojo.CommonContext;
 import com.nova.paas.common.pojo.PageInfo;
@@ -46,8 +45,8 @@ public class RecordPermissServiceImpl implements RecordPermissService {
     private RecordPermissMapper recordPermissMapper;
     @Inject
     private TeamMapper teamMapper;
-    @Inject
-    private TeamService teamService;
+    //    @Inject
+    //    private TeamService teamService;
     //    @Value("${COMPANY_ORG_ID}")
     //    private String COMPANY_ORG_ID;
 
@@ -260,7 +259,6 @@ public class RecordPermissServiceImpl implements RecordPermissService {
 
         RecordPermiss record = RecordPermiss.builder()
                 .tenantId(context.getTenantId())
-                .appId(context.getAppId())
                 .entityId(recordPermissObject.getEntityId())
                 .objectId(recordPermissObject.getObjectId())
                 .owner(recordPermissObject.getOwner())
@@ -280,7 +278,7 @@ public class RecordPermissServiceImpl implements RecordPermissService {
             teamMembers.setObjectId(recordPermissObject.getObjectId());
             teamMembers.setTeam(recordPermissObject.getTeam());
             teamMemberses.add(teamMembers);
-            teamService.addMemberToTeam(context, recordPermissObject.getEntityId(), teamMemberses, Boolean.FALSE);
+            //            teamService.addMemberToTeam(context, recordPermissObject.getEntityId(), teamMemberses, Boolean.FALSE);
         }
     }
 
@@ -392,7 +390,6 @@ public class RecordPermissServiceImpl implements RecordPermissService {
             //添加记录
             RecordPermiss recordPermiss = new RecordPermiss(IdUtil.generateId(),
                     context.getTenantId(),
-                    context.getAppId(),
                     entityId,
                     objectId,
                     context.getUserId(),
@@ -440,7 +437,6 @@ public class RecordPermissServiceImpl implements RecordPermissService {
             for (TeamPojo teamPojo : teamPojos) {
                 Team team = Team.builder()
                         .tenantId(context.getTenantId())
-                        .appId(context.getAppId())
                         .objectDescribeApiName(entityId)
                         .objectId(objectId)
                         .memberType(teamPojo.getMemberType())

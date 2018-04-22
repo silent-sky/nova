@@ -18,7 +18,6 @@ public class RolePojo implements Serializable {
      * @see com.nova.paas.common.constant.AuthConstant.RoleType
      */
     private Integer roleType;
-    private String appId;
     private String tenantId;
     private String description;
     private Boolean delFlag;
