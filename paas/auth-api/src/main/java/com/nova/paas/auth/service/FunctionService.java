@@ -15,8 +15,6 @@ import java.util.Set;
  */
 public interface FunctionService {
 
-    List<FunctionPojo> queryFunction(CommonContext context, QryFunctionParam param) throws AuthServiceException;
-
     void addFunc(CommonContext context, FunctionPojo pojo) throws AuthServiceException;
 
     void batchDeleteFunc(CommonContext context, Set<String> idSet) throws AuthServiceException;
@@ -29,6 +27,7 @@ public interface FunctionService {
      */
     void updateFunc(CommonContext context, FunctionPojo functionPojo) throws AuthServiceException;
 
+    List<FunctionPojo> queryFunction(CommonContext context, QryFunctionParam param) throws AuthServiceException;
     //    /**
     //     * 查询企业应用所有的功能
     //     *

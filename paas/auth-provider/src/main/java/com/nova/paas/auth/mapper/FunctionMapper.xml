@@ -17,26 +17,6 @@
         <result property="delFlag" column="del_flag"/>
     </resultMap>
 
-    <select id="queryFunction" resultMap="function">
-        select * from au_function where tenant_id=#{tenantId}
-        <if test="ids != null and ids.size()>0">
-            AND id IN
-            <foreach item="idSet" collection="ids" open="(" separator="," close=")">
-                #{idSet}
-            </foreach>
-        </if>
-        <if test="funcName != null and funcName!=''">
-            AND func_name=#{funcName}
-        </if>
-        <if test="parentId != null and parentId!=''">
-            AND parent_id=#{parentId}
-        </if>
-        <if test="funcType != null ">
-            AND func_type=#{funcType}
-        </if>
-        and del_flag=0
-    </select>
-
     <insert id="insert" parameterType="com.nova.paas.auth.entity.Function">
         insert into au_function (id, tenant_id,func_code,func_name,func_order,func_type,
         parent_id,created_by,created_at)
@@ -77,5 +57,24 @@
         where id = #{id} and tenant_id=#{tenantId}
     </update>
 
+    <select id="queryFunction" resultMap="function">
+        select * from au_function where tenant_id=#{tenantId}
+        <if test="ids != null and ids.size()>0">
+            AND id IN
+            <foreach item="idSet" collection="ids" open="(" separator="," close=")">
+                #{idSet}
+            </foreach>
+        </if>
+        <if test="funcName != null and funcName!=''">
+            AND func_name=#{funcName}
+        </if>
+        <if test="parentId != null and parentId!=''">
+            AND parent_id=#{parentId}
+        </if>
+        <if test="funcType != null ">
+            AND func_type=#{funcType}
+        </if>
+        and del_flag=0
+    </select>
 
 </mapper>

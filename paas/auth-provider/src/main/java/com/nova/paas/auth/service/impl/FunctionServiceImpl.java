@@ -40,19 +40,14 @@ public class FunctionServiceImpl implements FunctionService {
     FunctionMapper functionMapper;
 
     @Override
-    public List<FunctionPojo> queryFunction(CommonContext context, QryFunctionParam param) throws AuthServiceException {
-        List<Function> funcList =
-                functionMapper.queryFunction(context.getTenantId(), param.getIds(), param.getFuncName(), param.getParentId(), param.getFuncType());
-        return this.convertFuncToPojos(funcList);
-    }
-
-    @Override
     @Transactional
     public void addFunc(CommonContext context, FunctionPojo pojo) throws AuthServiceException {
         Function entity = new Function();
         try {
             PropertyUtils.copyProperties(entity, pojo);
             entity.setId(IdUtil.generateId());
+            entity.setCreatedBy(context.getUserId());
+            entity.setCreatedAt(System.currentTimeMillis());
         } catch (Exception e) {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
         }
@@ -138,6 +133,13 @@ public class FunctionServiceImpl implements FunctionService {
             throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION, e);
         }
 
+    }
+
+    @Override
+    public List<FunctionPojo> queryFunction(CommonContext context, QryFunctionParam param) throws AuthServiceException {
+        List<Function> funcList =
+                functionMapper.queryFunction(context.getTenantId(), param.getIds(), param.getFuncName(), param.getParentId(), param.getFuncType());
+        return this.convertFuncToPojos(funcList);
     }
 
     private List<FunctionPojo> convertFuncToPojos(List<Function> functionList) {

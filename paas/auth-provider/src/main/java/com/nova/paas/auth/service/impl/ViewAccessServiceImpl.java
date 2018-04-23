@@ -289,9 +289,9 @@ public class ViewAccessServiceImpl implements ViewAccessService {
 
     private void rolesIsExist(CommonContext context, Set<String> roles) throws AuthServiceException {
         if (CollectionUtils.isNotEmpty(roles)) {
-            if (roleService.roleCodeOrRoleNameExists(context, roles, null) != roles.size()) {
-                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-            }
+            //            if (roleService.roleCodeOrRoleNameExists(context, roles, null) != roles.size()) {
+            //                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
+            //            }
         }
     }
 

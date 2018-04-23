@@ -48,7 +48,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     RoleService roleService;
     @Autowired
     private CacheManager cacheManager;
-//    @Value("${USER_ROLE_EXPIRE_SECOND}")
+    //    @Value("${USER_ROLE_EXPIRE_SECOND}")
     //    private int USER_ROLE_EXPIRE_SECOND;
 
     @Override
@@ -424,12 +424,12 @@ public class UserRoleServiceImpl implements UserRoleService {
             }
 
             //查询企业所有角色（优化-只查需要的rolePojo？）
-            List<RolePojo> rolePojoList = roleService.queryRole(context, null, null, null, null);
-            if (CollectionUtils.isNotEmpty(rolePojoList)) {
-                rolePojoList.forEach(rolePojo -> {
-                    rolePojoMap.put(rolePojo.getRoleCode(), rolePojo);
-                });
-            }
+            //            List<RolePojo> rolePojoList = roleService.queryRole(context, null, null, null, null);
+            //            if (CollectionUtils.isNotEmpty(rolePojoList)) {
+            //                rolePojoList.forEach(rolePojo -> {
+            //                    rolePojoMap.put(rolePojo.getRoleCode(), rolePojo);
+            //                });
+            //            }
 
             //构建用户角色信息
             userRoleMap.forEach((userId, roles) -> {
@@ -1073,7 +1073,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                     false);
 
             //查询企业所有角色
-            List<RolePojo> rolePojoList = roleService.queryRole(context, null, null, null, null);
+            List<RolePojo> rolePojoList = roleService.queryRoleListByPage(context, null);
             if (CollectionUtils.isNotEmpty(rolePojoList)) {
                 rolePojoList.forEach(rolePojo -> {
                     rolePojoMap.put(rolePojo.getRoleCode(), rolePojo.getRoleName());
@@ -1474,9 +1474,9 @@ public class UserRoleServiceImpl implements UserRoleService {
      */
     private void rolesIsExist(CommonContext authContext, Set<String> roles) throws AuthServiceException {
         if (CollectionUtils.isNotEmpty(roles)) {
-            if (roleService.roleCodeOrRoleNameExists(authContext, roles, null) != roles.size()) {
-                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-            }
+            //            if (roleService.roleCodeOrRoleNameExists(authContext, roles, null) != roles.size()) {
+            //                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
+            //            }
         }
     }
 

@@ -12,13 +12,12 @@ import java.io.Serializable;
 public class RolePojo implements Serializable {
     private static final long serialVersionUID = 3073867806457952623L;
     private String id;
+    private String tenantId;
     private String roleCode;
     private String roleName;
     /**
      * @see com.nova.paas.common.constant.AuthConstant.RoleType
      */
     private Integer roleType;
-    private String tenantId;
     private String description;
-    private Boolean delFlag;
 }

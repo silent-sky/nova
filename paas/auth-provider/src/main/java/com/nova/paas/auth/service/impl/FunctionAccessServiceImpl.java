@@ -547,9 +547,9 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
      */
     private void rolesIsExist(CommonContext authContext, Set<String> roles) throws AuthServiceException {
         if (CollectionUtils.isNotEmpty(roles)) {
-            if (roleService.roleCodeOrRoleNameExists(authContext, roles, null) != roles.size()) {
-                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
-            }
+//            if (roleService.roleCodeOrRoleNameExists(authContext, roles, null) != roles.size()) {
+//                throw new AuthServiceException(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION);
+//            }
         }
     }
 
