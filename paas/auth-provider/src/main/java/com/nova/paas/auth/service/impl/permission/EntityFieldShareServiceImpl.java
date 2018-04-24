@@ -261,7 +261,7 @@ public class EntityFieldShareServiceImpl implements EntityFieldShareService {
      */
     public List<String> fieldShareReceiveSql(CommonContext context, String entityId) {
         List<String> roles = null;
-        //        List<String> roles = userRoleService.queryRoleCodeListByUserId(context);
+        //        List<String> roles = userRoleService.queryRoleIdListByUserId(context);
         return entityFieldShareReceiveMapper.fieldShareReceiveSql(context.getTenantId(), context.getAppId(), entityId, roles, context.getUserId());
     }
 
@@ -270,7 +270,7 @@ public class EntityFieldShareServiceImpl implements EntityFieldShareService {
      */
     public List<EntityFieldShareReceivePojo> userReceivedRule(CommonContext context, String entityId) {
         List<String> roles = null;
-        //        List<String> roles = userRoleService.queryRoleCodeListByUserId(context);
+        //        List<String> roles = userRoleService.queryRoleIdListByUserId(context);
         List<EntityFieldShareReceive> receives =
                 entityFieldShareReceiveMapper.userReceivedRule(context.getTenantId(), context.getAppId(), entityId, roles, context.getUserId());
         return this.entityFieldShareReceivesToPojos(receives);

@@ -154,8 +154,8 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
      */
     @Override
     public List<FunctionPojo> queryFuncAccessByUser(CommonContext context) throws AuthServiceException {
-        List<String> roleList = userRoleService.queryRoleCodeListByUserId(context);
-        Set<String> functionPermission = this.queryFuncSetByRoles(context, roleList);
+//        List<String> roleList = userRoleService.queryRoleIdListByUserId(context);
+//        Set<String> functionPermission = this.queryFuncSetByRoles(context, roleList);
 //        List<FunctionPojo> functionPojoList = functionService.queryFunctionByTenant(context);
 //        return this.structureFuncPermission(functionPermission, functionPojoList);
         return null;
@@ -180,16 +180,16 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
             return permissionCheckResult;
         }
 
-        Set<String> functionPermission = this.queryFuncSetByRoles(context, userRoleService.queryRoleCodeListByUserId(context));
+//        Set<String> functionPermission = this.queryFuncSetByRoles(context, userRoleService.queryRoleIdListByUserId(context));
 
         //权限校验
-        funcCodeSet.forEach(funcCode -> {
-            if (functionPermission.contains(funcCode)) {
-                permissionCheckResult.put(funcCode, Boolean.TRUE);
-            } else {
-                permissionCheckResult.put(funcCode, Boolean.FALSE);
-            }
-        });
+//        funcCodeSet.forEach(funcCode -> {
+//            if (functionPermission.contains(funcCode)) {
+//                permissionCheckResult.put(funcCode, Boolean.TRUE);
+//            } else {
+//                permissionCheckResult.put(funcCode, Boolean.FALSE);
+//            }
+//        });
         return permissionCheckResult;
     }
 

@@ -2,20 +2,28 @@ package com.nova.saas.hr.controller;
 
 import com.nova.paas.auth.arg.CreateFuncArg;
 import com.nova.paas.auth.arg.CreateRoleArg;
+import com.nova.paas.auth.arg.CreateUserRoleArg;
 import com.nova.paas.auth.arg.DeleteFuncArg;
 import com.nova.paas.auth.arg.DeleteRoleArg;
+import com.nova.paas.auth.arg.DeleteUserRoleByRolesArg;
+import com.nova.paas.auth.arg.DeleteUserRoleByUsersArg;
 import com.nova.paas.auth.arg.QryFunctionArg;
 import com.nova.paas.auth.arg.QryRoleArg;
+import com.nova.paas.auth.arg.QryUserRoleByRoleArg;
+import com.nova.paas.auth.arg.QryUserRoleByUserArg;
 import com.nova.paas.auth.arg.UpdateFuncArg;
 import com.nova.paas.auth.arg.UpdateRoleArg;
+import com.nova.paas.auth.arg.UpdateUserRoleArg;
 import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.param.QryFunctionParam;
 import com.nova.paas.auth.param.QryRoleParam;
 import com.nova.paas.auth.pojo.FunctionPojo;
 import com.nova.paas.auth.pojo.RolePojo;
+import com.nova.paas.auth.pojo.UserRolePojo;
 import com.nova.paas.auth.service.FunctionService;
 import com.nova.paas.auth.service.RoleService;
+import com.nova.paas.auth.service.UserRoleService;
 import com.nova.paas.common.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +46,8 @@ public class AuthController {
     private FunctionService functionService;
     @Inject
     private RoleService roleService;
+    @Inject
+    private UserRoleService userRoleService;
 
     @PostMapping(value = "/func/create")
     public Result createFunction(@RequestBody CreateFuncArg arg) {
@@ -177,6 +187,110 @@ public class AuthController {
                     .pageInfo(arg.getPageInfo())
                     .build();
             List<RolePojo> list = roleService.queryRoleListByPage(arg.getContext(), param);
+            result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/role/add")
+    public Result createUserRole(@RequestBody CreateUserRoleArg arg) {
+        Result result = new Result<>();
+        try {
+            userRoleService.addUserToRole(arg.getContext(), arg.getRoleId(), arg.getUsers());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/role/delete")
+    public Result deleteUserRoleByRoles(@RequestBody DeleteUserRoleByRolesArg arg) {
+        Result result = new Result<>();
+        try {
+            userRoleService.delRoleUserByRoles(arg.getContext(), arg.getUserId(), arg.getRoleIds());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/user/delete")
+    public Result deleteUserRoleByUsers(@RequestBody DeleteUserRoleByUsersArg arg) {
+        Result result = new Result<>();
+        try {
+            userRoleService.delRoleUserByUsers(arg.getContext(), arg.getRoleId(), arg.getUserIds());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/update")
+    public Result updateUserRole(@RequestBody UpdateUserRoleArg arg) {
+        Result result = new Result<>();
+        try {
+            userRoleService.updateUserRole(arg.getContext(), arg.getUserId(), arg.getRoleIds());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/role/list")
+    public Result findUserRoleListByRole(@RequestBody QryUserRoleByRoleArg arg) {
+        Result<List<UserRolePojo>> result = new Result<>();
+        try {
+            List<UserRolePojo> list = userRoleService.getUserRoleRelationByRole(arg.getContext(), arg.getRoleId(), arg.getTargetType());
+            result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/userRole/user/list")
+    public Result findUserRoleListByUser(@RequestBody QryUserRoleByUserArg arg) {
+        Result<List<UserRolePojo>> result = new Result<>();
+        try {
+            List<UserRolePojo> list = userRoleService.getUserRoleRelationByUser(arg.getContext(), arg.getTargetId());
             result.setResult(list);
         } catch (AuthServiceException e) {
             log.error(e.getErrorMsg().getMessage(), e);

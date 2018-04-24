@@ -981,7 +981,8 @@ public class DataRightsServiceImpl implements DataRightsService {
                 .append("' and dept_user.is_deleted = 0) and entity_share.receive_type = ")
                 .append(PermissionConstant.EntityShareType.DEPT)
                 .append(')');
-        List<String> userRoles = userRoleService.queryRoleCodeListByUserId(context);
+        //        List<String> userRoles = userRoleService.queryRoleIdListByUserId(context);
+        List<String> userRoles = null;
         if (CollectionUtils.isNotEmpty(userRoles)) {
             sql.append(" or ( entity_share.receive_user in (");
             int roleLen = userRoles.size();
@@ -1135,7 +1136,8 @@ public class DataRightsServiceImpl implements DataRightsService {
             Set<String> untreatedObject,
             Map<String, Set<String>> ownerObjects,
             Set<String> objectOwners) throws AuthServiceException {
-        List<String> userRoles = userRoleService.queryRoleCodeListByUserId(context);
+        //        List<String> userRoles = userRoleService.queryRoleIdListByUserId(context);
+        List<String> userRoles = null;
         List<EntityShareCache> entityShareCacheList = entityShareCacheMapper.queryEntityShareCacheByReceiveAndShareUsers(context.getTenantId(),
                 context.getAppId(),
                 entityId,

@@ -5,217 +5,140 @@
     <resultMap id="userRole" type="com.nova.paas.auth.entity.UserRole">
         <id property="id" column="id"/>
         <result property="tenantId" column="tenant_id"/>
-        <result property="appId" column="app_id"/>
-        <result property="roleCode" column="role_code"/>
-        <result property="orgId" column="org_id"/>
+        <result property="roleId" column="role_id"/>
+        <result property="targetId" column="target_id"/>
         <result property="targetType" column="org_type"/>
-        <result property="defaultRole" column="default_role"/>
-        <result property="deptId" column="dept_id"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modifiedAt" column="modified_at"/>
         <result property="delFlag" column="del_flag"/>
-        <result property="modifier" column="modifier"/>
-        <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-    <resultMap id="int" type="java.lang.Integer"/>
-
-    <update id="batchDel">
-        update auth_user_role set del_flag=1,modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
-        del_flag=0
-        <if test="roleCode != null and roleCode!='' ">
-            AND role_code=#{roleCode}
-        </if>
-        <if test="orgIdList != null and orgIdList.size()>0">
-            AND org_id IN
-            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
-                #{orgIds}
-            </foreach>
-        </if>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-    </update>
-
-
-    <select id="queryUserRoleProvider" resultMap="userRole">
-        select * from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="orgIdList != null and orgIdList.size()>0">
-            AND org_id IN
-            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
-                #{orgIds}
-            </foreach>
-        </if>
-        <if test="roles != null and roles.size()>0">
-            AND role_code IN
-            <foreach item="roleCodes" collection="roles" open="(" separator="," close=")">
-                #{roleCodes}
-            </foreach>
-        </if>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-    </select>
-
-    <select id="queryOrgIdsOrRoles" resultType="String">
-        select distinct(${result}) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="orgIdList != null and orgIdList.size()>0">
-            AND org_id IN
-            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
-                #{orgIds}
-            </foreach>
-        </if>
-        <if test="roleCode != null and roleCode!=''">
-            AND role_code=#{roleCode}
-        </if>
-        <choose>
-            <when test="excludeRoles!=null and excludeRoles.size()>0 and result=='orgId'">
-                and org_id not in (SELECT org_id from auth_user_role where tenant_id=#{tenantId} and app_id=#{appId} and role_code IN
-                <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
-                    #{excludeRoleCodes}
-                </foreach>
-                <if test="targetType != null ">
-                    AND org_type=#{targetType}
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into au_user_role
+        <trim prefix=" (" suffix=")" suffixOverrides=",">
+            <if test="list[0].id!=null">
+                id,
+            </if>
+            <if test="list[0].tenantId!=null">
+                tenant_id,
+            </if>
+            <if test="list[0].roleId!=null">
+                role_id,
+            </if>
+            <if test="list[0].targetId!=null">
+                target_id,
+            </if>
+            <if test="list[0].targetType!=null">
+                target_type,
+            </if>
+            <if test="list[0].modifiedBy!=null">
+                modified_by,
+            </if>
+            <if test="list[0].modifiedAt!=null">
+                modified_at,
+            </if>
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                <if test="item.id!=null">
+                    #{item.id},
                 </if>
-                and del_flag=0 )
-            </when>
-            <otherwise>
-                <if test="excludeRoles!=null and excludeRoles.size()>0 and result=='roleCode'">
-                    and role_code not in
-                    <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
-                        #{excludeRoleCodes}
-                    </foreach>
+                <if test="item.tenantId!=null">
+                    #{item.tenantId},
                 </if>
-            </otherwise>
-        </choose>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-        <if test="page!=null and page.pageSize!=null and start!=null">
-            limit #{start},#{page.pageSize}
-        </if>
-    </select>
-
-
-    <select id="queryOrgIdsOrRolesCount" resultType="int">
-        select count(distinct(${result})) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="orgIdList != null and orgIdList.size()>0">
-            AND org_id IN
-            <foreach item="orgIds" collection="orgIdList" open="(" separator="," close=")">
-                #{orgIds}
-            </foreach>
-        </if>
-        <if test="roleCode != null and roleCode!=''">
-            AND role_code=#{roleCode}
-        </if>
-        <choose>
-            <when test="excludeRoles!=null and excludeRoles.size()>0 and result=='orgId'">
-                and org_id not in (SELECT org_id from auth_user_role where tenant_id=#{tenantId} and app_id=#{appId} and role_code IN
-                <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
-                    #{excludeRoleCodes}
-                </foreach>
-                <if test="targetType != null ">
-                    AND org_type=#{targetType}
+                <if test="item.roleId!=null">
+                    #{item.roleId},
                 </if>
-                and del_flag=0 )
-            </when>
-            <otherwise>
-                <if test="excludeRoles!=null and excludeRoles.size()>0 and result=='roleCode'">
-                    and role_code not in
-                    <foreach item="excludeRoleCodes" collection="excludeRoles" open="(" separator="," close=")">
-                        #{excludeRoleCodes}
-                    </foreach>
+                <if test="item.targetId!=null">
+                    #{item.targetId},
                 </if>
-            </otherwise>
-        </choose>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
+                <if test="item.targetType!=null">
+                    #{item.targetType},
+                </if>
+                <if test="item.modifiedBy!=null">
+                    #{item.modifiedBy},
+                </if>
+                <if test="item.modifiedAt!=null">
+                    #{item.modifiedAt},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="batchDeleteByUsers">
+        update au_user_role set del_flag=1,modified_by=#{modifiedBy},modified_at=#{modifiedAt} WHERE tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!='' ">
+            AND role_id=#{roleId}
         </if>
-    </select>
-
-
-    <update id="setDefaultRoleFlag">
-        update auth_user_role set default_role=#{flag},modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId}
-        and del_flag=0
-        <if test="idList != null and idList.size()>0">
+        <if test="targetIds != null and targetIds.size()>0">
             AND id IN
-            <foreach item="ids" collection="idList" open="(" separator="," close=")">
-                #{ids}
+            <foreach item="item" collection="targetIds" open="(" separator="," close=")">
+                #{item}
             </foreach>
         </if>
         <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-    </update>
-
-
-    <update id="updateUserRoleDeptId">
-        update auth_user_role set dept_id=#{dept},modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
-        del_flag=0
-        <if test="roleCode != null and roleCode!='' ">
-            AND role_code=#{roleCode}
-        </if>
-        <if test="orgId != null and orgId!='' ">
-            AND org_id=#{orgId}
-        </if>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-    </update>
-
-
-    <select id="queryEntityByUserRole" resultMap="userRole">
-        select role_code,org_id,dept_id from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
-        <if test="roleCodes != null and roleCodes.size()>0">
-            AND role_code IN
-            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
-                #{roles}
-            </foreach>
-        </if>
-        <if test="orgId != null and orgId!='' ">
-            AND org_id=#{orgId}
-        </if>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
+            AND target_type=#{targetType}
         </if>
         and del_flag=0
-        <if test="start!=null and pageSize!=null">
-            limit #{start},#{pageSize}
-        </if>
-    </select>
+    </update>
 
-
-    <select id="queryEntityByUserRoleCount" resultMap="int">
-        select count(id) from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
-        <if test="roleCodes != null and roleCodes.size()>0">
-            AND role_code IN
-            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
-                #{roles}
-            </foreach>
-        </if>
-        <if test="orgId != null and orgId!='' ">
-            AND org_id=#{orgId}
+    <update id="batchDeleteByRoles">
+        update au_user_role set del_flag=1,modified_by=#{modifiedBy},modified_at=#{modifiedAt} WHERE tenant_id=#{tenantId}
+        <if test="targetId != null and targetId!='' ">
+            AND target_id=#{targetId}
         </if>
         <if test="targetType != null ">
-            AND org_type=#{targetType}
+            AND target_type=#{targetType}
+        </if>
+        <if test="roleIds != null and roleIds.size()>0">
+            AND id IN
+            <foreach item="item" collection="roleIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and del_flag=0
+    </update>
+
+    <update id="update" parameterType="com.nova.paas.auth.entity.UserRole">
+        update au_user_role
+        <set>
+            <if test="roleId != null">
+                role_id = #{roleId},
+            </if>
+            <if test="targetId != null">
+                target_id = #{targetId},
+            </if>
+            <if test="targetType != null">
+                target_type = #{targetType},
+            </if>
+            <if test="modifiedBy != null">
+                modified_by = #{modifiedBy},
+            </if>
+            <if test="modifiedAt != null">
+                modified_at = #{modifiedAt},
+            </if>
+        </set>
+        where id = #{id} and tenant_id=#{tenantId}
+    </update>
+
+    <select id="findUserByRole" resultMap="userRole">
+        select * from au_user_role where tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!=''">
+            AND role_id=#{roleId}
+        </if>
+        <if test="targetType != null and targetType!=''">
+            AND target_type=#{targetType}
         </if>
         and del_flag=0
     </select>
 
-
-    <select id="queryUsersByRoleDept" resultType="String">
-        select org_id from auth_user_role WHERE tenant_id=#{tenantId} and app_id=#{appId}
-        <if test="roleCodes != null and roleCodes.size()>0">
-            AND role_code IN
-            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
-                #{roles}
-            </foreach>
+    <select id="findRoleByUser" resultMap="userRole">
+        select * from au_user_role where tenant_id=#{tenantId}
+        <if test="targetId != null and targetId!=''">
+            AND target_id=#{targetId}
         </if>
-        <if test="deptId != null and deptId!='' ">
-            AND dept_id like CONCAT('%',#{deptId},'%')
-        </if>
-        <if test="targetType != null ">
-            AND org_type=#{targetType}
-        </if>
-        and del_flag=0
+        and target_type=0 and del_flag=0
     </select>
 
 </mapper>

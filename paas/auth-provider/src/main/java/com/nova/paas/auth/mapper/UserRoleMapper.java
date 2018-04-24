@@ -1,13 +1,9 @@
 package com.nova.paas.auth.mapper;
 
-import com.nova.paas.auth.entity.Role;
 import com.nova.paas.auth.entity.UserRole;
-import com.nova.paas.common.pojo.PageInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -18,105 +14,30 @@ import java.util.Set;
 @Mapper
 public interface UserRoleMapper {
 
-    @Select("select  distinct(org_id)   from  auth_user_role  where   tenant_id=#{tenantId}   and  app_id=#{appId}  and role_code=#{roleCode} and org_type = #{targetType}  and del_flag=false ")
-    List<String> queryUserIdByRoleCode(
-            @Param("tenantId") String tenantId, @Param("appId") String appId, @Param("roleCode") String roleCode, @Param("targetType") Integer orgType);
+    void batchInsert(List<UserRole> userRoleList);
 
-    @Select("SELECT role_code FROM auth_user_role WHERE tenant_id = #{tenantId} and app_id = #{appId} and org_id = #{orgId} and org_type = #{targetType} and del_flag = false   ")
-    List<String> queryRoleCodeListByUserId(
-            @Param("tenantId") String tenantId, @Param("appId") String appId, @Param("orgId") String orgId, @Param("targetType") Integer orgType);
-
-    @Select("select * from auth_role where tenant_id = #{tenantId} and app_id = #{appId} and del_flag = false and role_code in"
-                    + " (select role_code FROM auth_user_role where tenant_id = #{tenantId} and app_id = #{appId} and org_id = #{orgId} and org_type = #{targetType} and del_flag = false )")
-    List<Role> queryRoleByUser(
-            @Param("tenantId") String tenantId, @Param("appId") String appId, @Param("orgId") String orgId, @Param("targetType") Integer orgType);
-
-    @Select("select * from auth_user_role where tenant_id = #{tenantId} and app_id = #{appId} and role_code = #{roleCode} and org_type = #{targetType} and del_flag = false  ")
-    List<UserRole> queryUserRole(
-            @Param("tenantId") String tenantId, @Param("appId") String appId, @Param("roleCode") String roleCode, @Param("targetType") Integer orgType);
-
-    void batchDel(
+    void batchDeleteByUsers(
             @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCode") String roleCode,
-            @Param("orgIdList") Collection<String> orgIdList,
-            @Param("targetType") Integer orgType,
-            @Param("userId") String userId,
-            @Param("modifyTime") long modifyTime);
+            @Param("roleId") String roleId,
+            @Param("targetIds") Set<String> targetIds,
+            @Param("targetType") Integer targetType,
+            @Param("modifiedBy") String modifiedBy,
+            @Param("modifiedAt") Long modifiedAt);
 
-    List<UserRole> queryUserRoleProvider(
+    void batchDeleteByRoles(
             @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roles") Collection<String> roles,
-            @Param("orgIdList") Collection<String> orgIdList,
-            @Param("targetType") Integer orgType,
-            @Param("delFlag") Boolean delFlag);
+            @Param("roleIds") Set<String> roleIds,
+            @Param("targetId") String targetId,
+            @Param("targetType") Integer targetType,
+            @Param("modifiedBy") String modifiedBy,
+            @Param("modifiedAt") Long modifiedAt);
 
-    List<String> queryOrgIdsOrRoles(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCode") String roleCode,
-            @Param("orgIdList") Collection<String> orgIdList,
-            @Param("targetType") Integer orgType,
-            @Param("delFlag") Boolean delFlag,
-            @Param("result") String result,
-            @Param("excludeRoles") Collection<String> excludeRoles,
-            @Param("page") PageInfo page,
-            @Param("start") Integer start);
+    void update(UserRole userRole);
 
-    int queryOrgIdsOrRolesCount(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCode") String roleCode,
-            @Param("orgIdList") Collection<String> orgIdList,
-            @Param("targetType") Integer orgType,
-            @Param("delFlag") Boolean delFlag,
-            @Param("result") String result,
-            @Param("excludeRoles") Collection<String> excludeRoles);
+    List<UserRole> findUserByRole(
+            @Param("tenantId") String tenantId, @Param("roleId") String roleId, @Param("targetType") Integer targetType);
 
-    void setDefaultRoleFlag(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("idList") Collection<String> idList,
-            @Param("targetType") Integer orgType,
-            @Param("flag") boolean flag,
-            @Param("userId") String userId,
-            @Param("modifyTime") long modifyTime);
-
-    int updateUserRoleDeptId(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("targetType") Integer orgType,
-            @Param("roleCode") String roleCode,
-            @Param("orgId") String orgId,
-            @Param("dept") String dept,
-            @Param("userId") String userId,
-            @Param("modifyTime") long modifyTime);
-
-    List<UserRole> queryEntityByUserRole(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCodes") Set<String> roleCode,
-            @Param("targetType") Integer orgType,
-            @Param("orgId") String orgId,
-            @Param("start") Integer start,
-            @Param("pageSize") Integer pageSize);
-
-    int queryEntityByUserRoleCount(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCodes") Set<String> roleCode,
-            @Param("targetType") Integer orgType,
-            @Param("orgId") String orgId);
-
-    Set<String> queryUsersByRoleDept(
-            @Param("tenantId") String tenantId,
-            @Param("appId") String appId,
-            @Param("roleCodes") Set<String> roleCode,
-            @Param("targetType") Integer orgType,
-            @Param("deptId") String deptId);
-
-    @Select("select count(id) from auth_user_role where tenant_id = #{tenantId} and app_id = #{appId} and role_code = #{roleCode} and del_flag=0 and dept_id is not null and dept_id!='' and dept_id!='0'")
-    int queryValidUserNumByRole(@Param("tenantId") String tenantId, @Param("appId") String appId, @Param("roleCode") String roleCode);
+    List<UserRole> findRoleByUser(
+            @Param("tenantId") String tenantId, @Param("targetId") String targetId);
 
 }

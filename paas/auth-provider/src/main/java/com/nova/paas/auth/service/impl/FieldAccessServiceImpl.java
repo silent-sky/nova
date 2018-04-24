@@ -107,7 +107,8 @@ public class FieldAccessServiceImpl implements FieldAccessService {
         }
 
         //用户角色
-        List<String> roleCodeList = userRoleService.queryRoleCodeListByUserId(context);
+//        List<String> roleCodeList = userRoleService.queryRoleIdListByUserId(context);
+        List<String> roleCodeList = null;
 
         //用户无角色
         if (CollectionUtils.isEmpty(roleCodeList)) {
@@ -386,7 +387,8 @@ public class FieldAccessServiceImpl implements FieldAccessService {
         }
 
         //用户角色
-        List<String> roleCodeList = userRoleService.queryRoleCodeListByUserId(context);
+//        List<String> roleCodeList = userRoleService.queryRoleIdListByUserId(context);
+        List<String> roleCodeList = null;
 
         //用户无角色,对象字段权限直接返回null
         if (CollectionUtils.isEmpty(roleCodeList)) {

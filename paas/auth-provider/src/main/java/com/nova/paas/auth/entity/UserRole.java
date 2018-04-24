@@ -27,19 +27,11 @@ public class UserRole {
     private Integer targetType;
     private String modifiedBy;
     private Long modifiedAt;
-    //    private Boolean defaultRole;
     private String deptId;
     private Boolean delFlag;
 
     public UserRole(
-            String id,
-            String tenantId,
-            String targetId,
-            String roleId,
-            Integer targetType,
-            String modifiedBy,
-            Long modifiedAt,
-            Boolean delFlag) {
+            String id, String tenantId, String targetId, String roleId, Integer targetType, String modifiedBy, Long modifiedAt, Boolean delFlag) {
         this.id = id;
         this.tenantId = tenantId;
         this.targetId = targetId;
