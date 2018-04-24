@@ -5,76 +5,100 @@
     <resultMap id="funcAccess" type="com.nova.paas.auth.entity.FuncAccess">
         <id property="id" column="id"/>
         <result property="tenantId" column="tenant_id"/>
-        <result property="appId" column="app_id"/>
-        <result property="roleCode" column="role_code"/>
-        <result property="funcCode" column="func_code"/>
+        <result property="roleId" column="role_id"/>
+        <result property="funcId" column="func_id"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modifiedAt" column="modified_at"/>
         <result property="delFlag" column="del_flag"/>
-        <result property="modifier" column="modifier"/>
-        <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into au_func_access
+        <trim prefix=" (" suffix=")" suffixOverrides=",">
+            <if test="list[0].id!=null">
+                id,
+            </if>
+            <if test="list[0].tenantId!=null">
+                tenant_id,
+            </if>
+            <if test="list[0].roleId!=null">
+                role_id,
+            </if>
+            <if test="list[0].funcId!=null">
+                func_id,
+            </if>
+            <if test="list[0].modifiedBy!=null">
+                modified_by,
+            </if>
+            <if test="list[0].modifiedAt!=null">
+                modified_at,
+            </if>
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                <if test="item.id!=null">
+                    #{item.id},
+                </if>
+                <if test="item.tenantId!=null">
+                    #{item.tenantId},
+                </if>
+                <if test="item.roleId!=null">
+                    #{item.roleId},
+                </if>
+                <if test="item.funcId!=null">
+                    #{item.funcId},
+                </if>
+                <if test="item.modifiedBy!=null">
+                    #{item.modifiedBy},
+                </if>
+                <if test="item.modifiedAt!=null">
+                    #{item.modifiedAt},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
 
-    <select id="queryFuncAccessProvider" resultMap="funcAccess">
-        select role_code,func_code from auth_func_access WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="roles != null and roles.size()>0">
-            AND role_code IN
-            <foreach item="roleCodes" collection="roles" open="(" separator="," close=")">
-                #{roleCodes}
+    <update id="batchDelete">
+        update au_func_access set del_flag=1,modified_by=#{modifiedBy},modified_at=#{modifiedAt} WHERE tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!='' ">
+            AND role_id=#{roleId}
+        </if>
+        <if test="funcIds != null and funcIds.size()>0">
+            AND id IN
+            <foreach item="item" collection="funcIds" open="(" separator="," close=")">
+                #{item}
             </foreach>
         </if>
-        <if test="codes != null and codes.size()>0">
-            AND func_code IN
-            <foreach item="funcCodes" collection="codes" open="(" separator="," close=")">
-                #{funcCodes}
-            </foreach>
-        </if>
-    </select>
-
-
-    <select id="queryFuncAccessEntitys" resultMap="funcAccess">
-        select * from auth_func_access WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="roles != null and roles.size()>0">
-            AND role_code IN
-            <foreach item="roleCodes" collection="roles" open="(" separator="," close=")">
-                #{roleCodes}
-            </foreach>
-        </if>
-        <if test="codes != null and codes.size()>0">
-            AND func_code IN
-            <foreach item="funcCodes" collection="codes" open="(" separator="," close=")">
-                #{funcCodes}
-            </foreach>
-        </if>
-    </select>
-
-
-    <update id="batchDel">
-        update func_access set del_flag=1,modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="roleCode != null and roleCode!='' ">
-            AND role_code=#{roleCode}
-        </if>
-        <if test="funcCodeList != null and funcCodeList.size()>0">
-            AND func_code IN
-            <foreach item="funcCodes" collection="funcCodeList" open="(" separator="," close=")">
-                #{funcCodes}
-            </foreach>
-        </if>
+        and del_flag=0
     </update>
 
-    <update id="batchDelFuncAccess">
-        update func_access set del_flag=1,modifier=#{userId},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="roleCodes != null and roleCodes.size()>0">
-            AND role_code IN
-            <foreach item="role" collection="roleCodes" open="(" separator="," close=")">
-                #{role}
+    <select id="findFuncAccessByRole" resultMap="funcAccess">
+        select * from au_func_access where tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!='' ">
+            AND role_id=#{roleId}
+        </if>
+        and del_flag=0
+    </select>
+
+    <select id="findFuncAccessByFunc" resultMap="funcAccess">
+        select * from au_func_access where tenant_id=#{tenantId}
+        <if test="funcId != null and funcId!='' ">
+            AND func_id=#{funcId}
+        </if>
+        and del_flag=0
+    </select>
+
+    <select id="findFuncIdsByRoles" resultType="java.lang.String">
+        select func_id from au_func_access where tenant_id=#{tenantId}
+        <if test="roleIds != null and roleIds.size()>0">
+            AND role_id IN
+            <foreach item="item" collection="roleIds" open="(" separator="," close=")">
+                #{item}
             </foreach>
         </if>
-        <if test="funcCodes != null and funcCodes.size()>0">
-            AND func_code IN
-            <foreach item="func" collection="funcCodes" open="(" separator="," close=")">
-                #{func}
-            </foreach>
-        </if>
-    </update>
+        and del_flag=0
+    </select>
+
 
 </mapper>

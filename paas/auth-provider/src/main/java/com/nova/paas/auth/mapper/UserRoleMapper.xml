@@ -72,7 +72,7 @@
             AND role_id=#{roleId}
         </if>
         <if test="targetIds != null and targetIds.size()>0">
-            AND id IN
+            AND target_id IN
             <foreach item="item" collection="targetIds" open="(" separator="," close=")">
                 #{item}
             </foreach>
@@ -92,7 +92,7 @@
             AND target_type=#{targetType}
         </if>
         <if test="roleIds != null and roleIds.size()>0">
-            AND id IN
+            AND role_id IN
             <foreach item="item" collection="roleIds" open="(" separator="," close=")">
                 #{item}
             </foreach>

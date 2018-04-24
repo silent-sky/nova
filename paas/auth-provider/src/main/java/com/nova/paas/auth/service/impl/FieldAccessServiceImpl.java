@@ -715,14 +715,14 @@ public class FieldAccessServiceImpl implements FieldAccessService {
             entityFuncCode.put(entity, entity);
         });
         Map<String, List<String>> entityRoles = new HashMap<>();
-        Map<String, Set<String>> rolesFuncCodes = functionAccessService.queryFuncAccessByRoles(context, new HashSet<>(userRoles));//role  funcCodeSet
-        entityFuncCode.forEach((entity, funcCode) -> userRoles.forEach(role -> {
-            if (rolesFuncCodes.get(role) != null && (rolesFuncCodes.get(role).contains(funcCode) || ("5".equals(entity) && rolesFuncCodes.get(role)
-                    .contains("PaymentObj")))) {
-                entityRoles.computeIfAbsent(entity, k -> new ArrayList<>());
-                entityRoles.get(entity).add(role);
-            }
-        }));
+//        Map<String, Set<String>> rolesFuncCodes = functionAccessService.queryFuncAccessByRoles(context, new HashSet<>(userRoles));//role  funcCodeSet
+//        entityFuncCode.forEach((entity, funcCode) -> userRoles.forEach(role -> {
+//            if (rolesFuncCodes.get(role) != null && (rolesFuncCodes.get(role).contains(funcCode) || ("5".equals(entity) && rolesFuncCodes.get(role)
+//                    .contains("PaymentObj")))) {
+//                entityRoles.computeIfAbsent(entity, k -> new ArrayList<>());
+//                entityRoles.get(entity).add(role);
+//            }
+//        }));
         return entityRoles;
     }
 

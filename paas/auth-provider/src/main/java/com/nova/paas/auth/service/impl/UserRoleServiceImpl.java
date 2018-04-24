@@ -7,7 +7,6 @@ import com.nova.paas.auth.exception.AuthException;
 import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.mapper.UserRoleMapper;
 import com.nova.paas.auth.pojo.UserRolePojo;
-import com.nova.paas.auth.service.RoleService;
 import com.nova.paas.auth.service.UserRoleService;
 import com.nova.paas.common.constant.AuthConstant;
 import com.nova.paas.common.pojo.CommonContext;
@@ -33,8 +32,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Autowired
     UserRoleMapper userRoleMapper;
-    @Autowired
-    RoleService roleService;
 
     @Transactional
     @Override

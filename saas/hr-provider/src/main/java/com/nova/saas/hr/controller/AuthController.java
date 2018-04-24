@@ -1,12 +1,18 @@
 package com.nova.saas.hr.controller;
 
+import com.nova.paas.auth.arg.CheckFuncAccessArg;
+import com.nova.paas.auth.arg.CreateFuncAccessArg;
 import com.nova.paas.auth.arg.CreateFuncArg;
 import com.nova.paas.auth.arg.CreateRoleArg;
 import com.nova.paas.auth.arg.CreateUserRoleArg;
+import com.nova.paas.auth.arg.DeleteFuncAccessArg;
 import com.nova.paas.auth.arg.DeleteFuncArg;
 import com.nova.paas.auth.arg.DeleteRoleArg;
 import com.nova.paas.auth.arg.DeleteUserRoleByRolesArg;
 import com.nova.paas.auth.arg.DeleteUserRoleByUsersArg;
+import com.nova.paas.auth.arg.QryFuncAccessByFuncArg;
+import com.nova.paas.auth.arg.QryFuncAccessByRoleArg;
+import com.nova.paas.auth.arg.QryFuncByUserArg;
 import com.nova.paas.auth.arg.QryFunctionArg;
 import com.nova.paas.auth.arg.QryRoleArg;
 import com.nova.paas.auth.arg.QryUserRoleByRoleArg;
@@ -18,9 +24,11 @@ import com.nova.paas.auth.exception.AuthErrorMsg;
 import com.nova.paas.auth.exception.AuthServiceException;
 import com.nova.paas.auth.param.QryFunctionParam;
 import com.nova.paas.auth.param.QryRoleParam;
+import com.nova.paas.auth.pojo.FunctionAccessPojo;
 import com.nova.paas.auth.pojo.FunctionPojo;
 import com.nova.paas.auth.pojo.RolePojo;
 import com.nova.paas.auth.pojo.UserRolePojo;
+import com.nova.paas.auth.service.FunctionAccessService;
 import com.nova.paas.auth.service.FunctionService;
 import com.nova.paas.auth.service.RoleService;
 import com.nova.paas.auth.service.UserRoleService;
@@ -33,6 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * zhenghaibo
@@ -48,6 +58,10 @@ public class AuthController {
     private RoleService roleService;
     @Inject
     private UserRoleService userRoleService;
+    @Inject
+    private FunctionAccessService functionAccessService;
+
+    /********************************** 功能维护 **********************************/
 
     @PostMapping(value = "/func/create")
     public Result createFunction(@RequestBody CreateFuncArg arg) {
@@ -124,6 +138,8 @@ public class AuthController {
         return result;
     }
 
+    /********************************** 角色维护 **********************************/
+
     @PostMapping(value = "/role/create")
     public Result createRole(@RequestBody CreateRoleArg arg) {
         Result result = new Result<>();
@@ -199,6 +215,8 @@ public class AuthController {
         }
         return result;
     }
+
+    /********************************** 用户与角色关联关系 **********************************/
 
     @PostMapping(value = "/userRole/role/add")
     public Result createUserRole(@RequestBody CreateUserRoleArg arg) {
@@ -292,6 +310,132 @@ public class AuthController {
         try {
             List<UserRolePojo> list = userRoleService.getUserRoleRelationByUser(arg.getContext(), arg.getTargetId());
             result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    /********************************** 功能权限 **********************************/
+
+    @PostMapping(value = "/funcAccess/create")
+    public Result createFuncAccess(@RequestBody CreateFuncAccessArg arg) {
+        Result result = new Result<>();
+        try {
+            functionAccessService.addFuncToRole(arg.getContext(), arg.getRoleId(), arg.getFuncIds());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/delete")
+    public Result deleteFuncAccess(@RequestBody DeleteFuncAccessArg arg) {
+        Result result = new Result<>();
+        try {
+            functionAccessService.batchDelete(arg.getContext(), arg.getRoleId(), arg.getFuncIds());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/role/list")
+    public Result findFuncAccessListByRole(@RequestBody QryFuncAccessByRoleArg arg) {
+        Result<List<FunctionAccessPojo>> result = new Result<>();
+        try {
+            List<FunctionAccessPojo> list = functionAccessService.findFuncAccessByRole(arg.getContext(), arg.getRoleId());
+            result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/func/list")
+    public Result findFuncAccessListByFunc(@RequestBody QryFuncAccessByFuncArg arg) {
+        Result<List<FunctionAccessPojo>> result = new Result<>();
+        try {
+            List<FunctionAccessPojo> list = functionAccessService.findFuncAccessByFunc(arg.getContext(), arg.getFuncId());
+            result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/user/list")
+    public Result findFuncListByUser(@RequestBody QryFuncByUserArg arg) {
+        Result<List<FunctionPojo>> result = new Result<>();
+        try {
+            List<FunctionPojo> list = functionAccessService.queryFuncListByUser(arg.getContext(), arg.getUserId());
+            result.setResult(list);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/user/list/id")
+    public Result findFuncIdsByUser(@RequestBody QryFuncByUserArg arg) {
+        Result<Set<String>> result = new Result<>();
+        try {
+            Set<String> set = functionAccessService.queryFuncIdsByUser(arg.getContext(), arg.getUserId());
+            result.setResult(set);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/funcAccess/check")
+    public Result checkFuncAccess(@RequestBody CheckFuncAccessArg arg) {
+        Result<Map<String, Boolean>> result = new Result<>();
+        try {
+            Map<String, Boolean> map = functionAccessService.checkFuncPermission(arg.getContext(), arg.getUserId(), arg.getFuncIds());
+            result.setResult(map);
         } catch (AuthServiceException e) {
             log.error(e.getErrorMsg().getMessage(), e);
             result.setErrCode(e.getErrorMsg().getCode());
