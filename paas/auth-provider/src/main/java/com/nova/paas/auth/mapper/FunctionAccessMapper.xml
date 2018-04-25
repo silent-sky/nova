@@ -65,7 +65,7 @@
             AND role_id=#{roleId}
         </if>
         <if test="funcIds != null and funcIds.size()>0">
-            AND id IN
+            AND func_id IN
             <foreach item="item" collection="funcIds" open="(" separator="," close=")">
                 #{item}
             </foreach>

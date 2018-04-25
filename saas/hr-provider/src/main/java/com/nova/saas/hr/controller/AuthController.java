@@ -34,6 +34,7 @@ import com.nova.paas.auth.service.RoleService;
 import com.nova.paas.auth.service.UserRoleService;
 import com.nova.paas.common.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +51,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/paas/auth")
+@CrossOrigin
 @Slf4j
 public class AuthController {
     @Inject
@@ -447,5 +449,7 @@ public class AuthController {
         }
         return result;
     }
+
+    /********************************** 字段级权限 **********************************/
 
 }

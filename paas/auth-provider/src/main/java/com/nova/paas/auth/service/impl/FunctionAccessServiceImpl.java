@@ -85,9 +85,11 @@ public class FunctionAccessServiceImpl implements FunctionAccessService {
 
     @Override
     public List<FunctionPojo> queryFuncListByUser(CommonContext context, String userId) throws AuthServiceException {
+        List<FunctionPojo> functions = Lists.newArrayList();
         Set<String> funcIds = this.queryFuncIdsByUser(context, userId);
-        List<FunctionPojo> functions = functionService.queryFunction(context, new QryFunctionParam().builder().ids(funcIds).build());
-
+        if (CollectionUtils.isNotEmpty(funcIds)) {
+            functions = functionService.queryFunction(context, new QryFunctionParam().builder().ids(funcIds).build());
+        }
         return functions;
     }
 

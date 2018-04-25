@@ -59,13 +59,6 @@ public interface AuthConstant {
     }
 
 
-    interface CACHE_EXPIRE {
-
-        //业务功能失效时间
-        int FUNCTION = 1800;  //30分钟
-    }
-
-
     interface AuthType {
         public static final String AUTH_FIELD = "field";  //字段权限
         public static final String AUTH_FUNCTION = "function";  //功能权限
