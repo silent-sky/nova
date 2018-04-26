@@ -5,76 +5,108 @@
     <resultMap id="fieldAccess" type="com.nova.paas.auth.entity.FieldAccess">
         <id property="id" column="id"/>
         <result property="tenantId" column="tenant_id"/>
-        <result property="appId" column="app_id"/>
-        <result property="roleCode" column="role_code"/>
+        <result property="roleId" column="role_id"/>
         <result property="entityId" column="entity_id"/>
         <result property="fieldId" column="field_id"/>
         <result property="permission" column="permission"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modifiedAt" column="modified_at"/>
         <result property="delFlag" column="del_flag"/>
-        <result property="modifier" column="modifier"/>
-        <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-    <update id="batchDel">
-        update auth_field_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
-        del_flag=0
-        <if test="roleCode != null and roleCode!='' ">
-            AND role_code=#{roleCode}
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into au_field_access
+        <trim prefix=" (" suffix=")" suffixOverrides=",">
+            <if test="list[0].id!=null">
+                id,
+            </if>
+            <if test="list[0].tenantId!=null">
+                tenant_id,
+            </if>
+            <if test="list[0].roleId!=null">
+                role_id,
+            </if>
+            <if test="list[0].entityId!=null">
+                entity_id,
+            </if>
+            <if test="list[0].fieldId!=null">
+                field_id,
+            </if>
+            <if test="list[0].permission!=null">
+                permission,
+            </if>
+            <if test="list[0].modifiedBy!=null">
+                modified_by,
+            </if>
+            <if test="list[0].modifiedAt!=null">
+                modified_at,
+            </if>
+        </trim>
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                <if test="item.id!=null">
+                    #{item.id},
+                </if>
+                <if test="item.tenantId!=null">
+                    #{item.tenantId},
+                </if>
+                <if test="item.roleId!=null">
+                    #{item.roleId},
+                </if>
+                <if test="item.entityId!=null">
+                    #{item.entityId},
+                </if>
+                <if test="item.fieldId!=null">
+                    #{item.fieldId},
+                </if>
+                <if test="item.permission!=null">
+                    #{item.permission},
+                </if>
+                <if test="item.modifiedBy!=null">
+                    #{item.modifiedBy},
+                </if>
+                <if test="item.modifiedAt!=null">
+                    #{item.modifiedAt},
+                </if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="batchDelete">
+        update au_field_access set del_flag=1,modified_by=#{modifiedBy},modified_at=#{modifiedAt} WHERE tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!='' ">
+            AND role_id=#{roleId}
         </if>
         <if test="entityId != null and entityId!='' ">
             AND entity_id=#{entityId}
         </if>
-        <if test="fieldId != null and fieldId!='' ">
-            AND field_id=#{fieldId}
-        </if>
+        and del_flag=0
     </update>
 
-    <update id="batchDelSupportRoles">
-        update auth_field_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
-        del_flag=0
-        <if test="roles != null and roles.size()>0">
-            AND role_code IN
-            <foreach item="roleCodes" collection="roles" open="(" separator="," close=")">
-                #{roleCodes}
-            </foreach>
+    <select id="findFieldAccessByRole" resultMap="fieldAccess">
+        select * from au_field_access where tenant_id=#{tenantId}
+        <if test="roleId != null and roleId!='' ">
+            AND role_id=#{roleId}
         </if>
         <if test="entityId != null and entityId!='' ">
             AND entity_id=#{entityId}
         </if>
-        <if test="fieldId != null and fieldId!='' ">
-            AND field_id=#{fieldId}
-        </if>
-    </update>
-
-    <select id="queryFieldAccess" resultMap="fieldAccess">
-        select * from auth_field_access WHERE tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0
-        <if test="roleCodes != null and roleCodes.size()>0">
-            AND role_Code IN
-            <foreach item="roles" collection="roleCodes" open="(" separator="," close=")">
-                #{roles}
-            </foreach>
-        </if>
-        <if test="entitys != null and entitys.size()>0">
-            AND entity_id IN
-            <foreach item="entityIds" collection="entitys" open="(" separator="," close=")">
-                #{entityIds}
-            </foreach>
-        </if>
-        <if test="fields != null and fields.size()>0">
-            AND field_id IN
-            <foreach item="fieldIds" collection="fields" open="(" separator="," close=")">
-                #{fieldIds}
-            </foreach>
-        </if>
+        and del_flag=0
     </select>
 
-    <select id="queryFieldAccessByEntityRolesFilter" resultMap="fieldAccess" parameterType="java.util.Map">
-        <foreach collection="entityRoles.keys" item="myitem" separator="UNION ALL">
-            select * from auth_field_Access where tenant_id=#{tenantId} and app_id=#{appId} and del_flag=0 and entity_id=#{myitem} and role_code IN
-            <foreach collection="entityRoles[myitem]" item="myset" open="(" close=")" separator=",">
-                #{myset}
+    <select id="findFieldAccessByRoles" resultMap="fieldAccess">
+        select * from au_field_access where tenant_id=#{tenantId}
+        <if test="roleIds != null and roleIds.size()>0">
+            AND role_id IN
+            <foreach item="item" collection="roleIds" open="(" separator="," close=")">
+                #{item}
             </foreach>
-        </foreach>
+        </if>
+        <if test="entityId != null and entityId!='' ">
+            AND entity_id=#{entityId}
+        </if>
+        and del_flag=0
     </select>
 
 </mapper>

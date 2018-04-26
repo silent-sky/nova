@@ -139,8 +139,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRolePojo> getUserRoleRelationByUser(CommonContext context, String targetId) throws AuthServiceException {
-        List<UserRole> list = userRoleMapper.findRoleByUser(context.getTenantId(), targetId);
+    public List<UserRolePojo> getUserRoleRelationByUser(CommonContext context, String userId) throws AuthServiceException {
+        List<UserRole> list = userRoleMapper.findRoleByUser(context.getTenantId(), userId);
         List<UserRolePojo> pojoList = this.convertUserRoleToPojos(list);
         return pojoList;
     }

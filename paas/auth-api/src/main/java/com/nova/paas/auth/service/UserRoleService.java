@@ -45,6 +45,6 @@ public interface UserRoleService {
 
     List<UserRolePojo> getUserRoleRelationByRole(CommonContext context, String roleId, Integer targetType) throws AuthServiceException;
 
-    List<UserRolePojo> getUserRoleRelationByUser(CommonContext context, String targetId) throws AuthServiceException;
+    List<UserRolePojo> getUserRoleRelationByUser(CommonContext context, String userId) throws AuthServiceException;
 
 }

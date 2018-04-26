@@ -10,6 +10,8 @@ import com.nova.paas.auth.arg.DeleteFuncArg;
 import com.nova.paas.auth.arg.DeleteRoleArg;
 import com.nova.paas.auth.arg.DeleteUserRoleByRolesArg;
 import com.nova.paas.auth.arg.DeleteUserRoleByUsersArg;
+import com.nova.paas.auth.arg.QryFieldAccessByRoleArg;
+import com.nova.paas.auth.arg.QryFieldAccessByUserArg;
 import com.nova.paas.auth.arg.QryFuncAccessByFuncArg;
 import com.nova.paas.auth.arg.QryFuncAccessByRoleArg;
 import com.nova.paas.auth.arg.QryFuncByUserArg;
@@ -17,6 +19,7 @@ import com.nova.paas.auth.arg.QryFunctionArg;
 import com.nova.paas.auth.arg.QryRoleArg;
 import com.nova.paas.auth.arg.QryUserRoleByRoleArg;
 import com.nova.paas.auth.arg.QryUserRoleByUserArg;
+import com.nova.paas.auth.arg.UpdateFieldAccessArg;
 import com.nova.paas.auth.arg.UpdateFuncArg;
 import com.nova.paas.auth.arg.UpdateRoleArg;
 import com.nova.paas.auth.arg.UpdateUserRoleArg;
@@ -28,6 +31,7 @@ import com.nova.paas.auth.pojo.FunctionAccessPojo;
 import com.nova.paas.auth.pojo.FunctionPojo;
 import com.nova.paas.auth.pojo.RolePojo;
 import com.nova.paas.auth.pojo.UserRolePojo;
+import com.nova.paas.auth.service.FieldAccessService;
 import com.nova.paas.auth.service.FunctionAccessService;
 import com.nova.paas.auth.service.FunctionService;
 import com.nova.paas.auth.service.RoleService;
@@ -62,6 +66,8 @@ public class AuthController {
     private UserRoleService userRoleService;
     @Inject
     private FunctionAccessService functionAccessService;
+    @Inject
+    private FieldAccessService fieldAccessService;
 
     /********************************** 功能维护 **********************************/
 
@@ -451,5 +457,56 @@ public class AuthController {
     }
 
     /********************************** 字段级权限 **********************************/
+    @PostMapping(value = "/fieldAccess/update")
+    public Result updateFieldAccess(@RequestBody UpdateFieldAccessArg arg) {
+        Result result = new Result<>();
+        try {
+            fieldAccessService.update(arg.getContext(), arg.getRoleId(), arg.getEntityId(), arg.getFieldPermission());
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
 
+    @PostMapping(value = "/fieldAccess/role/list")
+    public Result findFieldAccessByRole(@RequestBody QryFieldAccessByRoleArg arg) {
+        Result<Map<String, Integer>> result = new Result<>();
+        try {
+            Map<String, Integer> permission = fieldAccessService.findFieldAccessByRole(arg.getContext(), arg.getRoleId(), arg.getEntityId());
+            result.setResult(permission);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/fieldAccess/user/list")
+    public Result findFieldAccessByUser(@RequestBody QryFieldAccessByUserArg arg) {
+        Result<Map<String, Integer>> result = new Result<>();
+        try {
+            Map<String, Integer> permission = fieldAccessService.findFieldAccessByUser(arg.getContext(), arg.getUserId(), arg.getEntityId());
+            result.setResult(permission);
+        } catch (AuthServiceException e) {
+            log.error(e.getErrorMsg().getMessage(), e);
+            result.setErrCode(e.getErrorMsg().getCode());
+            result.setErrMessage(e.getErrorMsg().getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setErrCode(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getCode());
+            result.setErrMessage(AuthErrorMsg.PAAS_AUTH_DEFAULT_EXCEPTION.getMessage());
+        }
+        return result;
+    }
 }
