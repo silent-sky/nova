@@ -5,16 +5,6 @@ package com.nova.paas.common.constant;
  * 2018/1/11 19:07
  */
 public interface AuthConstant {
-    interface EntityOpennessType {
-
-        //私密
-        int PRIVATE = 0;
-        //公开只读
-        int PUBLIC_READ_ONLY = 1;
-        //公开读写
-        int PUBLIC_READ_AND_WRITE = 2;
-    }
-
 
     interface RoleType {
         //默认角色

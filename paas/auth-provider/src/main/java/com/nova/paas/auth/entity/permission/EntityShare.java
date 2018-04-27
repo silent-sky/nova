@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name = "auth_entity_share")
+@Table(name = "auth_user_share")
 @Data
 @Builder
 public class EntityShare implements Serializable {

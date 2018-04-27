@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name = "auth_entity_openness")
+@Table(name = "au_entity_openness")
 @Data
 @Builder
 public class EntityOpenness implements Serializable {
@@ -14,11 +14,7 @@ public class EntityOpenness implements Serializable {
     private String tenantId;
     private String entityId;
     /**
-     * @see com.nova.paas.common.constant.PermissionConstant
-     */
-    private Integer scope;
-    /**
-     * @see com.nova.paas.common.constant.PermissionConstant
+     * @see com.nova.paas.common.constant.PermissionConstant.EntityOpennessType
      */
     private Integer permission;
     private Integer delFlag;
