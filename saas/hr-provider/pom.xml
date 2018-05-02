@@ -164,7 +164,7 @@
                     <apiSources>
                         <apiSource>
                             <springmvc>true</springmvc>
-                            <locations>com.facishare.paas</locations>
+                            <locations>com.nova.paas</locations>
                             <schemes>http,https</schemes>
                             <basePath>/nova</basePath>
                             <info>
