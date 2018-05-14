@@ -11,7 +11,7 @@
         <result property="recordTypeId" column="record_type_id"/>
         <result property="delFlag" column="del_flag"/>
         <result property="modifier" column="modifier"/>
-        <result property="modifyTime" column="modify_time"/>
+        <result property="updatedAt" column="modify_time"/>
     </resultMap>
 
     <select id="queryRecordTypeAccessProvider" resultMap="recordTypeAccess">
@@ -55,7 +55,7 @@
 
 
     <update id="deleteRoleRecordType">
-        update auth_recordType_Access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId}
+        update auth_recordType_Access set del_flag=1,modifier=#{modifier},modify_time=#{updatedAt} WHERE tenant_id=#{tenantId} and app_id=#{appId}
         and del_flag=0
         <if test="roleCodes != null and roleCodes.size()>0">
             AND role_code IN

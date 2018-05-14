@@ -27,7 +27,7 @@ import com.effektif.workflow.api.model.WorkflowId;
  */
 public class WorkflowQuery extends Query {
   
-  public static final String FIELD_CREATE_TIME = "createTime";
+  public static final String FIELD_CREATE_TIME = "createdAt";
   
   protected String organizationId;
   protected WorkflowId workflowId;

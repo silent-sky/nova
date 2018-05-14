@@ -17,8 +17,8 @@ package com.effektif.workflow.impl.workflowinstance;
 
 import com.effektif.workflow.api.Configuration;
 import com.effektif.workflow.api.WorkflowEngine;
-import com.effektif.workflow.api.ext.ExecutionPojo;
-import com.effektif.workflow.api.ext.WorkflowConstants;
+import com.nova.paas.workflow.pojo.ExecutionPojo;
+import com.nova.paas.workflow.constant.WorkflowConstants;
 import com.effektif.workflow.api.model.TriggerInstance;
 import com.effektif.workflow.api.model.WorkflowInstanceId;
 import com.effektif.workflow.api.query.WorkflowInstanceQuery;

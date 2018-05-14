@@ -1,6 +1,6 @@
 package com.effektif.workflow.impl.ext;
 
-import com.effektif.workflow.api.ext.WorkflowConstants;
+import com.nova.paas.workflow.constant.WorkflowConstants;
 import com.effektif.workflow.api.model.Message;
 import com.effektif.workflow.api.model.TaskId;
 import com.effektif.workflow.api.model.TypedValue;

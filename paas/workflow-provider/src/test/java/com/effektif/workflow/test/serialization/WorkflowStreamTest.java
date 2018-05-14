@@ -190,7 +190,7 @@ public class WorkflowStreamTest {
 
   @Test
   public void testExecutableWorkflow() {
-    LocalDateTime now = new LocalDateTime();
+    Long now = System.currentTimeMillis();
 
     Map<String,Object> p = new HashMap<>();
     p.put("str", "s");

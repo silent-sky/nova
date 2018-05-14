@@ -1,4 +1,4 @@
-package com.effektif.workflow.api.ext;
+package com.nova.paas.workflow.constant;
 
 /**
  * zhenghaibo
@@ -35,11 +35,6 @@ public interface WorkflowConstants {
 
 
     interface UserTaskType {
-        String SINGLE = "single";
-        String ONE_PASS = "one_pass";
-        String ALL_PASS = "all_pass";
-
-        /* 引擎自身只处理以下组合 */
         String ONE = "one";//[person,applicant,dept_leader,leader,ext_bpm]
         String ANYONE = "anyone";//[person,dept,group,role,ext_bpm]
         String ONE_BY_ONE = "one_by_one";//[person,level,grade,ext_bpm]
@@ -58,9 +53,6 @@ public interface WorkflowConstants {
         String LEVEL = "level";
         String GRADE = "grade";
         String LEADER_LEVEL = "leader_level";
-        String EXT_BPM = "ext_bpm";
-        String extUserType = "extUserType";
-        String ext_process = "ext_process";
     }
 
 
@@ -95,7 +87,7 @@ public interface WorkflowConstants {
         //最近的一次审批节点id
         String LATEST_USER_TASK_ID = "latest_user_task_id";
         //执行auto_go_back的标识
-        String AUTO_GO_BACK_FLAG="auto_go_back_flag";
+        String AUTO_GO_BACK_FLAG = "auto_go_back_flag";
     }
 
 
@@ -103,13 +95,6 @@ public interface WorkflowConstants {
         String APPROVAL_FLOW = "approvalflow";
         String WORKFLOW = "workflow";
         String BPM = "workflow_bpm";
-    }
-
-
-    interface AppId {
-        String APP_ID_XT = "facishare-xt";
-        String APP_ID_CRM = "CRM";
-        String APP_ID_BPM = "BPM";
     }
 
 

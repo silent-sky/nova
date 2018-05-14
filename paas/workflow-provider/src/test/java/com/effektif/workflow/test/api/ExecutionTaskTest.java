@@ -4,7 +4,7 @@ import com.effektif.workflow.api.activities.EndEvent;
 import com.effektif.workflow.api.activities.ExecutionItem;
 import com.effektif.workflow.api.activities.ExecutionTask;
 import com.effektif.workflow.api.activities.StartEvent;
-import com.effektif.workflow.api.ext.WorkflowConstants;
+import com.nova.paas.workflow.constant.WorkflowConstants;
 import com.effektif.workflow.api.workflow.ExecutableWorkflow;
 import com.effektif.workflow.impl.json.DefaultJsonStreamMapper;
 import com.effektif.workflow.test.WorkflowTest;

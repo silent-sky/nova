@@ -2,7 +2,7 @@ package com.effektif.workflow.impl.activity.types;
 
 import com.effektif.workflow.api.activities.ExecutionItem;
 import com.effektif.workflow.api.activities.ExecutionTask;
-import com.effektif.workflow.api.ext.ExecutionPojo;
+import com.nova.paas.workflow.pojo.ExecutionPojo;
 import com.effektif.workflow.api.ext.WorkflowBindingEnum;
 import com.effektif.workflow.impl.activity.AbstractActivityType;
 import com.effektif.workflow.impl.workflow.WorkflowImpl;
@@ -90,16 +90,8 @@ public class ExecutionTaskImpl extends AbstractActivityType<ExecutionTask> {
         pojo.setContent(item.getContent());
         pojo.setTemplate(item.getTemplate());
         pojo.setFieldMapping(item.getFieldMapping());
-        pojo.setUpdateFieldJson(item.getUpdateFieldJson());
-        pojo.setUpdateFieldObject(item.getUpdateFieldObject());
-        pojo.setTriggerParam(item.getTriggerParam());
         pojo.setTenantId(extMap.get(WorkflowBindingEnum.tenantId.toString()));
         pojo.setAppId(extMap.get(WorkflowBindingEnum.appId.toString()));
-        pojo.setWorkflowMap(extMap);
-        pojo.setAfterActionDefinitionId(item.getAfterActionDefinitionId());
-        pojo.setAfterActionMappingId(item.getAfterActionMappingId());
-        pojo.setActionMapping(item.getActionMapping());
-        pojo.setActionParams(item.getActionParams());
         pojoList.add(pojo);
       }
     }

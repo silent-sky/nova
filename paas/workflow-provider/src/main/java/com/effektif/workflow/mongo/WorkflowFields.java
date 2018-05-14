@@ -2,13 +2,29 @@ package com.effektif.workflow.mongo;
 
 public interface WorkflowFields {
 
+  String _ID = "_id";
   String NAME = "name";
-  String ORGANIZATION_ID = "organizationId";
-  String DEPLOYED_BY = "deployedBy";
+  String DESC = "description";
   String SOURCE_WORKFLOW_ID = "sourceWorkflowId";
-  String CREATE_TIME = "createTime";
-  String TRIGGER = "trigger";
+  String ENABLE = "enable";//是否启用 true,false
+  String TYPE = "type";//类型 审批流/工作流
+  String TENANT_ID = "tenantId";
+  String APP_ID = "appId";
+  String ENTITY_ID = "entityId";
+  String OBJECT_ID = "objectId";
+  String PRIORITY = "priority";
+  String CREATED_AT = "createdAt";
+  String CREATED_BY = "createdBy";
+  String UPDATED_AT = "updatedAt";
+  String UPDATED_BY = "updatedBy";
+  String DELETED = "deleted";
+  String REMIND = "remind";
+  String REMIND_LATENCY = "remindLatency";
+  String ACTIVITIES = "activities";
   String VARIABLES = "variables";
+  String TRANSITIONS = "transitions";
+  String EXECUTION = "execution";
+  String TRIGGER_TYPES = "triggerTypes";
 
   interface Versions {
     String WORKFLOW_NAME = "workflowName";
@@ -16,51 +32,9 @@ public interface WorkflowFields {
     String LOCK = "lock";
   }
 
+
   interface VersionsLock {
     String OWNER = "owner";
     String TIME = "time";
   }
-
-  //  interface Scope {
-  //    String _ID = "_id";
-  //    String ACTIVITIES = "activities";
-  //    String VARIABLES = "variables";
-  //    String TRANSITIONS = "transitions";
-  //    String TIMERS = "timers";
-  //  }
-  //
-  //  interface Activity extends FieldsScope {
-  //    String DEFAULT_TRANSITION_ID = "defaultTransitionId";
-  //    String MULTI_INSTANCE = "multiInstance";
-  //    String ACTIVITY_TYPE = "type";
-  //  }
-  //
-  //  interface Binding {
-  //    String EXPRESSION = "expression";
-  //    String VARIABLE_ID = "variableId";
-  //    String TYPED_VALUE = "value";
-  //  }
-  //
-  //  interface TypedValue {
-  //    String TYPE = "type";
-  //    String VALUE = "value";
-  //  }
-  //
-  //  interface MultiInstance {
-  //    String ELEMENT_VARIABLE = "elementVariable";
-  //    String VALUE_BINDINGS = "valueBindings";
-  //  }
-  //
-  //  interface Transition {
-  //    String _ID = "_id";
-  //    String FROM = "from";
-  //    String TO = "to";
-  //    String CONDITION = null;
-  //  }
-  //
-  //  interface Variable {
-  //    String _ID = "_id";
-  //    String TYPE = "type";
-  //    String INITIAL_VALUE = "initialValue";
-  //  }
 }

@@ -29,7 +29,7 @@ public class MemoryTaskStore implements TaskStore {
             String taskId = Integer.toString(nextId++);
             task.setId(new TaskId(taskId));
         }
-        task.setModifyTime(System.currentTimeMillis());
+        task.setUpdatedAt(System.currentTimeMillis());
         tasks.put(task.getId(), task);
     }
 
@@ -54,7 +54,7 @@ public class MemoryTaskStore implements TaskStore {
         Task task = tasks.get(taskId);
         if (task != null) {
             task.setAssigneeIds(assigneeIds);
-            task.setModifyTime(System.currentTimeMillis());
+            task.setUpdatedAt(System.currentTimeMillis());
         }
         return task;
     }

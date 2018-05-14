@@ -92,7 +92,7 @@ public class EntityOpennessServiceImpl implements EntityOpennessService {
             //差异化更新
             entityOpennessList.forEach(entityOpenness -> {
                 EntityOpennessPojo pojo = entityOpennessPojoMap.get(entityOpenness.getEntityId());
-                entityOpenness.setScope(pojo.getScope());
+//                entityOpenness.setScope(pojo.getScope());
                 entityOpenness.setPermission(pojo.getPermission());
                 entityOpenness.setModifier(context.getUserId());
                 entityOpenness.setModifyTime(System.currentTimeMillis());
@@ -115,7 +115,7 @@ public class EntityOpennessServiceImpl implements EntityOpennessService {
     public Integer queryEntityOpennessScopeByEntity(CommonContext context, String entityId) throws AuthServiceException {
         List<EntityOpenness> entityOpennessList = this.queryEntityOpennessPrivate(context, Collections.singleton(entityId), null, null, null);
         if (CollectionUtils.isNotEmpty(entityOpennessList)) {
-            return entityOpennessList.get(0).getScope();
+//            return entityOpennessList.get(0).getScope();
         }
         return null;
     }
@@ -261,7 +261,7 @@ public class EntityOpennessServiceImpl implements EntityOpennessService {
                         .tenantId(context.getTenantId())
                         .entityId(entityOpennessPojo.getEntityId())
                         .permission(entityOpennessPojo.getPermission())
-                        .scope(entityOpennessPojo.getScope())
+//                        .scope(entityOpennessPojo.getScope())
                         .creator(context.getUserId())
                         .createTime(System.currentTimeMillis())
                         .modifier(context.getUserId())

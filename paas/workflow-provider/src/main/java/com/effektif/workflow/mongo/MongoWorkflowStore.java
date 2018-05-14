@@ -121,7 +121,7 @@ public class MongoWorkflowStore implements WorkflowStore, Brewable {
     Exceptions.checkNotNullParameter(sourceWorkflowId, "sourceWorkflowId");
     Query query = new Query()
       .equal(SOURCE_WORKFLOW_ID, sourceWorkflowId)
-      .orderDesc(CREATE_TIME)
+      .orderDesc(CREATED_AT)
       .page(0,  1);
     Fields fields = new Fields()
       .include(_ID);
@@ -164,7 +164,7 @@ public class MongoWorkflowStore implements WorkflowStore, Brewable {
   
   private String getDbField(String field) {
     if (WorkflowQuery.FIELD_CREATE_TIME.equals(field)) {
-      return CREATE_TIME;
+      return CREATED_AT;
     }
     throw new RuntimeException("Unknown field "+field);
   }

@@ -29,8 +29,8 @@ public interface TaskFields {
   String CANDIDATE_EDITABLE = "candidateEditable";
   String TASK_TYPE = "taskType";
   String ACTION_TYPE = "actionType";
-  String CREATE_TIME = "createTime";
-  String MODIFY_TIME = "modifyTime";
+  String CREATE_TIME = "createdAt";
+  String MODIFY_TIME = "updatedAt";
   String MODIFIER = "modifier";
   String COMPLETED = "completed";
   String CANCELED = "canceled";

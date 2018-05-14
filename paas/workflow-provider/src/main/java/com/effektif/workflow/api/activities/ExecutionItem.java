@@ -1,6 +1,7 @@
 package com.effektif.workflow.api.activities;
 
 import com.effektif.workflow.api.ext.ActionParam;
+import com.nova.paas.workflow.constant.WorkflowConstants;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -16,7 +17,7 @@ public class ExecutionItem implements Serializable {
   private static final long serialVersionUID = -9201307438128145017L;
 
   /**
-   * @see com.effektif.workflow.api.ext.WorkflowConstants.ExecuteType
+   * @see WorkflowConstants.ExecuteType
    */
   private String taskType;
 

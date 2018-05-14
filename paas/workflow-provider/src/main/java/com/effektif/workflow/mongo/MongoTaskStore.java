@@ -60,7 +60,7 @@ public class MongoTaskStore implements TaskStore, Brewable {
     }
 
     @Override public void insertTask(Task task) {
-        task.setModifyTime(System.currentTimeMillis());
+        task.setUpdatedAt(System.currentTimeMillis());
         BasicDBObject dbTask = taskToMongo(task);
         tasksCollection.insert("insert-task", dbTask);
     }

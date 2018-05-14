@@ -12,12 +12,12 @@
         <result property="viewId" column="view_id"/>
         <result property="delFlag" column="del_flag"/>
         <result property="modifier" column="modifier"/>
-        <result property="modifyTime" column="modify_time"/>
+        <result property="updatedAt" column="modify_time"/>
     </resultMap>
 
 
     <update id="batchDel">
-        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{updatedAt} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
         del_flag=0
         <if test="roleCode != null and roleCode!='' ">
             AND role_code=#{roleCode}
@@ -49,7 +49,7 @@
 
 
     <update id="delRoleViewAccess">
-        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        update auth_view_access set del_flag=1,modifier=#{modifier},modify_time=#{updatedAt} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
         del_flag=0
         <if test="roleViewPojos != null and roleViewPojos.size()>0">
             and (
@@ -61,7 +61,7 @@
     </update>
 
     <update id="deleteViewAccess">
-        update auth_view_access set del_Flag=1,modifier=#{modifier},modify_time=#{modifyTime} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
+        update auth_view_access set del_Flag=1,modifier=#{modifier},modify_time=#{updatedAt} WHERE tenant_id=#{tenantId} and app_id=#{appId} and
         del_flag=0
         <if test="entityId != null and entityId!='' ">
             AND entity_id=#{entityId}

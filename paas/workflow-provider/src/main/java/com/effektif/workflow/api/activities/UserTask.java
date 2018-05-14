@@ -1,7 +1,8 @@
 package com.effektif.workflow.api.activities;
 
 import com.effektif.workflow.api.bpmn.BpmnElement;
-import com.effektif.workflow.api.ext.ExecutionPojo;
+import com.nova.paas.workflow.constant.WorkflowConstants;
+import com.nova.paas.workflow.pojo.ExecutionPojo;
 import com.effektif.workflow.api.json.TypeName;
 import com.effektif.workflow.api.workflow.Activity;
 
@@ -23,13 +24,13 @@ public class UserTask extends Activity {
     /**
      * 指派类型
      *
-     * @see com.effektif.workflow.api.ext.WorkflowConstants.AssigneeType
+     * @see WorkflowConstants.AssigneeType
      */
     protected String assignType;
     /**
      * 审批任务类型
      *
-     * @see com.effektif.workflow.api.ext.WorkflowConstants.UserTaskType
+     * @see WorkflowConstants.UserTaskType
      */
     protected String taskType;
     protected Map<String, List<ExecutionPojo>> execution;
