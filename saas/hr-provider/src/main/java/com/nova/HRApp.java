@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class})
 //@MapperScan("com.nova.paas.auth.mapper")
 @ComponentScan(basePackages = {"com.nova"})
-@MapperScan(basePackages = "com.nova.*.mapper")
+@MapperScan(basePackages = "com.nova.**.mapper")
 public class HRApp extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication webApp = new SpringApplication(HRApp.class);
