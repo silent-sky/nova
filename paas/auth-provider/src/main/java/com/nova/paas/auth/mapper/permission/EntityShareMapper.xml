@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nova.paas.auth.mapper.permission.EntityShareMapper">
+    <resultMap id="fieldAccess" type="com.nova.paas.auth.entity.permission.EntityShare">
+        <id property="id" column="id"/>
+        <result property="tenantId" column="tenant_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="permission" column="permission"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modifiedAt" column="modified_at"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+
+
+</mapper>

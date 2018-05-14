@@ -19,10 +19,10 @@ public class EntityShare implements Serializable {
     private String receiveId;
     private Integer permission;
     private Integer status;
-    private Integer delFlag;
-    private String creator;
-    private long createTime;
-    private String modifier;
-    private long modifyTime;
+    private String createdBy;
+    private Long createdAt;
+    private String modifiedBy;
+    private Long modifiedAt;
+    private Boolean delFlag;
 
 }

@@ -19,7 +19,7 @@ target
 *.iml
 out
 gen
-
+*.pid
 
 ### Java template
 *.class

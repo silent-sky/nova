@@ -8,14 +8,16 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.system.ApplicationPidFileWriter;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableAsync
 @EnableTransactionManagement
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class})
-@MapperScan("com.nova.paas.auth.mapper")
-//@ComponentScan(basePackages = {"com.nova"})
+//@MapperScan("com.nova.paas.auth.mapper")
+@ComponentScan(basePackages = {"com.nova"})
+@MapperScan(basePackages = "com.nova.*.mapper")
 public class HRApp extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication webApp = new SpringApplication(HRApp.class);

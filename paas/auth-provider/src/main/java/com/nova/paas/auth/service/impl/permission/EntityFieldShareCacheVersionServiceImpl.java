@@ -13,25 +13,18 @@ import java.util.Map;
 @Slf4j
 public class EntityFieldShareCacheVersionServiceImpl implements EntityFieldShareCacheVersionService {
 
-    public Map<String, String> rulesCurrentVersion(
-            CommonContext context, String entityId, List<String> rules) throws AuthServiceException {
+    @Override
+    public Map<String, String> rulesCurrentVersion(CommonContext context, String entityId, List<String> rules) throws AuthServiceException {
         return null;
     }
 
-    /**
-     * 更新规则的当前版本
-     */
-    public void updateRuleCurrentVersion(
-            CommonContext context, String rule, String currentVersion) throws AuthServiceException {
+    @Override
+    public void updateRuleCurrentVersion(CommonContext context, String rule, String currentVersion) throws AuthServiceException {
 
     }
 
-    /**
-     * 更新规则的最新版本
-     */
-    public void updateRuleNewVersion(
-            CommonContext context, String rule, String newVersion) throws AuthServiceException {
+    @Override
+    public void updateRuleNewVersion(CommonContext context, String rule, String newVersion) throws AuthServiceException {
 
     }
-
 }
