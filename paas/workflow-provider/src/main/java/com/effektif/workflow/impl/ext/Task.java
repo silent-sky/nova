@@ -1,13 +1,12 @@
 package com.effektif.workflow.impl.ext;
 
-import com.nova.paas.workflow.constant.WorkflowConstants;
+import com.nova.paas.workflow.constant.WorkflowConstant;
 import com.nova.paas.workflow.pojo.ExecutionPojo;
 import com.effektif.workflow.api.model.TaskId;
 import com.effektif.workflow.api.workflow.Extensible;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,13 +64,13 @@ public class Task extends Extensible implements Serializable {
     /**
      * 审批人员类别
      *
-     * @see WorkflowConstants.AssigneeType
+     * @see WorkflowConstant.AssigneeType
      */
     protected String assignType;
     /**
      * task审批类型
      *
-     * @see WorkflowConstants.UserTaskType
+     * @see WorkflowConstant.UserTaskType
      */
     protected String taskType;
     protected String status;

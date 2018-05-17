@@ -102,9 +102,9 @@ public class MemoryWorkflowStore implements WorkflowStore, Brewable {
     Long latestDeployTime = null;
     for (ExecutableWorkflow workflow: workflows.values()) {
       if ( workflowName.equals(workflow.getSourceWorkflowId())
-              && (latestDeployTime==null || latestDeployTime.compareTo(workflow.getCreateTime())>0) ) {
+              && (latestDeployTime==null || latestDeployTime.compareTo(workflow.getCreatedAt())>0) ) {
         latestWorkflow = workflow;
-        latestDeployTime = workflow.getCreateTime();
+        latestDeployTime = workflow.getCreatedAt();
       }
     }
     return latestWorkflow!=null ? latestWorkflow.getId() : null;

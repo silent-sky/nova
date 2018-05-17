@@ -1,4 +1,4 @@
-package com.nova.paas.workflow.pojo;
+package com.nova.paas.workflow.entity;
 
 import lombok.Data;
 
@@ -6,11 +6,11 @@ import java.io.Serializable;
 
 /**
  * zhenghaibo
- * 2018/5/10 10:30
+ * 2018/5/16 11:26
  */
 @Data
-public class CriteriaPojo implements Serializable {
-    private static final long serialVersionUID = 5059364178702511100L;
+public class CriteriaEntity implements Serializable {
+    private static final long serialVersionUID = 3693190060628171447L;
 
     /**
      * 行号

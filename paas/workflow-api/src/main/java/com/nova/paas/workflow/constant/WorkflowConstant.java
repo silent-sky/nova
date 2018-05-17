@@ -4,7 +4,7 @@ package com.nova.paas.workflow.constant;
  * zhenghaibo
  * 2017/4/8 13:24
  */
-public interface WorkflowConstants {
+public interface WorkflowConstant {
 
     /**
      * 一个流程实例中允许的最大activity instance数量,避免节点死循环
@@ -94,7 +94,7 @@ public interface WorkflowConstants {
     interface WorkflowType {
         String APPROVAL_FLOW = "approvalflow";
         String WORKFLOW = "workflow";
-        String BPM = "workflow_bpm";
+        String BPM = "bpm";
     }
 
 

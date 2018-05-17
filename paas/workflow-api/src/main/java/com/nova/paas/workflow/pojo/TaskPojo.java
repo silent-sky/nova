@@ -39,6 +39,6 @@ public class TaskPojo implements Serializable {
     private String workflowName;
     private String workflowDescription;
     private String status;
-    //    private Map<String, List<ExecutionPojo>> execution;
+    private Map<String, List<ExecutionPojo>> execution;
     private RulePojo rule;
 }

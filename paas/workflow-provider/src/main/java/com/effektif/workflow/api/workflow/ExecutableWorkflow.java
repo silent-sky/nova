@@ -55,16 +55,16 @@ public class ExecutableWorkflow extends AbstractWorkflow {
      * @see #sourceWorkflowId(String)
      */
     protected String sourceWorkflowId;
-    protected Long createTime;
-    protected String creatorId;
+    protected Long createdAt;
+    protected String createdBy;
 
     @Override
     public void readBpmn(BpmnReader r) {
         r.startExtensionElements();
         name = r.readStringAttributeBpmn("name");
         sourceWorkflowId = r.readStringValue("sourceWorkflowId");
-        createTime = Long.valueOf(r.readStringValue("createdAt"));
-        creatorId = r.readStringValue("creatorId");
+        createdAt = Long.valueOf(r.readStringValue("createdAt"));
+        createdBy = r.readStringValue("createdBy");
         enableCases = Boolean.valueOf(r.readStringValue("enableCases"));
 
         // TODO move access control in a property?
@@ -100,11 +100,11 @@ public class ExecutableWorkflow extends AbstractWorkflow {
         super.writeBpmn(w);
         w.startExtensionElements();
         w.writeStringValue("sourceWorkflowId", "value", sourceWorkflowId);
-        w.writeStringValue("creatorId", "value", creatorId);
+        w.writeStringValue("createdBy", "value", createdBy);
         w.writeStringValue("enableCases", "value", enableCases);
 
         //zhenghaibo 2018.4.8
-        w.writeStringValue("createdAt", "value", createTime);
+        w.writeStringValue("createdAt", "value", createdAt);
 
         //    if (createdAt != null) {
         //      w.startElementEffektif("createdAt");
@@ -165,29 +165,29 @@ public class ExecutableWorkflow extends AbstractWorkflow {
         return this;
     }
 
-    public Long getCreateTime() {
-        return this.createTime;
+    public Long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateTime(Long createTime) {
-        this.createTime = createTime;
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public ExecutableWorkflow createTime(Long createTime) {
-        this.createTime = createTime;
+    public ExecutableWorkflow createdAt(Long createdAt) {
+        this.createdAt = createdAt;
         return this;
     }
 
-    public String getCreatorId() {
-        return this.creatorId;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreatorId(String id) {
-        this.creatorId = id;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public ExecutableWorkflow creatorId(String id) {
-        this.creatorId = id;
+    public ExecutableWorkflow createdBy(String createdBy) {
+        this.createdBy = createdBy;
         return this;
     }
 

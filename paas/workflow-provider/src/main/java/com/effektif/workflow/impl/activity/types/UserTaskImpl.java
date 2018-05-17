@@ -3,7 +3,7 @@ package com.effektif.workflow.impl.activity.types;
 import com.effektif.workflow.api.activities.UserTask;
 import com.effektif.workflow.api.ext.AssigneeParserPojo;
 import com.effektif.workflow.api.ext.WorkflowBindingEnum;
-import com.nova.paas.workflow.constant.WorkflowConstants;
+import com.nova.paas.workflow.constant.WorkflowConstant;
 import com.effektif.workflow.impl.WorkflowParser;
 import com.effektif.workflow.impl.activity.AbstractActivityType;
 import com.effektif.workflow.impl.ext.Task;
@@ -67,7 +67,7 @@ public class UserTaskImpl extends AbstractActivityType<UserTask> {
         task.setRemind((Boolean) workflow.getProperty(WorkflowBindingEnum.remind.toString()));
         task.setRemindLatency((Integer) workflow.getProperty(WorkflowBindingEnum.remindLatency.toString()));
         task.setReminders(activityInstance.activity.getProperty(WorkflowBindingEnum.reminders.toString()));
-        task.setStatus(WorkflowConstants.UserTaskStatus.IN_PROGRESS);
+        task.setStatus(WorkflowConstant.UserTaskStatus.IN_PROGRESS);
         Long currentTime = System.currentTimeMillis();
         task.setCreatedAt(currentTime);
         task.setUpdatedAt(currentTime);
@@ -184,37 +184,37 @@ public class UserTaskImpl extends AbstractActivityType<UserTask> {
             String activityId = activity.getId();
             if (null != taskType) {
                 switch (taskType) {
-                    case WorkflowConstants.UserTaskType.ALL:
+                    case WorkflowConstant.UserTaskType.ALL:
                         filteredMap.clear();
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.PERSON)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.PERSON, assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
-                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.PERSON)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.PERSON, assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
+                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
                         }
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.GROUP)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.GROUP, assigneeMap.get(WorkflowConstants.AssigneeType.GROUP));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.GROUP)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.GROUP, assigneeMap.get(WorkflowConstant.AssigneeType.GROUP));
                         }
                         break;
-                    case WorkflowConstants.UserTaskType.ANYONE:
+                    case WorkflowConstant.UserTaskType.ANYONE:
                         filteredMap.clear();
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.DEPT)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.DEPT, assigneeMap.get(WorkflowConstants.AssigneeType.DEPT));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.DEPT)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.DEPT, assigneeMap.get(WorkflowConstant.AssigneeType.DEPT));
                         }
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.GROUP)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.GROUP, assigneeMap.get(WorkflowConstants.AssigneeType.GROUP));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.GROUP)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.GROUP, assigneeMap.get(WorkflowConstant.AssigneeType.GROUP));
                         }
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.ROLE)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.ROLE, assigneeMap.get(WorkflowConstants.AssigneeType.ROLE));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.ROLE)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.ROLE, assigneeMap.get(WorkflowConstant.AssigneeType.ROLE));
                         }
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.PERSON)) {
-                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
-                            filteredMap.put(WorkflowConstants.AssigneeType.PERSON, assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.PERSON)) {
+                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
+                            filteredMap.put(WorkflowConstant.AssigneeType.PERSON, assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
                         }
 
                         break;
-                    case WorkflowConstants.UserTaskType.ONE:
+                    case WorkflowConstant.UserTaskType.ONE:
                         filteredMap.clear();
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.DEPT_LEADER)) {
-                            filteredMap.put(WorkflowConstants.AssigneeType.DEPT_LEADER, assigneeMap.get(WorkflowConstants.AssigneeType.DEPT_LEADER));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.DEPT_LEADER)) {
+                            filteredMap.put(WorkflowConstant.AssigneeType.DEPT_LEADER, assigneeMap.get(WorkflowConstant.AssigneeType.DEPT_LEADER));
                         }
 
                         //                        candidateIds =
@@ -226,13 +226,13 @@ public class UserTaskImpl extends AbstractActivityType<UserTask> {
                         //                                            .userId(applicantId)
                         //                                            .taskId(taskId)
                         //                                            .workflowInstanceId(workflowInstanceId)));
-                        if (assigneeMap.containsKey(WorkflowConstants.AssigneeType.APPLICANT)) {
+                        if (assigneeMap.containsKey(WorkflowConstant.AssigneeType.APPLICANT)) {
                             //              candidateIds.add(applicantId);
-                            filteredMap.put(WorkflowConstants.AssigneeType.APPLICANT, assigneeMap.get(WorkflowConstants.AssigneeType.APPLICANT));
+                            filteredMap.put(WorkflowConstant.AssigneeType.APPLICANT, assigneeMap.get(WorkflowConstant.AssigneeType.APPLICANT));
                         }
-                        if (null != assigneeMap.get(WorkflowConstants.AssigneeType.PERSON)) {
-                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
-                            filteredMap.put(WorkflowConstants.AssigneeType.PERSON, assigneeMap.get(WorkflowConstants.AssigneeType.PERSON));
+                        if (null != assigneeMap.get(WorkflowConstant.AssigneeType.PERSON)) {
+                            //              candidateIds.addAll(assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
+                            filteredMap.put(WorkflowConstant.AssigneeType.PERSON, assigneeMap.get(WorkflowConstant.AssigneeType.PERSON));
                         }
                         if (1 < candidateIds.size()) {
                             String candidateId = candidateIds.get(0);
@@ -240,7 +240,7 @@ public class UserTaskImpl extends AbstractActivityType<UserTask> {
                             candidateIds.add(candidateId);
                         }
                         break;
-                    case WorkflowConstants.UserTaskType.ONE_BY_ONE:
+                    case WorkflowConstant.UserTaskType.ONE_BY_ONE:
                         //Todo: 准备处理重构后的level和grade
                         break;
                     default:

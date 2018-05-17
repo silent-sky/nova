@@ -205,8 +205,8 @@ public class WorkflowStreamTest {
       .id(new WorkflowId(workflowIdInternal))
       .name("Software release")
       .description("Regular software production release process.")
-      .createTime(now)
-      .creatorId("iamdevloper")
+      .createdAt(now)
+      .createdBy("iamdevloper")
       .sourceWorkflowId("source")
       .variable("v", TextType.INSTANCE)
       .activity("start", new StartEvent())
@@ -225,8 +225,8 @@ public class WorkflowStreamTest {
     assertEquals(workflowIdInternal, workflow.getId().getInternal());
     assertEquals("Software release", workflow.getName());
     assertEquals("Regular software production release process.", workflow.getDescription());
-    assertEquals(now, workflow.getCreateTime());
-    assertEquals("iamdevloper", workflow.getCreatorId());
+    assertEquals(now, workflow.getCreatedAt());
+    assertEquals("iamdevloper", workflow.getCreatedBy());
     assertEquals("source", workflow.getSourceWorkflowId());
     assertEquals("start", ((StartEvent)workflow.getActivities().get(0)).getId());
     assertEquals("end", ((EndEvent)workflow.getActivities().get(1)).getId());

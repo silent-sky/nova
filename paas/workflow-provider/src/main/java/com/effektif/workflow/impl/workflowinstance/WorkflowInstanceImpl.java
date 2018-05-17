@@ -17,8 +17,8 @@ package com.effektif.workflow.impl.workflowinstance;
 
 import com.effektif.workflow.api.Configuration;
 import com.effektif.workflow.api.WorkflowEngine;
+import com.nova.paas.workflow.constant.WorkflowConstant;
 import com.nova.paas.workflow.pojo.ExecutionPojo;
-import com.nova.paas.workflow.constant.WorkflowConstants;
 import com.effektif.workflow.api.model.TriggerInstance;
 import com.effektif.workflow.api.model.WorkflowInstanceId;
 import com.effektif.workflow.api.query.WorkflowInstanceQuery;
@@ -146,7 +146,7 @@ public class WorkflowInstanceImpl extends ScopeInstanceImpl {
       ActivityInstanceImpl activityInstance = getNextWork();
 
       //zhenghaibo 2018.4.8
-      if (Integer.parseInt(activityInstance.getId()) > WorkflowConstants.MAX_ACTIVITY_INSTANCES) {
+      if (Integer.parseInt(activityInstance.getId()) > WorkflowConstant.MAX_ACTIVITY_INSTANCES) {
         throw new RuntimeException("workflow engine stopped,loop avoid.");
       }
 

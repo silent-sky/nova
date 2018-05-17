@@ -4,7 +4,7 @@ import com.effektif.workflow.api.activities.EndEvent;
 import com.effektif.workflow.api.activities.ExecutionItem;
 import com.effektif.workflow.api.activities.ExecutionTask;
 import com.effektif.workflow.api.activities.StartEvent;
-import com.nova.paas.workflow.constant.WorkflowConstants;
+import com.nova.paas.workflow.constant.WorkflowConstant;
 import com.effektif.workflow.api.workflow.ExecutableWorkflow;
 import com.effektif.workflow.impl.json.DefaultJsonStreamMapper;
 import com.effektif.workflow.test.WorkflowTest;
@@ -28,13 +28,13 @@ public class ExecutionTaskTest extends WorkflowTest {
         LinkedHashMap<String, Set<String>> recipients = new LinkedHashMap<>();
         recipients.put("PERSON", Sets.newHashSet("user1", "user2", "user3"));
 
-        item1.setTaskType(WorkflowConstants.ExecuteType.SEND_QIXIN);
+        item1.setTaskType(WorkflowConstant.ExecuteType.SEND_QIXIN);
         item1.setTitle("qixin1_title");
         item1.setContent("qixin1_content");
         item1.setSender("user1");
         item1.setRecipients(recipients);
 
-        item2.setTaskType(WorkflowConstants.ExecuteType.SEND_QIXIN);
+        item2.setTaskType(WorkflowConstant.ExecuteType.SEND_QIXIN);
         item2.setTitle("qixin2_title");
         item2.setContent("qixin2_content");
         item2.setSender("user2");

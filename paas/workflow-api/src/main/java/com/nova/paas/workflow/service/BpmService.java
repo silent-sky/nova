@@ -21,7 +21,7 @@ public interface BpmService {
     /**
      * 部署BPM
      */
-    WorkflowPojo deploy(CommonContext context, boolean update, String workflowJson, String ruleJson) throws WorkflowServiceException;
+    WorkflowPojo deploy(CommonContext context, boolean isNew, String workflowJson, String ruleJson) throws WorkflowServiceException;
 
     /**
      * 根据rule启动匹配的流程

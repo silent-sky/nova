@@ -25,6 +25,10 @@ public class RulePojo implements Serializable {
     private List<CriteriaPojo> conditions;
     private String sourceWorkflowId;
 
+    private Long createdAt;
+    private String createdBy;
+    private Long modifiedAt;
+    private String modifiedBy;
 
     public RulePojo condition(CriteriaPojo criteriaPojo) {
         if (conditions == null) {

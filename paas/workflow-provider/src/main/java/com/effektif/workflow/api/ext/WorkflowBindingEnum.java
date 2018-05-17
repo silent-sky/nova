@@ -10,7 +10,8 @@ public enum WorkflowBindingEnum {
     entityId,//实体
     objectId,//对象id
     applicantId,//提交人id
-    status,//实例状态
+    status,//状态
+    deleted,//删除标志
     workflowType,//流程类型
     triggerType,//触发动作
     remind,//提醒
