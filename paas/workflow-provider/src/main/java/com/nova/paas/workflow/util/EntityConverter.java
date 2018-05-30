@@ -57,6 +57,30 @@ public class EntityConverter {
         return entity;
     }
 
+    public static List<RulePojo> convertRuleEntity(List<RuleEntity> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Lists.newArrayList();
+        }
+        List<RulePojo> pojoList = new ArrayList();
+        for (RuleEntity entity : entityList) {
+            RulePojo pojo = convertRule(entity);
+            pojoList.add(pojo);
+        }
+        return pojoList;
+    }
+
+    public static List<RuleEntity> convertRulePojo(List<RulePojo> pojoList) {
+        if (CollectionUtils.isEmpty(pojoList)) {
+            return Lists.newArrayList();
+        }
+        List<RuleEntity> entityList = new ArrayList();
+        for (RulePojo pojo : pojoList) {
+            RuleEntity entity = convertRule(pojo);
+            entityList.add(entity);
+        }
+        return entityList;
+    }
+
     public static CriteriaPojo convertRuleCriteria(CriteriaEntity entity) {
         if (entity == null) {
             return null;

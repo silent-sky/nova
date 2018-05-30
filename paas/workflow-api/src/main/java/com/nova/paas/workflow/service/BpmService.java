@@ -11,6 +11,7 @@ import com.nova.paas.workflow.pojo.WorkflowDefinitionPojo;
 import com.nova.paas.workflow.pojo.WorkflowPojo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * zhenghaibo
@@ -31,7 +32,7 @@ public interface BpmService {
     /**
      * 启动一个流程实例
      */
-    String start(CommonContext context, String entityId, String objectId) throws WorkflowServiceException;
+    String start(CommonContext context,String sourceWorkflowId, String entityId, String objectId, Map<String, Object> conditionMap) throws WorkflowServiceException;
 
     /**
      * 完成一个任务

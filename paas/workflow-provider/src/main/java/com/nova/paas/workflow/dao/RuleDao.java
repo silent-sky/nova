@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,5 +48,12 @@ public class RuleDao {
                 .set(RuleFields.MODIFIED_BY, userId)
                 .set(RuleFields.DELETED, true);
         mongoTemplate.updateFirst(query, update, RuleEntity.class);
+    }
+
+    public List<RuleEntity> findRules(String tenantId, String workflowType, String entityId, String triggerType) {
+        Query query = new Query(Criteria.where(RuleFields.TENANT_ID).is(tenantId)).addCriteria(Criteria.where(RuleFields.RUlE_TYPE).is(workflowType))
+                .addCriteria(Criteria.where(RuleFields.ENTITY_ID).in(entityId))
+                .addCriteria(Criteria.where(RuleFields.TRIGGER_TYPES).all(triggerType));
+        return mongoTemplate.find(query, RuleEntity.class);
     }
 }

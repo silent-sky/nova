@@ -21,11 +21,14 @@ import com.nova.paas.workflow.service.BpmService;
 import com.nova.paas.workflow.service.RuleService;
 import com.nova.paas.workflow.util.WorkflowJsonCheckUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -74,7 +77,7 @@ public class BpmServiceImpl implements BpmService {
             workflow.id(null);
         }
         WorkflowPojo workflowPojo = effektifAdapter.deployWorkflow(workflow);
-        sourceWorkflowId=workflowPojo.getSourceWorkflowId();
+        sourceWorkflowId = workflowPojo.getSourceWorkflowId();
 
         //流程启动规则
         if (isNew) {
@@ -84,7 +87,7 @@ public class BpmServiceImpl implements BpmService {
                 rulePojo.setCreatedBy(context.getUserId());
                 rulePojo.setRuleType(WorkflowConstant.WorkflowType.BPM);
                 rulePojo.setSourceWorkflowId(sourceWorkflowId);
-                String ruleId = ruleService.createRule(rulePojo);
+                String ruleId = ruleService.createRule(context, rulePojo);
 
                 workflowPojo.setRuleId(ruleId);
             }
@@ -99,15 +102,15 @@ public class BpmServiceImpl implements BpmService {
                 rulePojo.setModifiedBy(context.getUserId());
 
                 if (StringUtils.isBlank(rulePojo.getId())) {
-                    String ruleId = ruleService.createRule(rulePojo);
+                    String ruleId = ruleService.createRule(context, rulePojo);
                     workflowPojo.setRuleId(ruleId);
                 } else {
-                    ruleService.updateRule(rulePojo);
+                    ruleService.updateRule(context, rulePojo);
                     workflowPojo.setRuleId(rulePojo.getId());
                 }
 
             } else {
-                ruleService.deleteRule(context.getTenantId(), context.getUserId(), Sets.newHashSet(sourceWorkflowId));
+                ruleService.deleteRule(context, Sets.newHashSet(sourceWorkflowId));
             }
         }
         return workflowPojo;
@@ -115,12 +118,37 @@ public class BpmServiceImpl implements BpmService {
 
     @Override
     public String startByRule(CommonContext context, String entityId, String objectId, String triggerType) throws WorkflowServiceException {
-        return null;
+        List<RulePojo> ruleList = ruleService.findRules(context, WorkflowConstant.WorkflowType.BPM, entityId, triggerType);
+        if (CollectionUtils.isEmpty(ruleList)) {
+            log.warn("not match rules,context:{},entityId:{},triggerType:{}", context, entityId, triggerType);
+            throw new WorkflowServiceException(WorkflowErrorMsg.PAAS_WF_DEFAULT_EXCEPTION);
+        }
+        //默认取第一个匹配到的规则
+        RulePojo rulePojo = ruleList.get(0);
+        String sourceWorkflowId = rulePojo.getSourceWorkflowId();
+        context.property(WorkflowBindingEnum.triggerType.toString(), triggerType);
+        String instanceId = this.start(context, sourceWorkflowId, entityId, objectId, null);
+        return instanceId;
+
     }
 
     @Override
-    public String start(CommonContext context, String entityId, String objectId) throws WorkflowServiceException {
-        return null;
+    public String start(CommonContext context, String sourceWorkflowId, String entityId, String objectId, Map<String, Object> conditionMap)
+            throws WorkflowServiceException {
+        Map<WorkflowBindingEnum, Object> bindingMap = this.conventBindingMap(context, entityId, objectId);
+
+        if (StringUtils.isBlank(sourceWorkflowId)) {
+            throw new WorkflowServiceException(WorkflowErrorMsg.PAAS_WF_DEFAULT_EXCEPTION);
+        }
+        WorkflowEntity workflow = workflowDao.getLatestWorkflowBySourceId(context.getTenantId(), sourceWorkflowId);
+        if (workflow == null) {
+            return "";
+        }
+        bindingMap.put(WorkflowBindingEnum.triggerType, context.getProperty(WorkflowBindingEnum.triggerType.toString()));
+
+        String instanceId = effektifAdapter.startWorkflowByWorkflowId(workflow.getId().toString(), conditionMap, bindingMap);
+
+        return instanceId;
     }
 
     @Override
@@ -167,5 +195,17 @@ public class BpmServiceImpl implements BpmService {
     @Override
     public void changeCandidates(CommonContext context, String taskId, List<String> candidateIds) throws WorkflowServiceException {
 
+    }
+
+    private Map<WorkflowBindingEnum, Object> conventBindingMap(CommonContext context, String entityId, String objectId) {
+        EnumMap<WorkflowBindingEnum, Object> bindingMap = new EnumMap<WorkflowBindingEnum, Object>(WorkflowBindingEnum.class);
+        bindingMap.put(WorkflowBindingEnum.tenantId, context.getTenantId());
+        bindingMap.put(WorkflowBindingEnum.appId, context.getAppId());
+        bindingMap.put(WorkflowBindingEnum.entityId, entityId);
+        bindingMap.put(WorkflowBindingEnum.objectId, objectId);
+        bindingMap.put(WorkflowBindingEnum.applicantId, context.getUserId());
+        bindingMap.put(WorkflowBindingEnum.status, WorkflowConstant.InstanceStatus.IN_PROGRESS);
+        bindingMap.put(WorkflowBindingEnum.workflowType, WorkflowConstant.WorkflowType.BPM);
+        return bindingMap;
     }
 }
