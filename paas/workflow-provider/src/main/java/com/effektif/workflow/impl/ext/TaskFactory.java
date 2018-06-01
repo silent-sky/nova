@@ -91,8 +91,6 @@ public class TaskFactory implements Brewable {
             if (WorkflowConstant.UserTaskType.ALL.equals(task.getTaskType())) {
                 actionType = this.getCountersignatureResult(taskOpinions);
             }
-            //bpm坚持的key样式 -_-||
-            conditionMap.put("activity_" + task.getActivityId() + "##result", actionType);
             task = taskStore.completeTask(taskId, actionType, taskOpinions, assigneeIds);
 
             task.setCompleted(true);
@@ -106,7 +104,7 @@ public class TaskFactory implements Brewable {
                     }
                 }
 
-                // TODO: hanmz 2017/11/17 生成下一个节点前执行后动作
+                // TODO: 生成下一个节点前执行后动作
                 conditionMap = actionAfterAction();
                 if (conditionMap != null && conditionMap.size() > 0) {
                     for (Map.Entry entry : conditionMap.entrySet()) {
@@ -156,7 +154,7 @@ public class TaskFactory implements Brewable {
                 }
             }
 
-            // TODO: hanmz 2017/11/17 生成下一个节点前执行后动作
+            // TODO:  生成下一个节点前执行后动作
             conditionMap = actionAfterAction();
             if (conditionMap != null && conditionMap.size() > 0) {
                 for (Map.Entry entry : conditionMap.entrySet()) {

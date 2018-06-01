@@ -111,6 +111,7 @@ public class UserTaskImpl extends AbstractActivityType<UserTask> {
         task.setAssignNextTask(activity.getAssignNextTask());
         task.setCandidateByPreTask(activity.getCandidateByPreTask());
 
+        taskStore.insertTask(task);
     }
 
     private String getObjectHelper(Object obj) {

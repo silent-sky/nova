@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.nova"})
 @MapperScan(basePackages = "com.nova.**.mapper")
-public class HRApp extends SpringBootServletInitializer {
+public class SaaSApp extends SpringBootServletInitializer {
     public static void main(String[] args) {
-        SpringApplication webApp = new SpringApplication(HRApp.class);
+        SpringApplication webApp = new SpringApplication(SaaSApp.class);
         webApp.addListeners(new ApplicationPidFileWriter());
         webApp.setBeanNameGenerator(new NovaBeanNameGenerator());
         webApp.run(args);
@@ -26,6 +26,6 @@ public class HRApp extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(HRApp.class);
+        return application.sources(SaaSApp.class);
     }
 }

@@ -46,15 +46,10 @@ public class ExecutionItem implements Serializable {
   private Map<String, Object> triggerParam;
 
 
-  //zz 2017.11.13 start
   private String afterActionDefinitionId;
   private String afterActionMappingId;
-  // zz  2017.11.13  end
-
-  // wangbf 2018.01.19 start
   private Map<String, Object> actionMapping;
   private List<ActionParam> actionParams;
-  // wangbf 2018.01.19 end
 
   public String getAfterActionDefinitionId() {
     return afterActionDefinitionId;
